@@ -90,7 +90,12 @@
     "alignRight": "Do prawej",
     "save": "Zapisz",
     "unsaved": "Niezapisane zmiany",
-    "loadFailed": "Nie udało się wczytać szablonu."
+    "loadFailed": "Nie udało się wczytać szablonu.",
+    "line": "Linia",
+    "undo": "Cofnij",
+    "redo": "Ponów",
+    "autosaving": "Autozapis…",
+    "autosavedAt": "Autozapisano {{time}}"
   },
   "admin": {
     "users": {

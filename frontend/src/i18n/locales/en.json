@@ -90,7 +90,12 @@
     "alignRight": "Right",
     "save": "Save",
     "unsaved": "Unsaved changes",
-    "loadFailed": "Failed to load template."
+    "loadFailed": "Failed to load template.",
+    "line": "Line",
+    "undo": "Undo",
+    "redo": "Redo",
+    "autosaving": "Autosaving…",
+    "autosavedAt": "Autosaved at {{time}}"
   },
   "admin": {
     "users": {

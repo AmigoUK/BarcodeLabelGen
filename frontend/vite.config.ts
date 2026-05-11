@@ -16,5 +16,16 @@ export default defineConfig({
   build: {
     outDir: "dist",
     sourcemap: true,
+    rollupOptions: {
+      output: {
+        manualChunks: {
+          // Heavy 2D canvas lib — keeps the main bundle small for users
+          // who never open the editor.
+          konva: ["konva", "react-konva", "use-image"],
+          // Stable shared deps that change rarely → long-term browser cache.
+          react: ["react", "react-dom", "react-router-dom"],
+        },
+      },
+    },
   },
 });

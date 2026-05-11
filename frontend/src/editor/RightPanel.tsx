@@ -3,7 +3,7 @@ import { Input } from "../components/ui/Input";
 import { Select } from "../components/ui/Select";
 import { Button } from "../components/ui/Button";
 import { useEditorStore } from "./store";
-import type { EditorObject, ImageObject, RectObject, TextObject } from "./types";
+import type { EditorObject, ImageObject, LineObject, RectObject, TextObject } from "./types";
 
 export function RightPanel() {
   const { t } = useTranslation();
@@ -33,6 +33,9 @@ export function RightPanel() {
           )}
           {selected.type === "image" && (
             <ImageProps obj={selected} update={(p) => updateObject(selected.id, p)} />
+          )}
+          {selected.type === "line" && (
+            <LineProps obj={selected} update={(p) => updateObject(selected.id, p)} />
           )}
 
           <div className="pt-3">
@@ -172,6 +175,35 @@ function RectProps({ obj, update }: { obj: RectObject; update: (p: Partial<RectO
           step={0.05}
           min={0}
           value={obj.strokeWidth ?? 0}
+          onChange={(strokeWidth) => update({ strokeWidth })}
+        />
+      </div>
+    </div>
+  );
+}
+
+function LineProps({ obj, update }: { obj: LineObject; update: (p: Partial<LineObject>) => void }) {
+  const { t } = useTranslation();
+  // Edit relative endpoint coordinates (origin at the line's anchor)
+  const [x1, y1, x2, y2] = obj.points;
+  const setPoints = (next: number[]) => update({ points: next });
+  return (
+    <div className="space-y-3 border-t border-slate-800 pt-3">
+      <div className="grid grid-cols-2 gap-2">
+        <NumberInput label="X₁ (mm)" value={x1} onChange={(v) => setPoints([v, y1, x2, y2])} />
+        <NumberInput label="Y₁ (mm)" value={y1} onChange={(v) => setPoints([x1, v, x2, y2])} />
+        <NumberInput label="X₂ (mm)" value={x2} onChange={(v) => setPoints([x1, y1, v, y2])} />
+        <NumberInput label="Y₂ (mm)" value={y2} onChange={(v) => setPoints([x1, y1, x2, v])} />
+        <ColorInput
+          label={t("editor.stroke")}
+          value={obj.stroke}
+          onChange={(stroke) => update({ stroke })}
+        />
+        <NumberInput
+          label={t("editor.strokeMm")}
+          step={0.05}
+          min={0.05}
+          value={obj.strokeWidth}
           onChange={(strokeWidth) => update({ strokeWidth })}
         />
       </div>

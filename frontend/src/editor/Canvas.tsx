@@ -2,6 +2,7 @@ import Konva from "konva";
 import { useEffect, useRef, useState } from "react";
 import { Layer, Rect, Stage, Transformer } from "react-konva";
 import { ImageObject } from "./objects/ImageObject";
+import { LineObject } from "./objects/LineObject";
 import { RectObject } from "./objects/RectObject";
 import { TextObject } from "./objects/TextObject";
 import { useEditorStore } from "./store";
@@ -112,6 +113,18 @@ export function Canvas() {
               if (o.type === "image") {
                 return (
                   <ImageObject
+                    key={o.id}
+                    object={o}
+                    scale={scale}
+                    draggable
+                    onSelect={() => select(o.id)}
+                    onDragEnd={(x, y) => updateObject(o.id, { x, y })}
+                  />
+                );
+              }
+              if (o.type === "line") {
+                return (
+                  <LineObject
                     key={o.id}
                     object={o}
                     scale={scale}

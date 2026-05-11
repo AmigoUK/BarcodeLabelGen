@@ -9,11 +9,34 @@ type Props = {
   onSave: () => void;
   saving: boolean;
   saveError?: string | null;
+  autosaveStatus: "idle" | "saving" | "saved" | "error";
+  autosaveAt: Date | null;
 };
 
-export function Toolbar({ template, onSave, saving, saveError }: Props) {
+export function Toolbar({
+  template,
+  onSave,
+  saving,
+  saveError,
+  autosaveStatus,
+  autosaveAt,
+}: Props) {
   const { t } = useTranslation();
   const dirty = useEditorStore((s) => s.dirty);
+  const past = useEditorStore((s) => s.past.length);
+  const future = useEditorStore((s) => s.future.length);
+  const undo = useEditorStore((s) => s.undo);
+  const redo = useEditorStore((s) => s.redo);
+
+  const autosaveLabel = (() => {
+    if (autosaveStatus === "saving") return t("editor.autosaving");
+    if (autosaveStatus === "saved" && autosaveAt) {
+      return t("editor.autosavedAt", {
+        time: autosaveAt.toLocaleTimeString(),
+      });
+    }
+    return null;
+  })();
 
   return (
     <div className="flex items-center justify-between gap-3 border-b border-slate-800 bg-slate-950 px-4 py-2">
@@ -29,11 +52,28 @@ export function Toolbar({ template, onSave, saving, saveError }: Props) {
             {t("editor.unsaved")}
           </span>
         )}
+        {autosaveLabel && <span className="text-xs text-slate-500">{autosaveLabel}</span>}
       </div>
-      <div className="flex items-center gap-3">
-        {saveError && <span className="text-xs text-rose-400">{saveError}</span>}
-        <Button onClick={onSave} disabled={saving || !dirty}>
-          {saving ? t("common.loading") : t("editor.save")}
+      <div className="flex items-center gap-1">
+        <Button
+          variant="ghost"
+          onClick={undo}
+          disabled={past === 0}
+          title={t("editor.undo") + " (Ctrl+Z)"}
+        >
+          ↶
+        </Button>
+        <Button
+          variant="ghost"
+          onClick={redo}
+          disabled={future === 0}
+          title={t("editor.redo") + " (Ctrl+Y)"}
+        >
+          ↷
+        </Button>
+        {saveError && <span className="ml-2 text-xs text-rose-400">{saveError}</span>}
+        <Button onClick={onSave} disabled={saving || !dirty} className="ml-2">
+          {saving ? t("common.loading") : t("editor.save") + " (Ctrl+S)"}
         </Button>
       </div>
     </div>

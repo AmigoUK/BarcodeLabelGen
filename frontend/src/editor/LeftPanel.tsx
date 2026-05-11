@@ -64,6 +64,24 @@ export function LeftPanel() {
       <Button
         variant="secondary"
         className="w-full justify-start"
+        onClick={() =>
+          addObject({
+            id: newObjectId(),
+            type: "line",
+            x: Math.max(2, centerX - 15),
+            y: Math.max(2, centerY),
+            points: [0, 0, 30, 0],
+            stroke: "#0f172a",
+            strokeWidth: 0.3,
+          })
+        }
+      >
+        ╱ &nbsp; {t("editor.line")}
+      </Button>
+
+      <Button
+        variant="secondary"
+        className="w-full justify-start"
         onClick={() => fileRef.current?.click()}
         disabled={upload.isPending}
       >
