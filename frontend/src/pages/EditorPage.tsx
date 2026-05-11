@@ -1,9 +1,10 @@
-import { useCallback, useEffect, useRef } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useParams } from "react-router-dom";
 import { Canvas } from "../editor/Canvas";
 import { LeftPanel } from "../editor/LeftPanel";
 import { RightPanel } from "../editor/RightPanel";
+import { SeriesWizard } from "../editor/SeriesWizard";
 import { Toolbar } from "../editor/Toolbar";
 import { useEditorStore } from "../editor/store";
 import type { CanvasData } from "../editor/types";
@@ -97,6 +98,8 @@ export function EditorPage() {
     return () => window.removeEventListener("beforeunload", onBeforeUnload);
   }, [dirty]);
 
+  const [showWizard, setShowWizard] = useState(false);
+
   if (template.isLoading) {
     return <div className="p-6 text-slate-400">{t("common.loading")}</div>;
   }
@@ -119,12 +122,22 @@ export function EditorPage() {
         }
         autosaveStatus={autosave.status}
         autosaveAt={autosave.lastSavedAt}
+        onGenerateSeries={() => setShowWizard(true)}
+        seriesDisabled={dirty}
       />
       <div className="flex min-h-0 flex-1">
         <LeftPanel />
         <Canvas />
         <RightPanel />
       </div>
+      {showWizard && canvas && (
+        <SeriesWizard
+          templateId={template.data.id}
+          templateName={template.data.name}
+          canvas={canvas}
+          onClose={() => setShowWizard(false)}
+        />
+      )}
     </div>
   );
 }

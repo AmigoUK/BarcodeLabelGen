@@ -12,6 +12,11 @@ type Props = {
   saveError?: string | null;
   autosaveStatus: "idle" | "saving" | "saved" | "error";
   autosaveAt: Date | null;
+  onGenerateSeries: () => void;
+  /** Disable the series button while there are unsaved changes — series
+   * generation always uses the last-saved canvas, so the user should save
+   * first to avoid generating from stale data. */
+  seriesDisabled: boolean;
 };
 
 export function Toolbar({
@@ -21,6 +26,8 @@ export function Toolbar({
   saveError,
   autosaveStatus,
   autosaveAt,
+  onGenerateSeries,
+  seriesDisabled,
 }: Props) {
   const { t } = useTranslation();
   const dirty = useEditorStore((s) => s.dirty);
@@ -85,6 +92,14 @@ export function Toolbar({
         <Button
           variant="secondary"
           className="ml-2"
+          onClick={onGenerateSeries}
+          disabled={seriesDisabled}
+          title={seriesDisabled ? t("editor.saveFirstHint") : ""}
+        >
+          {t("editor.generateSeries")}
+        </Button>
+        <Button
+          variant="secondary"
           onClick={() => {
             const safeName = template.name.replace(/[^A-Za-z0-9._-]+/g, "_");
             generate.mutate({ templateId: template.id, filename: `${safeName}.pdf` });
