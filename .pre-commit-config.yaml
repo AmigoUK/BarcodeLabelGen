@@ -1,0 +1,58 @@
+# Pre-commit hooks: ruff (Python lint+format), mypy (Python type-check),
+# prettier (JS/TS/MD/YAML format), eslint (TS lint).
+#
+# Install once:  pre-commit install
+# Run on all:    pre-commit run --all-files
+
+repos:
+  # Generic hygiene
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v5.0.0
+    hooks:
+      - id: trailing-whitespace
+      - id: end-of-file-fixer
+      - id: check-yaml
+      - id: check-added-large-files
+        args: ["--maxkb=1024"]
+      - id: check-merge-conflict
+      - id: detect-private-key
+
+  # --- Python: ruff (lint + format) ---
+  - repo: https://github.com/astral-sh/ruff-pre-commit
+    rev: v0.8.4
+    hooks:
+      - id: ruff
+        args: ["--fix"]
+        files: ^backend/.*\.py$
+      - id: ruff-format
+        files: ^backend/.*\.py$
+
+  # --- Python: mypy (strict type checking) ---
+  - repo: https://github.com/pre-commit/mirrors-mypy
+    rev: v1.13.0
+    hooks:
+      - id: mypy
+        files: ^backend/app/.*\.py$
+        args: ["--config-file=backend/pyproject.toml"]
+        additional_dependencies:
+          - flask>=3.0.3
+          - types-redis>=4.6.0
+
+  # --- JS/TS: Prettier (format) ---
+  - repo: https://github.com/pre-commit/mirrors-prettier
+    rev: v4.0.0-alpha.8
+    hooks:
+      - id: prettier
+        files: \.(ts|tsx|js|json|md|yaml|yml|css|html)$
+        exclude: ^(backend/|.*\.lock$)
+
+  # --- TS: ESLint ---
+  - repo: local
+    hooks:
+      - id: eslint
+        name: eslint (frontend)
+        entry: bash -c 'cd frontend && npx --no-install eslint --max-warnings=0'
+        language: system
+        files: ^frontend/.*\.(ts|tsx)$
+        pass_filenames: false
+        require_serial: true

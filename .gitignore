@@ -57,6 +57,7 @@ dist/
 dist-ssr/
 .vite/
 *.local
+*.tsbuildinfo
 
 # --- Editors / IDEs ---
 .vscode/*

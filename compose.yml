@@ -1,0 +1,96 @@
+# BarcodeLabelGen — production docker-compose
+#
+# Exposes nginx ONLY on 127.0.0.1:18003 — the host port is meant to be
+# fronted by Tailscale Serve, not exposed publicly. After `docker compose up -d`
+# run on the host:
+#
+#     tailscale serve --bg --https=18003 http://127.0.0.1:18003
+#
+# Then access via: https://HOST.TAILNET.ts.net:18003
+
+name: barcodelabelgen
+
+services:
+  nginx:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    image: barcodelabelgen/frontend:latest
+    container_name: blg-nginx
+    restart: unless-stopped
+    ports:
+      - "127.0.0.1:18003:80"
+    depends_on:
+      web:
+        condition: service_started
+    networks:
+      - internal
+
+  web:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    image: barcodelabelgen/backend:latest
+    container_name: blg-web
+    restart: unless-stopped
+    environment:
+      DATABASE_URL: postgresql://blg:${POSTGRES_PASSWORD:-blg-dev-password}@db:5432/blg
+      REDIS_URL: redis://redis:6379/0
+      SECRET_KEY: ${SECRET_KEY:-change-me-in-prod}
+      FLASK_ENV: production
+    depends_on:
+      db:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    volumes:
+      - uploads:/app/uploads
+      - pdfs:/app/pdfs
+      - assets:/app/assets
+    networks:
+      - internal
+
+  db:
+    image: postgres:16-alpine
+    container_name: blg-db
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: blg
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-blg-dev-password}
+      POSTGRES_DB: blg
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U blg -d blg"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 10s
+    networks:
+      - internal
+
+  redis:
+    image: redis:7-alpine
+    container_name: blg-redis
+    restart: unless-stopped
+    command: ["redis-server", "--appendonly", "yes"]
+    volumes:
+      - redisdata:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - internal
+
+volumes:
+  pgdata:
+  redisdata:
+  uploads:
+  pdfs:
+  assets:
+
+networks:
+  internal:
+    driver: bridge
