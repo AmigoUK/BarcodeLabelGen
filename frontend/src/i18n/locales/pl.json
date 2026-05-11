@@ -61,7 +61,9 @@
     "format": "Format etykiety",
     "choose": "wybierz",
     "empty": "Nie masz jeszcze żadnych szablonów. Kliknij „Nowy szablon”, aby zacząć.",
-    "confirmDelete": "Usunąć szablon „{{name}}”?"
+    "confirmDelete": "Usunąć szablon „{{name}}”?",
+    "searchPlaceholder": "Szukaj szablonu…",
+    "noMatches": "Brak szablonów pasujących do „{{query}}”."
   },
   "editor": {
     "add": "Dodaj",
@@ -100,7 +102,10 @@
     "barcodeType": "Typ kodu",
     "barcodeData": "Dane kodu",
     "dynamicHint": "Użyj {{'{{nazwa_kolumny}}'}} aby wstawić pole dynamiczne (zostanie zastąpione danymi z arkusza w generatorze serii).",
-    "dynamicFields": "Wykryte pola dynamiczne:"
+    "dynamicFields": "Wykryte pola dynamiczne:",
+    "downloadPdf": "Pobierz PDF",
+    "generatingPdf": "Generowanie…",
+    "pdfFailed": "Błąd PDF"
   },
   "admin": {
     "users": {

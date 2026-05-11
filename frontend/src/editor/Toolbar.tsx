@@ -1,6 +1,7 @@
 import { useTranslation } from "react-i18next";
 import { Link } from "react-router-dom";
 import { Button } from "../components/ui/Button";
+import { useGeneratePdf } from "../hooks/useGeneratePdf";
 import type { TemplateDetail } from "../hooks/useTemplates";
 import { useEditorStore } from "./store";
 
@@ -27,16 +28,21 @@ export function Toolbar({
   const future = useEditorStore((s) => s.future.length);
   const undo = useEditorStore((s) => s.undo);
   const redo = useEditorStore((s) => s.redo);
+  const generate = useGeneratePdf();
 
   const autosaveLabel = (() => {
     if (autosaveStatus === "saving") return t("editor.autosaving");
     if (autosaveStatus === "saved" && autosaveAt) {
-      return t("editor.autosavedAt", {
-        time: autosaveAt.toLocaleTimeString(),
-      });
+      return t("editor.autosavedAt", { time: autosaveAt.toLocaleTimeString() });
     }
     return null;
   })();
+
+  const generateError = generate.error
+    ? generate.error instanceof Error
+      ? generate.error.message
+      : String(generate.error)
+    : null;
 
   return (
     <div className="flex items-center justify-between gap-3 border-b border-slate-800 bg-slate-950 px-4 py-2">
@@ -71,8 +77,24 @@ export function Toolbar({
         >
           ↷
         </Button>
+        {generateError && (
+          <span className="ml-2 text-xs text-rose-400" title={generateError}>
+            {t("editor.pdfFailed")}
+          </span>
+        )}
+        <Button
+          variant="secondary"
+          className="ml-2"
+          onClick={() => {
+            const safeName = template.name.replace(/[^A-Za-z0-9._-]+/g, "_");
+            generate.mutate({ templateId: template.id, filename: `${safeName}.pdf` });
+          }}
+          disabled={generate.isPending}
+        >
+          {generate.isPending ? t("editor.generatingPdf") : t("editor.downloadPdf")}
+        </Button>
         {saveError && <span className="ml-2 text-xs text-rose-400">{saveError}</span>}
-        <Button onClick={onSave} disabled={saving || !dirty} className="ml-2">
+        <Button onClick={onSave} disabled={saving || !dirty}>
           {saving ? t("common.loading") : t("editor.save") + " (Ctrl+S)"}
         </Button>
       </div>

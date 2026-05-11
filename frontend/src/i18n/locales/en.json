@@ -61,7 +61,9 @@
     "format": "Label format",
     "choose": "choose",
     "empty": "You don't have any templates yet. Click \"New template\" to start.",
-    "confirmDelete": "Delete template \"{{name}}\"?"
+    "confirmDelete": "Delete template \"{{name}}\"?",
+    "searchPlaceholder": "Search templates…",
+    "noMatches": "No templates match \"{{query}}\"."
   },
   "editor": {
     "add": "Add",
@@ -100,7 +102,10 @@
     "barcodeType": "Code type",
     "barcodeData": "Barcode data",
     "dynamicHint": "Use {{'{{column_name}}'}} to insert a dynamic field (replaced by CSV/Excel data in the batch generator).",
-    "dynamicFields": "Detected dynamic fields:"
+    "dynamicFields": "Detected dynamic fields:",
+    "downloadPdf": "Download PDF",
+    "generatingPdf": "Generating…",
+    "pdfFailed": "PDF error"
   },
   "admin": {
     "users": {

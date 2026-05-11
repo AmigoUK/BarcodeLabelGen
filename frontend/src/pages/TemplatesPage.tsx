@@ -17,12 +17,30 @@ export function TemplatesPage() {
   const templates = useTemplates();
   const del = useDeleteTemplate();
   const [showCreate, setShowCreate] = useState(false);
+  const [query, setQuery] = useState("");
+
+  const filtered = templates.data
+    ? query.trim()
+      ? templates.data.filter((tpl) => tpl.name.toLowerCase().includes(query.trim().toLowerCase()))
+      : templates.data
+    : [];
 
   return (
     <div className="space-y-6">
-      <header className="flex items-center justify-between">
+      <header className="flex flex-wrap items-center justify-between gap-3">
         <h1 className="text-2xl font-bold">{t("nav.templates")}</h1>
-        <Button onClick={() => setShowCreate(true)}>+ {t("templates.new")}</Button>
+        <div className="flex items-center gap-2">
+          {templates.data && templates.data.length > 0 && (
+            <Input
+              type="search"
+              placeholder={t("templates.searchPlaceholder")}
+              value={query}
+              onChange={(e) => setQuery(e.target.value)}
+              className="w-64"
+            />
+          )}
+          <Button onClick={() => setShowCreate(true)}>+ {t("templates.new")}</Button>
+        </div>
       </header>
 
       {templates.isLoading && <p className="text-slate-400">{t("common.loading")}</p>}
@@ -33,9 +51,15 @@ export function TemplatesPage() {
         </div>
       )}
 
-      {templates.data && templates.data.length > 0 && (
+      {templates.data && templates.data.length > 0 && filtered.length === 0 && (
+        <div className="rounded-lg border border-dashed border-slate-700 bg-slate-900/40 p-10 text-center text-slate-400">
+          {t("templates.noMatches", { query })}
+        </div>
+      )}
+
+      {filtered.length > 0 && (
         <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
-          {templates.data.map((tpl) => (
+          {filtered.map((tpl) => (
             <a
               key={tpl.id}
               href={`/templates/${tpl.id}/edit`}
