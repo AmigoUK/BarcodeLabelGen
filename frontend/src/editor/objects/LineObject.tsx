@@ -1,3 +1,4 @@
+import type Konva from "konva";
 import { Line } from "react-konva";
 import type { LineObject as LineObjectModel } from "../types";
 
@@ -6,10 +7,10 @@ type Props = {
   scale: number;
   draggable: boolean;
   onSelect: () => void;
-  onDragEnd: (xMm: number, yMm: number) => void;
+  onChange: (patch: Partial<LineObjectModel>) => void;
 };
 
-export function LineObject({ object, scale, draggable, onSelect, onDragEnd }: Props) {
+export function LineObject({ object, scale, draggable, onSelect, onChange }: Props) {
   return (
     <Line
       id={object.id}
@@ -24,7 +25,24 @@ export function LineObject({ object, scale, draggable, onSelect, onDragEnd }: Pr
       hitStrokeWidth={Math.max(8, object.strokeWidth * scale * 4)}
       onMouseDown={onSelect}
       onTap={onSelect}
-      onDragEnd={(e) => onDragEnd(e.target.x() / scale, e.target.y() / scale)}
+      onDragEnd={(e) => onChange({ x: e.target.x() / scale, y: e.target.y() / scale })}
+      onTransformEnd={(e) => {
+        // Points are relative to the line's anchor (x,y). Scale each pair
+        // by scaleX/scaleY so the geometry persists; then reset the
+        // visual scale on the node.
+        const node = e.target as Konva.Line;
+        const scaleX = node.scaleX();
+        const scaleY = node.scaleY();
+        const rotation = node.rotation();
+        node.scaleX(1);
+        node.scaleY(1);
+        onChange({
+          x: node.x() / scale,
+          y: node.y() / scale,
+          rotation,
+          points: object.points.map((p, i) => p * (i % 2 === 0 ? scaleX : scaleY)),
+        });
+      }}
     />
   );
 }

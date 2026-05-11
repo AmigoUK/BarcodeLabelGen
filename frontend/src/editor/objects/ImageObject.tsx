@@ -1,3 +1,4 @@
+import type Konva from "konva";
 import { Image as KonvaImage } from "react-konva";
 import useImage from "use-image";
 import { assetImageUrl } from "../../hooks/useAssets";
@@ -8,10 +9,10 @@ type Props = {
   scale: number;
   draggable: boolean;
   onSelect: () => void;
-  onDragEnd: (xMm: number, yMm: number) => void;
+  onChange: (patch: Partial<ImageObjectModel>) => void;
 };
 
-export function ImageObject({ object, scale, draggable, onSelect, onDragEnd }: Props) {
+export function ImageObject({ object, scale, draggable, onSelect, onChange }: Props) {
   const [img] = useImage(assetImageUrl(object.assetId), "anonymous");
   return (
     <KonvaImage
@@ -25,7 +26,22 @@ export function ImageObject({ object, scale, draggable, onSelect, onDragEnd }: P
       draggable={draggable}
       onMouseDown={onSelect}
       onTap={onSelect}
-      onDragEnd={(e) => onDragEnd(e.target.x() / scale, e.target.y() / scale)}
+      onDragEnd={(e) => onChange({ x: e.target.x() / scale, y: e.target.y() / scale })}
+      onTransformEnd={(e) => {
+        const node = e.target as Konva.Image;
+        const scaleX = node.scaleX();
+        const scaleY = node.scaleY();
+        const rotation = node.rotation();
+        node.scaleX(1);
+        node.scaleY(1);
+        onChange({
+          x: node.x() / scale,
+          y: node.y() / scale,
+          rotation,
+          width: Math.max(1, object.width * Math.abs(scaleX)),
+          height: Math.max(1, object.height * Math.abs(scaleY)),
+        });
+      }}
     />
   );
 }

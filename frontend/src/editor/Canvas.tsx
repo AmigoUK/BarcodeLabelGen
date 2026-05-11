@@ -107,7 +107,7 @@ export function Canvas() {
                     scale={scale}
                     draggable
                     onSelect={() => select(o.id)}
-                    onDragEnd={(x, y) => updateObject(o.id, { x, y })}
+                    onChange={(patch) => updateObject(o.id, patch)}
                   />
                 );
               }
@@ -119,7 +119,7 @@ export function Canvas() {
                     scale={scale}
                     draggable
                     onSelect={() => select(o.id)}
-                    onDragEnd={(x, y) => updateObject(o.id, { x, y })}
+                    onChange={(patch) => updateObject(o.id, patch)}
                   />
                 );
               }
@@ -131,7 +131,7 @@ export function Canvas() {
                     scale={scale}
                     draggable
                     onSelect={() => select(o.id)}
-                    onDragEnd={(x, y) => updateObject(o.id, { x, y })}
+                    onChange={(patch) => updateObject(o.id, patch)}
                   />
                 );
               }
@@ -143,7 +143,7 @@ export function Canvas() {
                     scale={scale}
                     draggable
                     onSelect={() => select(o.id)}
-                    onDragEnd={(x, y) => updateObject(o.id, { x, y })}
+                    onChange={(patch) => updateObject(o.id, patch)}
                   />
                 );
               }
