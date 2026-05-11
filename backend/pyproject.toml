@@ -20,6 +20,8 @@ dependencies = [
     "python-barcode>=0.15.1",
     "qrcode[pil]>=8.0",
     "reportlab>=4.2.5",
+    "pandas>=2.2.3",
+    "openpyxl>=3.1.5",
 ]
 
 [dependency-groups]
