@@ -122,32 +122,49 @@ def _draw_text(c: rl_canvas.Canvas, obj: dict[str, Any], page_h_pt: float) -> No
     bold = obj.get("fontWeight") == "bold"
     italic = obj.get("fontStyle") == "italic"
     rotation = float(obj.get("rotation") or 0)
+    width_raw = obj.get("width")
+    has_explicit_width = isinstance(width_raw, int | float) and width_raw > 0
+    width_mm_value = (
+        float(width_raw) if isinstance(width_raw, int | float) and width_raw > 0 else 0.0
+    )
 
-    # ReportLab's built-in PostScript fonts cover Latin-1; Polish letters
-    # in Helvetica work because ReportLab maps to ISO-8859-2 / WinAnsi.
-    base = "Helvetica"
-    if bold and italic:
-        font = f"{base}-BoldOblique"
-    elif bold:
-        font = f"{base}-Bold"
-    elif italic:
-        font = f"{base}-Oblique"
+    # Map the user-facing font family to one of ReportLab's built-in
+    # standard PDF fonts (the only ones that don't need embedding).
+    # Helvetica/Arial/Inter share visual metrics close enough that
+    # they're indistinguishable at label sizes; same for Times/Georgia.
+    family = (obj.get("fontFamily") or "").lower()
+    if "courier" in family:
+        base = "Courier"
+        styles = ("", "-Bold", "-Oblique", "-BoldOblique")
+    elif "times" in family or "georgia" in family or "serif" in family:
+        base = "Times"
+        styles = ("-Roman", "-Bold", "-Italic", "-BoldItalic")
     else:
-        font = base
+        base = "Helvetica"
+        styles = ("", "-Bold", "-Oblique", "-BoldOblique")
 
-    font_size_pt = font_size_mm * mm  # actually mm → pt via the same scale
-    # Convert mm font size to "pt" the way ReportLab expects: setFont takes
-    # a point size. 1 mm = 2.834 pt, so multiplying by `mm` is correct.
+    idx = (1 if bold else 0) + (2 if italic else 0)
+    font = f"{base}{styles[idx]}"
+
+    # Konva's `fontSize` is stored in mm in our schema. ReportLab's setFont
+    # expects PostScript points. 1 mm = 2.834 pt, so `font_size_mm * mm`
+    # (where `mm` is reportlab's points-per-mm constant) gives the right
+    # type size — a "6 mm font" prints at the same physical size as it
+    # appears on the canvas.
+    font_size_pt = font_size_mm * mm
 
     c.saveState()
     c.setFillColor(fill)
     c.setFont(font, font_size_pt)
 
-    # In Konva, the y is the TOP of the text bounding box. ReportLab's
-    # drawString places the BASELINE. Approximate baseline = top + font_size
-    # (this works for single-line text; multi-line wrap is a Sprint 5+ task).
+    # In Konva, y is the TOP of the text bounding box. ReportLab's
+    # drawString puts the BASELINE at y. Helvetica's ascent is ~71.8 % of
+    # the font size (cap height + a bit), so baseline = top + 0.718*size.
+    # 0.85 was wrong — it pushed the baseline too low, making text appear
+    # slightly clipped at the top and shifted down vs. the editor preview.
+    ascent_ratio = 0.718
     x_pt = x_mm * mm
-    baseline_y_pt = page_h_pt - (y_mm * mm) - font_size_pt * 0.85
+    baseline_y_pt = page_h_pt - (y_mm * mm) - font_size_pt * ascent_ratio
 
     if rotation:
         # Rotate around the top-left anchor so behaviour matches the editor
@@ -157,10 +174,16 @@ def _draw_text(c: rl_canvas.Canvas, obj: dict[str, Any], page_h_pt: float) -> No
 
     for i, line in enumerate(text.split("\n")):
         line_y = baseline_y_pt - i * font_size_pt * 1.2
-        if align == "center":
-            c.drawCentredString(x_pt + (float(obj.get("width") or 0) * mm) / 2, line_y, line)
-        elif align == "right":
-            c.drawRightString(x_pt + (float(obj.get("width") or 0) * mm), line_y, line)
+
+        # Centering/right-aligning is only meaningful when the text has an
+        # explicit `width` (the wrap box). Without it, Konva lays out
+        # left-aligned regardless of the `align` value — so do the same in
+        # the PDF, otherwise the text shifts left by half its rendered
+        # width and looks wrong vs. the preview.
+        if align == "center" and has_explicit_width:
+            c.drawCentredString(x_pt + (width_mm_value * mm) / 2, line_y, line)
+        elif align == "right" and has_explicit_width:
+            c.drawRightString(x_pt + (width_mm_value * mm), line_y, line)
         else:
             c.drawString(x_pt, line_y, line)
 
