@@ -21,6 +21,8 @@ RUN --mount=type=cache,target=/root/.cache/uv \
 
 # Copy app source and finalize install
 COPY app ./app
+COPY alembic ./alembic
+COPY alembic.ini ./
 
 # ---- Runtime stage: minimal Python image with venv copied in ----
 FROM python:3.12-slim AS runtime
@@ -39,19 +41,25 @@ RUN groupadd -r app && useradd -r -g app -u 1000 app \
 
 COPY --from=builder --chown=app:app /app/.venv /app/.venv
 COPY --from=builder --chown=app:app /app/app /app/app
+COPY --from=builder --chown=app:app /app/alembic /app/alembic
+COPY --from=builder --chown=app:app /app/alembic.ini /app/alembic.ini
+COPY --chown=app:app docker-entrypoint.sh /usr/local/bin/docker-entrypoint.sh
+RUN chmod +x /usr/local/bin/docker-entrypoint.sh
 
 ENV PATH="/app/.venv/bin:$PATH" \
     PYTHONDONTWRITEBYTECODE=1 \
     PYTHONUNBUFFERED=1 \
-    PYTHONPATH=/app
+    PYTHONPATH=/app \
+    FLASK_APP=app.wsgi:app
 
 USER app
 
 EXPOSE 8000
 
-HEALTHCHECK --interval=30s --timeout=5s --start-period=10s --retries=3 \
+HEALTHCHECK --interval=30s --timeout=5s --start-period=15s --retries=3 \
     CMD curl -fsS http://127.0.0.1:8000/api/health || exit 1
 
+ENTRYPOINT ["docker-entrypoint.sh"]
 CMD ["gunicorn", \
      "--bind", "0.0.0.0:8000", \
      "--workers", "4", \

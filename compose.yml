@@ -34,7 +34,7 @@ services:
     container_name: blg-web
     restart: unless-stopped
     environment:
-      DATABASE_URL: postgresql://blg:${POSTGRES_PASSWORD:-blg-dev-password}@db:5432/blg
+      DATABASE_URL: postgresql+psycopg://blg:${POSTGRES_PASSWORD:-blg-dev-password}@db:5432/blg
       REDIS_URL: redis://redis:6379/0
       SECRET_KEY: ${SECRET_KEY:-change-me-in-prod}
       FLASK_ENV: production

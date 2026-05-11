@@ -16,8 +16,10 @@ health_bp = Blueprint("health", __name__)
 
 
 def _check_db(database_url: str) -> tuple[bool, str | None]:
+    # psycopg.connect doesn't understand SQLAlchemy's `+driver` URL suffix.
+    raw_url = database_url.replace("postgresql+psycopg://", "postgresql://")
     try:
-        with psycopg.connect(database_url, connect_timeout=2) as conn, conn.cursor() as cur:
+        with psycopg.connect(raw_url, connect_timeout=2) as conn, conn.cursor() as cur:
             cur.execute("SELECT 1")
             cur.fetchone()
     except Exception as exc:  # noqa: BLE001 — broad except is intentional for health probe
