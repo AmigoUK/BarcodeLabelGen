@@ -1,5 +1,5 @@
 import Konva from "konva";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useLayoutEffect, useRef, useState } from "react";
 import { Layer, Rect, Stage, Transformer } from "react-konva";
 import { ImageObject } from "./objects/ImageObject";
 import { LineObject } from "./objects/LineObject";
@@ -19,6 +19,16 @@ export function Canvas() {
   const updateObject = useEditorStore((s) => s.updateObject);
 
   const [containerSize, setContainerSize] = useState({ width: 0, height: 0 });
+
+  // Measure synchronously after layout so the very first paint already
+  // uses the real container size — avoids the "tiny thumbnail until
+  // ResizeObserver fires" flash, especially noticeable on slow devices.
+  useLayoutEffect(() => {
+    const el = containerRef.current;
+    if (!el) return;
+    const rect = el.getBoundingClientRect();
+    setContainerSize({ width: rect.width, height: rect.height });
+  }, []);
 
   // Track container size so the canvas re-fits when the panel resizes.
   useEffect(() => {
@@ -61,7 +71,7 @@ export function Canvas() {
   return (
     <div
       ref={containerRef}
-      className="relative flex h-full w-full items-center justify-center overflow-hidden bg-slate-900"
+      className="relative flex min-h-0 min-w-0 flex-1 items-center justify-center overflow-hidden bg-slate-900"
     >
       {scale > 0 && (
         <Stage

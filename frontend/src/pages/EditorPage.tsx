@@ -113,9 +113,7 @@ export function EditorPage() {
       />
       <div className="flex min-h-0 flex-1">
         <LeftPanel />
-        <div className="flex-1">
-          <Canvas />
-        </div>
+        <Canvas />
         <RightPanel />
       </div>
     </div>
