@@ -76,4 +76,4 @@ BarcodeLabelGen/
 
 ## License
 
-Proprietary — internal tool.
+GPL-3.0 — see [`LICENSE`](LICENSE).
