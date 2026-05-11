@@ -1,0 +1,87 @@
+{
+  "app": {
+    "name": "BarcodeLabelGen",
+    "tagline": "Label editor and PDF generator"
+  },
+  "common": {
+    "loading": "Loading…",
+    "save": "Save",
+    "cancel": "Cancel",
+    "delete": "Delete",
+    "edit": "Edit",
+    "close": "Close",
+    "submit": "Submit",
+    "yes": "Yes",
+    "no": "No",
+    "search": "Search",
+    "create": "Create",
+    "language": "Language"
+  },
+  "auth": {
+    "login": "Log in",
+    "logout": "Log out",
+    "email": "Email",
+    "password": "Password",
+    "currentPassword": "Current password",
+    "newPassword": "New password",
+    "newPasswordConfirm": "Confirm new password",
+    "loginTitle": "Sign in to BarcodeLabelGen",
+    "loginButton": "Sign in",
+    "loggingIn": "Signing in…",
+    "changePasswordTitle": "You must change your password",
+    "changePasswordIntro": "Your account requires setting a new password. Pick one at least 10 characters long.",
+    "changePasswordButton": "Change password",
+    "errors": {
+      "invalidCredentials": "Wrong email or password",
+      "csrfFailed": "Session expired — please refresh the page",
+      "passwordTooShort": "Password must be at least 10 characters",
+      "passwordsDontMatch": "Passwords don't match",
+      "newPasswordSameAsOld": "New password must differ from the current one",
+      "currentPasswordWrong": "Current password is incorrect",
+      "generic": "Something went wrong. Please try again."
+    }
+  },
+  "nav": {
+    "dashboard": "Dashboard",
+    "templates": "Templates",
+    "shared": "Shared",
+    "history": "History",
+    "imports": "Data imports",
+    "admin": "Administration",
+    "users": "Users"
+  },
+  "dashboard": {
+    "title": "Dashboard",
+    "welcome": "Welcome, {{email}}!",
+    "comingSoon": "Editor and remaining features arrive in upcoming sprints."
+  },
+  "admin": {
+    "users": {
+      "title": "User management",
+      "create": "Create account",
+      "createTitle": "Create new user",
+      "tempPassword": "Temporary password",
+      "tempPasswordHelp": "Min. 10 characters. The user will be forced to change it on first login.",
+      "generatePassword": "Generate random",
+      "role": "Role",
+      "roles": {
+        "admin": "Administrator",
+        "editor": "Editor",
+        "viewer": "Viewer (read-only)"
+      },
+      "active": "Active",
+      "lastLogin": "Last login",
+      "createdAt": "Created",
+      "neverLoggedIn": "Never",
+      "tempPasswordCreatedTitle": "Account created",
+      "tempPasswordCreatedBody": "Share this temporary password with the user — it won't be shown again:",
+      "resetPassword": "Reset password",
+      "resetPasswordTitle": "Reset user password",
+      "errors": {
+        "emailExists": "A user with this email already exists",
+        "cannotDisableSelf": "You can't disable your own account",
+        "userNotFound": "User not found"
+      }
+    }
+  }
+}

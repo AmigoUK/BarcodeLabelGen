@@ -1,0 +1,87 @@
+{
+  "app": {
+    "name": "BarcodeLabelGen",
+    "tagline": "Edytor etykiet i generator PDF"
+  },
+  "common": {
+    "loading": "Ładowanie…",
+    "save": "Zapisz",
+    "cancel": "Anuluj",
+    "delete": "Usuń",
+    "edit": "Edytuj",
+    "close": "Zamknij",
+    "submit": "Wyślij",
+    "yes": "Tak",
+    "no": "Nie",
+    "search": "Szukaj",
+    "create": "Utwórz",
+    "language": "Język"
+  },
+  "auth": {
+    "login": "Zaloguj",
+    "logout": "Wyloguj",
+    "email": "Email",
+    "password": "Hasło",
+    "currentPassword": "Aktualne hasło",
+    "newPassword": "Nowe hasło",
+    "newPasswordConfirm": "Powtórz nowe hasło",
+    "loginTitle": "Zaloguj się do BarcodeLabelGen",
+    "loginButton": "Zaloguj",
+    "loggingIn": "Logowanie…",
+    "changePasswordTitle": "Musisz zmienić hasło",
+    "changePasswordIntro": "Twoje konto wymaga ustawienia nowego hasła. Wybierz hasło o długości co najmniej 10 znaków.",
+    "changePasswordButton": "Zmień hasło",
+    "errors": {
+      "invalidCredentials": "Nieprawidłowy email lub hasło",
+      "csrfFailed": "Sesja wygasła — odśwież stronę",
+      "passwordTooShort": "Hasło musi mieć co najmniej 10 znaków",
+      "passwordsDontMatch": "Hasła nie są identyczne",
+      "newPasswordSameAsOld": "Nowe hasło musi być inne niż aktualne",
+      "currentPasswordWrong": "Aktualne hasło jest nieprawidłowe",
+      "generic": "Wystąpił błąd. Spróbuj ponownie."
+    }
+  },
+  "nav": {
+    "dashboard": "Pulpit",
+    "templates": "Szablony",
+    "shared": "Udostępnione",
+    "history": "Historia",
+    "imports": "Importy danych",
+    "admin": "Administracja",
+    "users": "Użytkownicy"
+  },
+  "dashboard": {
+    "title": "Pulpit",
+    "welcome": "Witaj, {{email}}!",
+    "comingSoon": "Edytor i pozostałe funkcje pojawią się w kolejnych sprintach."
+  },
+  "admin": {
+    "users": {
+      "title": "Zarządzanie użytkownikami",
+      "create": "Utwórz konto",
+      "createTitle": "Utwórz nowego użytkownika",
+      "tempPassword": "Hasło tymczasowe",
+      "tempPasswordHelp": "Min. 10 znaków. Użytkownik będzie musiał je zmienić przy pierwszym logowaniu.",
+      "generatePassword": "Wygeneruj losowe",
+      "role": "Rola",
+      "roles": {
+        "admin": "Administrator",
+        "editor": "Redaktor",
+        "viewer": "Tylko podgląd"
+      },
+      "active": "Aktywne",
+      "lastLogin": "Ostatnie logowanie",
+      "createdAt": "Utworzono",
+      "neverLoggedIn": "Nigdy",
+      "tempPasswordCreatedTitle": "Konto utworzone",
+      "tempPasswordCreatedBody": "Przekaż użytkownikowi to hasło tymczasowe — nie będzie później wyświetlane:",
+      "resetPassword": "Resetuj hasło",
+      "resetPasswordTitle": "Resetuj hasło użytkownika",
+      "errors": {
+        "emailExists": "Użytkownik z tym emailem już istnieje",
+        "cannotDisableSelf": "Nie możesz dezaktywować własnego konta",
+        "userNotFound": "Nie znaleziono użytkownika"
+      }
+    }
+  }
+}
