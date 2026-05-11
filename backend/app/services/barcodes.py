@@ -63,14 +63,17 @@ def render_png(
         raise BarcodeRenderError(f"unsupported type: {bc_type}") from exc
 
     writer = ImageWriter(format="PNG")
-    # Writer options: module_height in mm, dpi controls resolution.
+    # Writer options: module_height/width/text_distance in mm. text_distance
+    # is the gap between the bottom of the bars and the top of the
+    # human-readable digits; 5 mm clears descenders cleanly (2.5 mm let
+    # the loops of "9"/"7" touch the bars).
     options = {
         "module_height": max(1.0, float(height_mm)),
         "module_width": 0.25,  # mm — bar width unit
         "dpi": 200,
         "quiet_zone": 2,
         "font_size": 8,
-        "text_distance": 2.5,
+        "text_distance": 5.0,
         "write_text": True,
     }
 
