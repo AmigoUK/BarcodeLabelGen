@@ -17,6 +17,8 @@ dependencies = [
     "pydantic[email]>=2.10.4",
     "click>=8.1.7",
     "pillow>=11.0.0",
+    "python-barcode>=0.15.1",
+    "qrcode[pil]>=8.0",
 ]
 
 [dependency-groups]

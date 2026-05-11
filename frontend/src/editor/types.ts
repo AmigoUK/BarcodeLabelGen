@@ -50,7 +50,17 @@ export type ImageObject = EditorObjectBase & {
   assetId: number;
 };
 
-export type EditorObject = TextObject | RectObject | LineObject | ImageObject;
+export type BarcodeType = "ean13" | "ean14" | "gtin" | "code128" | "gs1_128" | "qr";
+
+export type BarcodeObject = EditorObjectBase & {
+  type: "barcode";
+  barcodeType: BarcodeType;
+  data: string;
+  width: number; // mm
+  height: number; // mm
+};
+
+export type EditorObject = TextObject | RectObject | LineObject | ImageObject | BarcodeObject;
 
 export type CanvasData = {
   version: 1;

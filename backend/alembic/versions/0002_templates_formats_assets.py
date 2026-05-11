@@ -107,9 +107,7 @@ def upgrade() -> None:
     # Seed system label formats — A4-family + common Zebra rolls.
     # `kind` declared as Enum here so Postgres applies the proper enum cast
     # instead of a varchar→enum mismatch.
-    seed_kind_enum = sa.Enum(
-        "a_paper", "zebra", "custom", name="format_kind", create_type=False
-    )
+    seed_kind_enum = sa.Enum("a_paper", "zebra", "custom", name="format_kind", create_type=False)
     op.bulk_insert(
         sa.table(
             "label_formats",

@@ -16,6 +16,7 @@ from app.models.user import User
 from app.routes.admin import admin_bp
 from app.routes.assets import assets_bp
 from app.routes.auth import auth_bp
+from app.routes.barcodes import barcodes_bp
 from app.routes.health import health_bp
 from app.routes.me import me_bp
 from app.routes.templates import templates_bp
@@ -82,6 +83,7 @@ def create_app(
     app.register_blueprint(admin_bp, url_prefix="/api")
     app.register_blueprint(templates_bp, url_prefix="/api")
     app.register_blueprint(assets_bp, url_prefix="/api")
+    app.register_blueprint(barcodes_bp, url_prefix="/api")
 
     # CLI
     register_cli(app)

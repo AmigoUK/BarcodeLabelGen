@@ -95,7 +95,12 @@
     "undo": "Undo",
     "redo": "Redo",
     "autosaving": "Autosaving…",
-    "autosavedAt": "Autosaved at {{time}}"
+    "autosavedAt": "Autosaved at {{time}}",
+    "barcode": "Barcode",
+    "barcodeType": "Code type",
+    "barcodeData": "Barcode data",
+    "dynamicHint": "Use {{'{{column_name}}'}} to insert a dynamic field (replaced by CSV/Excel data in the batch generator).",
+    "dynamicFields": "Detected dynamic fields:"
   },
   "admin": {
     "users": {

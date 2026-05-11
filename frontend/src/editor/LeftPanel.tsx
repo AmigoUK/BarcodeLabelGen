@@ -82,6 +82,25 @@ export function LeftPanel() {
       <Button
         variant="secondary"
         className="w-full justify-start"
+        onClick={() =>
+          addObject({
+            id: newObjectId(),
+            type: "barcode",
+            x: Math.max(2, centerX - 25),
+            y: Math.max(2, centerY - 10),
+            width: 50,
+            height: 20,
+            barcodeType: "ean13",
+            data: "590123456789",
+          })
+        }
+      >
+        ▤ &nbsp; {t("editor.barcode")}
+      </Button>
+
+      <Button
+        variant="secondary"
+        className="w-full justify-start"
         onClick={() => fileRef.current?.click()}
         disabled={upload.isPending}
       >

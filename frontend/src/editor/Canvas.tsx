@@ -1,6 +1,7 @@
 import Konva from "konva";
 import { useEffect, useLayoutEffect, useRef, useState } from "react";
 import { Layer, Rect, Stage, Transformer } from "react-konva";
+import { BarcodeObject } from "./objects/BarcodeObject";
 import { ImageObject } from "./objects/ImageObject";
 import { LineObject } from "./objects/LineObject";
 import { RectObject } from "./objects/RectObject";
@@ -147,6 +148,18 @@ export function Canvas() {
                   />
                 );
               }
+              if (o.type === "barcode") {
+                return (
+                  <BarcodeObject
+                    key={o.id}
+                    object={o}
+                    scale={scale}
+                    draggable
+                    onSelect={() => select(o.id)}
+                    onChange={(patch) => updateObject(o.id, patch)}
+                  />
+                );
+              }
               return null;
             })}
             <Transformer
@@ -162,8 +175,8 @@ export function Canvas() {
       )}
       {canvas && (
         <div className="pointer-events-none absolute bottom-2 right-3 rounded bg-slate-950/70 px-2 py-1 text-xs text-slate-400">
-          {canvas.stage.width_mm} × {canvas.stage.height_mm} mm ·{" "}
-          {Math.round(scale * 100) / 100} px/mm
+          {canvas.stage.width_mm} × {canvas.stage.height_mm} mm · {Math.round(scale * 100) / 100}{" "}
+          px/mm
         </div>
       )}
     </div>

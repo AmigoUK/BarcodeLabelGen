@@ -3,7 +3,54 @@ import { Input } from "../components/ui/Input";
 import { Select } from "../components/ui/Select";
 import { Button } from "../components/ui/Button";
 import { useEditorStore } from "./store";
-import type { EditorObject, ImageObject, LineObject, RectObject, TextObject } from "./types";
+import type {
+  BarcodeObject,
+  BarcodeType,
+  EditorObject,
+  ImageObject,
+  LineObject,
+  RectObject,
+  TextObject,
+} from "./types";
+
+const BARCODE_TYPES: { value: BarcodeType; label: string }[] = [
+  { value: "ean13", label: "EAN-13" },
+  { value: "ean14", label: "EAN-14" },
+  { value: "gtin", label: "GTIN" },
+  { value: "code128", label: "Code 128" },
+  { value: "gs1_128", label: "GS1-128 (EAN-128)" },
+  { value: "qr", label: "QR" },
+];
+
+function detectPlaceholders(value: string): string[] {
+  const out = new Set<string>();
+  const pattern = /\{\{\s*([^}]+?)\s*\}\}/g;
+  let m: RegExpExecArray | null;
+  while ((m = pattern.exec(value)) !== null) {
+    out.add(m[1]);
+  }
+  return Array.from(out);
+}
+
+function PlaceholderChips({ value, label }: { value: string; label: string }) {
+  const fields = detectPlaceholders(value);
+  if (fields.length === 0) return null;
+  return (
+    <div className="mt-1 space-y-1">
+      <p className="text-xs text-slate-500">{label}</p>
+      <div className="flex flex-wrap gap-1">
+        {fields.map((f) => (
+          <span
+            key={f}
+            className="rounded bg-indigo-900/40 px-2 py-0.5 font-mono text-xs text-indigo-300"
+          >
+            {`{{${f}}}`}
+          </span>
+        ))}
+      </div>
+    </div>
+  );
+}
 
 export function RightPanel() {
   const { t } = useTranslation();
@@ -36,6 +83,9 @@ export function RightPanel() {
           )}
           {selected.type === "line" && (
             <LineProps obj={selected} update={(p) => updateObject(selected.id, p)} />
+          )}
+          {selected.type === "barcode" && (
+            <BarcodeProps obj={selected} update={(p) => updateObject(selected.id, p)} />
           )}
 
           <div className="pt-3">
@@ -83,6 +133,8 @@ function TextProps({ obj, update }: { obj: TextObject; update: (p: Partial<TextO
           onChange={(e) => update({ text: e.target.value })}
           className="block w-full rounded-md border border-slate-700 bg-slate-900 px-3 py-2 text-sm text-slate-100 focus:outline-none focus:ring-2 focus:ring-indigo-400"
         />
+        <p className="mt-1 text-xs text-slate-500">{t("editor.dynamicHint")}</p>
+        <PlaceholderChips value={obj.text} label={t("editor.dynamicFields")} />
       </div>
       <div className="grid grid-cols-2 gap-2">
         <NumberInput
@@ -238,6 +290,60 @@ function ImageProps({
         />
       </div>
       <p className="text-xs text-slate-500">asset #{obj.assetId}</p>
+    </div>
+  );
+}
+
+function BarcodeProps({
+  obj,
+  update,
+}: {
+  obj: BarcodeObject;
+  update: (p: Partial<BarcodeObject>) => void;
+}) {
+  const { t } = useTranslation();
+  return (
+    <div className="space-y-3 border-t border-slate-800 pt-3">
+      <Select
+        label={t("editor.barcodeType")}
+        value={obj.barcodeType}
+        onChange={(e) => update({ barcodeType: e.target.value as BarcodeType })}
+      >
+        {BARCODE_TYPES.map((b) => (
+          <option key={b.value} value={b.value}>
+            {b.label}
+          </option>
+        ))}
+      </Select>
+      <div>
+        <label className="mb-1 block text-sm font-medium text-slate-200">
+          {t("editor.barcodeData")}
+        </label>
+        <textarea
+          value={obj.data}
+          rows={2}
+          onChange={(e) => update({ data: e.target.value })}
+          className="block w-full rounded-md border border-slate-700 bg-slate-900 px-3 py-2 font-mono text-sm text-slate-100 focus:outline-none focus:ring-2 focus:ring-indigo-400"
+        />
+        <p className="mt-1 text-xs text-slate-500">{t("editor.dynamicHint")}</p>
+        <PlaceholderChips value={obj.data} label={t("editor.dynamicFields")} />
+      </div>
+      <div className="grid grid-cols-2 gap-2">
+        <NumberInput
+          label={t("editor.widthMm")}
+          step={0.5}
+          min={5}
+          value={obj.width}
+          onChange={(width) => update({ width })}
+        />
+        <NumberInput
+          label={t("editor.heightMm")}
+          step={0.5}
+          min={5}
+          value={obj.height}
+          onChange={(height) => update({ height })}
+        />
+      </div>
     </div>
   );
 }
