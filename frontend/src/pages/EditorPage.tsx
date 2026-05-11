@@ -1,4 +1,4 @@
-import { useCallback, useEffect } from "react";
+import { useCallback, useEffect, useRef } from "react";
 import { useTranslation } from "react-i18next";
 import { useParams } from "react-router-dom";
 import { Canvas } from "../editor/Canvas";
@@ -27,19 +27,28 @@ export function EditorPage() {
   const undo = useEditorStore((s) => s.undo);
   const redo = useEditorStore((s) => s.redo);
 
-  // Hydrate the editor from the loaded template (once per template).
+  // Hydrate the editor ONCE per template — when the user navigates to a
+  // different template id. Re-hydrating after every save would clobber any
+  // edits the user made while the save request was in flight.
+  const loadedTemplateRef = useRef<number | null>(null);
   useEffect(() => {
-    if (template.data) {
+    if (template.data && loadedTemplateRef.current !== template.data.id) {
       setCanvas(template.data.canvas_data);
+      loadedTemplateRef.current = template.data.id;
     }
   }, [template.data, setCanvas]);
 
   // Save fn shared by manual button + autosave + Ctrl+S.
+  // Only marks the editor clean if the user hasn't made further edits while
+  // the request was in flight — otherwise dirty stays true and the next
+  // autosave/Save picks up the newer canvas.
   const saveCanvas = useCallback(
     async (c: CanvasData) => {
       if (!templateId) return;
       await update.mutateAsync({ id: templateId, patch: { canvas_data: c } });
-      markClean();
+      if (useEditorStore.getState().canvas === c) {
+        markClean();
+      }
     },
     [templateId, update, markClean],
   );
