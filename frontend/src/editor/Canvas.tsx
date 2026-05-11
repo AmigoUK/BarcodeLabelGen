@@ -62,18 +62,21 @@ export function Canvas() {
     transformer.getLayer()?.batchDraw();
   }, [selectedId, canvas]);
 
-  if (!canvas) return null;
-
-  const scale = fitScale(containerSize, canvas.stage);
-  const stagePxW = canvas.stage.width_mm * scale;
-  const stagePxH = canvas.stage.height_mm * scale;
+  // Always render the container div so the ref attaches synchronously and
+  // the measurement effects (which run once on mount) see real DOM. If we
+  // returned null while the canvas was loading, the very first paint would
+  // measure a missing element and lock containerSize at {0, 0} — the Stage
+  // would then never appear.
+  const scale = canvas ? fitScale(containerSize, canvas.stage) : 0;
+  const stagePxW = canvas ? canvas.stage.width_mm * scale : 0;
+  const stagePxH = canvas ? canvas.stage.height_mm * scale : 0;
 
   return (
     <div
       ref={containerRef}
       className="relative flex min-h-0 min-w-0 flex-1 items-center justify-center overflow-hidden bg-slate-900"
     >
-      {scale > 0 && (
+      {canvas && scale > 0 && (
         <Stage
           ref={stageRef}
           width={stagePxW}
@@ -157,10 +160,12 @@ export function Canvas() {
           </Layer>
         </Stage>
       )}
-      <div className="pointer-events-none absolute bottom-2 right-3 rounded bg-slate-950/70 px-2 py-1 text-xs text-slate-400">
-        {canvas.stage.width_mm} × {canvas.stage.height_mm} mm · {Math.round(scale * 100) / 100}{" "}
-        px/mm
-      </div>
+      {canvas && (
+        <div className="pointer-events-none absolute bottom-2 right-3 rounded bg-slate-950/70 px-2 py-1 text-xs text-slate-400">
+          {canvas.stage.width_mm} × {canvas.stage.height_mm} mm ·{" "}
+          {Math.round(scale * 100) / 100} px/mm
+        </div>
+      )}
     </div>
   );
 }
