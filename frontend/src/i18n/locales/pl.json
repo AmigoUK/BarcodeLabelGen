@@ -53,7 +53,44 @@
   "dashboard": {
     "title": "Pulpit",
     "welcome": "Witaj, {{email}}!",
-    "comingSoon": "Edytor i pozostałe funkcje pojawią się w kolejnych sprintach."
+    "comingSoon": "Otwórz Szablony aby utworzyć pierwszą etykietę."
+  },
+  "templates": {
+    "new": "Nowy szablon",
+    "name": "Nazwa szablonu",
+    "format": "Format etykiety",
+    "choose": "wybierz",
+    "empty": "Nie masz jeszcze żadnych szablonów. Kliknij „Nowy szablon”, aby zacząć.",
+    "confirmDelete": "Usunąć szablon „{{name}}”?"
+  },
+  "editor": {
+    "add": "Dodaj",
+    "text": "Tekst",
+    "rect": "Prostokąt",
+    "image": "Obraz",
+    "newText": "Nowy tekst",
+    "properties": "Właściwości",
+    "selectToEdit": "Wybierz element na płótnie, aby edytować jego właściwości.",
+    "textValue": "Treść",
+    "fontFamily": "Czcionka",
+    "fontSizeMm": "Rozmiar (mm)",
+    "fill": "Wypełnienie",
+    "stroke": "Obrys",
+    "strokeMm": "Obrys (mm)",
+    "widthMm": "Szerokość (mm)",
+    "heightMm": "Wysokość (mm)",
+    "bold": "Pogrubienie",
+    "italic": "Kursywa",
+    "normal": "Normalne",
+    "boldYes": "Pogrubione",
+    "italicYes": "Kursywa",
+    "align": "Wyrównanie",
+    "alignLeft": "Do lewej",
+    "alignCenter": "Wyśrodkowane",
+    "alignRight": "Do prawej",
+    "save": "Zapisz",
+    "unsaved": "Niezapisane zmiany",
+    "loadFailed": "Nie udało się wczytać szablonu."
   },
   "admin": {
     "users": {

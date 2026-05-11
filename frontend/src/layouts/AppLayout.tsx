@@ -39,6 +39,7 @@ export function AppLayout({ children }: Props) {
         </Link>
         <nav className="flex flex-col gap-1">
           {navItem("/", t("nav.dashboard"))}
+          {navItem("/templates", t("nav.templates"))}
           {me?.role === "admin" && (
             <>
               <div className="mt-4 px-3 text-xs uppercase tracking-wider text-slate-500">

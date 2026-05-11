@@ -53,7 +53,44 @@
   "dashboard": {
     "title": "Dashboard",
     "welcome": "Welcome, {{email}}!",
-    "comingSoon": "Editor and remaining features arrive in upcoming sprints."
+    "comingSoon": "Open Templates to design your first label."
+  },
+  "templates": {
+    "new": "New template",
+    "name": "Template name",
+    "format": "Label format",
+    "choose": "choose",
+    "empty": "You don't have any templates yet. Click \"New template\" to start.",
+    "confirmDelete": "Delete template \"{{name}}\"?"
+  },
+  "editor": {
+    "add": "Add",
+    "text": "Text",
+    "rect": "Rectangle",
+    "image": "Image",
+    "newText": "New text",
+    "properties": "Properties",
+    "selectToEdit": "Select an element on the canvas to edit its properties.",
+    "textValue": "Text",
+    "fontFamily": "Font",
+    "fontSizeMm": "Size (mm)",
+    "fill": "Fill",
+    "stroke": "Stroke",
+    "strokeMm": "Stroke (mm)",
+    "widthMm": "Width (mm)",
+    "heightMm": "Height (mm)",
+    "bold": "Weight",
+    "italic": "Style",
+    "normal": "Normal",
+    "boldYes": "Bold",
+    "italicYes": "Italic",
+    "align": "Align",
+    "alignLeft": "Left",
+    "alignCenter": "Center",
+    "alignRight": "Right",
+    "save": "Save",
+    "unsaved": "Unsaved changes",
+    "loadFailed": "Failed to load template."
   },
   "admin": {
     "users": {
