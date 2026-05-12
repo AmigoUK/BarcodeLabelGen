@@ -2,14 +2,33 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { api } from "../lib/api";
 import { readCsrfCookie } from "../lib/csrf";
 
+export type SqliteTableInfo = {
+  name: string;
+  columns: string[];
+  row_count: number;
+};
+
 export type DataSet = {
   id: number;
   original_filename: string;
-  file_format: "csv" | "xlsx";
+  /** Literal extension token; SQLite uploads keep their own ext ('db'/'sqlite'/'sqlite3'). */
+  file_format: string;
+  source_type: "csv" | "xlsx" | "sqlite";
   columns: string[];
   row_count: number;
   size_bytes: number;
   uploaded_at: string;
+  sqlite_table: string | null;
+  sqlite_query: string | null;
+  /** Present only on the upload-response for SQLite files — drives the wizard's
+   *  table-picker step. Not persisted, not returned by GET. */
+  sqlite_tables?: SqliteTableInfo[];
+};
+
+export type SqliteConfigInput = {
+  datasetId: number;
+  table?: string;
+  query?: string;
 };
 
 export type FilterOp = "eq" | "neq" | "contains" | "gt" | "lt" | "empty" | "non_empty";
@@ -65,6 +84,21 @@ export function useDatasetPreview(datasetId: number | null, rows = 5) {
         `/api/datasets/${datasetId}/preview?rows=${rows}`,
       ),
     enabled: datasetId !== null,
+  });
+}
+
+export function useConfigureSqlite() {
+  const qc = useQueryClient();
+  return useMutation({
+    mutationFn: ({ datasetId, table, query }: SqliteConfigInput) =>
+      api<DataSet>(`/api/datasets/${datasetId}/sqlite-config`, {
+        method: "PATCH",
+        body: JSON.stringify({ table, query }),
+      }),
+    onSuccess: (_, vars) => {
+      void qc.invalidateQueries({ queryKey: DATASETS_KEY });
+      void qc.invalidateQueries({ queryKey: ["datasets", vars.datasetId] });
+    },
   });
 }
 

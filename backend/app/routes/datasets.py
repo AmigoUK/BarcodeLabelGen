@@ -9,7 +9,14 @@ from pydantic import ValidationError
 
 from app.api_helpers import validation_error_response
 from app.db.session import get_session
-from app.schemas.dataset import DataSetPublic, FilterRequest, FilterResponse
+from app.models.dataset import DataSetSourceType
+from app.schemas.dataset import (
+    DataSetPublic,
+    FilterRequest,
+    FilterResponse,
+    SqliteConfigRequest,
+    SqliteTableInfo,
+)
 from app.services import datasets as ds_svc
 
 datasets_bp = Blueprint("datasets", __name__)
@@ -44,7 +51,15 @@ def upload_dataset() -> ResponseReturnValue:
     except ds_svc.DataSetUploadError as exc:
         return jsonify({"error": "upload_rejected", "detail": str(exc)}), 400
 
-    return jsonify(DataSetPublic.model_validate(ds).model_dump(mode="json")), 201
+    body = DataSetPublic.model_validate(ds).model_dump(mode="json")
+    if ds.source_type is DataSetSourceType.SQLITE:
+        # Attach the table list as a transient field so the wizard can render
+        # the picker immediately. Not persisted, not returned by GET.
+        tables = ds_svc.sqlite_tables_for(ds)
+        body["sqlite_tables"] = [
+            SqliteTableInfo.model_validate(t).model_dump(mode="json") for t in tables
+        ]
+    return jsonify(body), 201
 
 
 @datasets_bp.get("/datasets/<int:dataset_id>")
@@ -80,6 +95,30 @@ def preview_dataset(dataset_id: int) -> ResponseReturnValue:
     except ValueError:
         limit = 5
     return jsonify({"rows": ds_svc.preview_rows(ds, limit=limit), "total": ds.row_count})
+
+
+@datasets_bp.patch("/datasets/<int:dataset_id>/sqlite-config")
+@login_required
+def configure_sqlite_dataset(dataset_id: int) -> ResponseReturnValue:
+    """Finalize a SQLite dataset by selecting a table or storing a SELECT."""
+    session = get_session()
+    ds = ds_svc.get_dataset(session, dataset_id)
+    if ds is None or ds.owner_id != current_user.id:
+        return jsonify({"error": "dataset_not_found"}), 404
+    if ds.source_type is not DataSetSourceType.SQLITE:
+        return jsonify({"error": "not_a_sqlite_dataset"}), 400
+
+    try:
+        payload = SqliteConfigRequest.model_validate(request.get_json(silent=True) or {})
+    except ValidationError as exc:
+        return validation_error_response(exc)
+
+    try:
+        ds = ds_svc.configure_sqlite(session, ds, table=payload.table, query=payload.query)
+    except ds_svc.DataSetUploadError as exc:
+        return jsonify({"error": "sqlite_config_rejected", "detail": str(exc)}), 400
+
+    return jsonify(DataSetPublic.model_validate(ds).model_dump(mode="json"))
 
 
 @datasets_bp.post("/datasets/<int:dataset_id>/filter")

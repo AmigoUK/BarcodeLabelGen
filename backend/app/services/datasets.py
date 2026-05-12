@@ -19,10 +19,13 @@ import pandas as pd
 from sqlalchemy import select
 from sqlalchemy.orm import Session
 
-from app.models.dataset import DataSet
+from app.models.dataset import DataSet, DataSetSourceType
+from app.services import sqlite_source
 
 ALLOWED_EXT = {"csv", "xls", "xlsx"}
-MAX_SIZE_BYTES = 10 * 1024 * 1024  # 10 MB per PROJECT.md §F10
+SQLITE_EXT = sqlite_source.ALLOWED_EXTS  # {"db","sqlite","sqlite3"}
+MAX_SIZE_BYTES = 10 * 1024 * 1024  # 10 MB per PROJECT.md §F10 (CSV/XLSX)
+MAX_SIZE_BYTES_SQLITE = sqlite_source.MAX_SIZE_BYTES  # 50 MB
 MAX_ROWS = 1000  # MVP cap
 
 
@@ -45,10 +48,25 @@ def uploads_dir() -> Path:
 
 
 def _detect_format(filename: str) -> str:
+    """Return canonical file_format token for the extension.
+
+    Tabular extensions normalize to 'csv' / 'xlsx'. SQLite extensions keep
+    their literal form ('db' / 'sqlite' / 'sqlite3') — purely informational.
+    """
     ext = filename.rsplit(".", 1)[-1].lower() if "." in filename else ""
+    if ext in SQLITE_EXT:
+        return ext
     if ext not in ALLOWED_EXT:
         raise DataSetUploadError(f"extension .{ext} not allowed")
     return "csv" if ext == "csv" else "xlsx"
+
+
+def _source_type_for(file_format: str) -> DataSetSourceType:
+    if file_format in SQLITE_EXT:
+        return DataSetSourceType.SQLITE
+    if file_format == "csv":
+        return DataSetSourceType.CSV
+    return DataSetSourceType.XLSX
 
 
 def _read_dataframe(file_path: Path, file_format: str) -> pd.DataFrame:
@@ -68,15 +86,45 @@ def save_upload(
 ) -> DataSet:
     if not raw:
         raise DataSetUploadError("empty upload")
-    if len(raw) > MAX_SIZE_BYTES:
-        raise DataSetUploadError(f"file exceeds {MAX_SIZE_BYTES} bytes limit")
 
     file_format = _detect_format(original_filename)
+    source_type = _source_type_for(file_format)
+
+    size_limit = MAX_SIZE_BYTES_SQLITE if source_type is DataSetSourceType.SQLITE else MAX_SIZE_BYTES
+    if len(raw) > size_limit:
+        raise DataSetUploadError(f"file exceeds {size_limit} bytes limit")
+
     storage_filename = f"{uuid.uuid4().hex}.{file_format}"
     target = uploads_dir() / storage_filename
     target.parent.mkdir(parents=True, exist_ok=True)
     target.write_bytes(raw)
 
+    if source_type is DataSetSourceType.SQLITE:
+        # Don't materialize rows yet — the user still has to pick a table or
+        # write a SELECT. Just sanity-check that the file actually opens as a
+        # SQLite database (caught here so we surface a clean 400, not an
+        # opaque crash later in the wizard).
+        if not sqlite_source.is_valid_sqlite_file(target):
+            target.unlink(missing_ok=True)
+            raise DataSetUploadError("file is not a valid SQLite database")
+        ds = DataSet(
+            owner_id=owner_id,
+            original_filename=original_filename,
+            storage_filename=storage_filename,
+            file_format=file_format,
+            source_type=source_type,
+            columns=[],
+            row_count=0,
+            size_bytes=len(raw),
+        )
+        session.add(ds)
+        session.commit()
+        session.refresh(ds)
+        return ds
+
+    # CSV / XLSX path — parse immediately so the upload response already
+    # carries columns + row_count and the wizard can advance to the mapping
+    # step without an extra round-trip.
     try:
         df = _read_dataframe(target, file_format)
     except Exception as exc:  # noqa: BLE001 — anything could go wrong inside pandas
@@ -96,6 +144,7 @@ def save_upload(
         original_filename=original_filename,
         storage_filename=storage_filename,
         file_format=file_format,
+        source_type=source_type,
         columns=columns,
         row_count=int(len(df)),
         size_bytes=len(raw),
@@ -126,13 +175,59 @@ def delete_dataset(session: Session, dataset_id: int) -> None:
 
 
 def load_rows(ds: DataSet) -> list[dict[str, str]]:
-    """Read the dataset back into a list of plain-string row dicts."""
+    """Read the dataset back into a list of plain-string row dicts.
+
+    Dispatch on source_type so callers don't care which format the user
+    uploaded — they always receive `list[dict[str, str]]`.
+    """
+    if ds.source_type is DataSetSourceType.SQLITE:
+        return sqlite_source.load_rows(ds)
     file_path = uploads_dir() / ds.storage_filename
     if not file_path.is_file():
         return []
     df = _read_dataframe(file_path, ds.file_format)
     df = df.astype(str)
     return df.to_dict(orient="records")  # type: ignore[no-any-return]
+
+
+def configure_sqlite(
+    session: Session, ds: DataSet, *, table: str | None, query: str | None
+) -> DataSet:
+    """Finalize a SQLite-source dataset by selecting a table or storing a SELECT.
+
+    Validates the choice by actually executing it (RO connection + LIMIT
+    cap), then persists the resulting columns + row_count snapshot on the
+    DataSet so the wizard's mapping step has the metadata it needs.
+
+    Raises `DataSetUploadError` on validation failure (caller turns into 400).
+    """
+    if ds.source_type is not DataSetSourceType.SQLITE:
+        raise DataSetUploadError("sqlite-config only applies to SQLite datasets")
+
+    path = uploads_dir() / ds.storage_filename
+    try:
+        columns, row_count = sqlite_source.snapshot(path, table=table, query=query)
+    except sqlite_source.SqliteSourceError as exc:
+        raise DataSetUploadError(str(exc)) from exc
+
+    if row_count == 0:
+        # Renderer would have nothing to do — surface this now rather than at /generate.
+        raise DataSetUploadError("query/table returned 0 rows")
+
+    ds.sqlite_table = table.strip() if table else None
+    ds.sqlite_query = query.strip() if query else None
+    ds.columns = columns
+    ds.row_count = row_count
+    session.commit()
+    session.refresh(ds)
+    return ds
+
+
+def sqlite_tables_for(ds: DataSet) -> list[sqlite_source.SqliteTableInfo]:
+    """Re-read the SQLite file's table list for the wizard's picker."""
+    if ds.source_type is not DataSetSourceType.SQLITE:
+        return []
+    return sqlite_source.list_tables(uploads_dir() / ds.storage_filename)
 
 
 def preview_rows(ds: DataSet, *, limit: int = 5) -> list[dict[str, str]]:

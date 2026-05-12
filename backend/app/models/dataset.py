@@ -1,11 +1,12 @@
-"""DataSet — an uploaded XLS/CSV the user maps onto template placeholders."""
+"""DataSet — uploaded data source (CSV / XLSX / SQLite) the user maps onto template placeholders."""
 
 from __future__ import annotations
 
+import enum
 from datetime import UTC, datetime
 from typing import Any
 
-from sqlalchemy import JSON, DateTime, ForeignKey, Integer, String
+from sqlalchemy import JSON, DateTime, Enum as SAEnum, ForeignKey, Integer, String, Text
 from sqlalchemy.dialects.postgresql import JSONB
 from sqlalchemy.orm import Mapped, mapped_column
 
@@ -18,6 +19,12 @@ def _utcnow() -> datetime:
     return datetime.now(UTC)
 
 
+class DataSetSourceType(str, enum.Enum):
+    CSV = "csv"
+    XLSX = "xlsx"
+    SQLITE = "sqlite"
+
+
 class DataSet(Base):
     __tablename__ = "datasets"
 
@@ -27,7 +34,16 @@ class DataSet(Base):
     )
     original_filename: Mapped[str] = mapped_column(String(255), nullable=False)
     storage_filename: Mapped[str] = mapped_column(String(255), nullable=False)
-    file_format: Mapped[str] = mapped_column(String(10), nullable=False)  # 'csv' | 'xlsx'
+    file_format: Mapped[str] = mapped_column(String(10), nullable=False)
+    source_type: Mapped[DataSetSourceType] = mapped_column(
+        SAEnum(DataSetSourceType, name="dataset_source_type", values_callable=lambda e: [m.value for m in e]),
+        nullable=False,
+        default=DataSetSourceType.CSV,
+    )
+    # SQLite-only: the table OR the SELECT to read at render time.
+    # At most one is set (DB-level CHECK); both NULL means "uploaded but not yet configured".
+    sqlite_table: Mapped[str | None] = mapped_column(String(128), nullable=True)
+    sqlite_query: Mapped[str | None] = mapped_column(Text, nullable=True)
 
     # Snapshot of structure so the wizard can show columns without re-parsing.
     columns: Mapped[list[Any]] = mapped_column(JsonField, nullable=False)

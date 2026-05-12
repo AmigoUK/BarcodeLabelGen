@@ -17,7 +17,9 @@ import {
   type DataSet,
   type FilterOp,
   type FilterSpec,
+  type SqliteTableInfo,
   downloadJobPdf,
+  useConfigureSqlite,
   useFilterDataset,
   useJobStatus,
   useSubmitBatch,
@@ -66,6 +68,7 @@ export function SeriesWizard({ templateId, templateName, canvas, onClose }: Prop
   const [jobId, setJobId] = useState<string | null>(null);
 
   const upload = useUploadDataset();
+  const configureSqlite = useConfigureSqlite();
   const filterMutation = useFilterDataset();
   const submit = useSubmitBatch();
   const jobQuery = useJobStatus(jobId);
@@ -88,7 +91,11 @@ export function SeriesWizard({ templateId, templateName, canvas, onClose }: Prop
     }
   }, [jobQuery.data, jobId, templateName]);
 
-  const canAdvanceFromUpload = dataset !== null;
+  // SQLite uploads start unconfigured (no columns yet) — must run PATCH /sqlite-config
+  // before the mapping step has anything to map onto.
+  const isSqliteUnconfigured =
+    dataset !== null && dataset.source_type === "sqlite" && dataset.columns.length === 0;
+  const canAdvanceFromUpload = dataset !== null && !isSqliteUnconfigured;
   const canAdvanceFromMap = placeholders.every((ph) => mapping[ph]);
 
   return (
@@ -112,6 +119,25 @@ export function SeriesWizard({ templateId, templateName, canvas, onClose }: Prop
               setDataset(ds);
             } catch {
               /* error surfaced via uploadError */
+            }
+          }}
+          configuring={configureSqlite.isPending}
+          configureError={
+            configureSqlite.error
+              ? configureSqlite.error instanceof Error
+                ? configureSqlite.error.message
+                : String(configureSqlite.error)
+              : null
+          }
+          onConfigureSqlite={async (input) => {
+            try {
+              const updated = await configureSqlite.mutateAsync(input);
+              // Preserve the upload-only `sqlite_tables` field for re-config UX.
+              setDataset((prev) =>
+                prev ? { ...updated, sqlite_tables: prev.sqlite_tables } : updated,
+              );
+            } catch {
+              /* error surfaced via configureError */
             }
           }}
         />
@@ -246,14 +272,28 @@ function UploadStep({
   uploadError,
   uploading,
   onFile,
+  configuring,
+  configureError,
+  onConfigureSqlite,
 }: {
   dataset: DataSet | null;
   uploadError: string | null;
   uploading: boolean;
   onFile: (f: File) => Promise<void>;
+  configuring: boolean;
+  configureError: string | null;
+  onConfigureSqlite: (input: {
+    datasetId: number;
+    table?: string;
+    query?: string;
+  }) => Promise<void>;
 }) {
   const { t } = useTranslation();
   const fileRef = useRef<HTMLInputElement>(null);
+
+  const isSqlite = dataset?.source_type === "sqlite";
+  const isConfigured = !!dataset && dataset.columns.length > 0;
+
   return (
     <div className="space-y-3">
       <p className="text-sm text-slate-300">{t("series.uploadIntro")}</p>
@@ -263,7 +303,7 @@ function UploadStep({
       <input
         ref={fileRef}
         type="file"
-        accept=".csv,.xls,.xlsx,text/csv,application/vnd.ms-excel,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+        accept=".csv,.xls,.xlsx,.db,.sqlite,.sqlite3,text/csv,application/vnd.ms-excel,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet,application/x-sqlite3,application/vnd.sqlite3"
         className="hidden"
         onChange={(e) => {
           const f = e.target.files?.[0];
@@ -276,14 +316,141 @@ function UploadStep({
           {uploadError}
         </p>
       )}
-      {dataset && (
+
+      {dataset && isSqlite && (
+        <SqliteConfigPanel
+          dataset={dataset}
+          configuring={configuring}
+          configureError={configureError}
+          onConfigure={onConfigureSqlite}
+        />
+      )}
+
+      {dataset && (!isSqlite || isConfigured) && (
         <div className="rounded border border-emerald-900 bg-emerald-950/30 p-3 text-sm text-emerald-200">
           <p className="font-medium">{dataset.original_filename}</p>
           <p className="text-xs text-emerald-300">
             {dataset.row_count} {t("series.rows")} {" / "}
             {dataset.columns.length} {t("series.columns")}: {dataset.columns.join(", ")}
           </p>
+          {isSqlite && dataset.sqlite_table && (
+            <p className="mt-1 text-xs text-emerald-400">
+              {t("series.sqliteSourceTable")}:{" "}
+              <span className="font-mono">{dataset.sqlite_table}</span>
+            </p>
+          )}
+          {isSqlite && dataset.sqlite_query && (
+            <p className="mt-1 break-all text-xs text-emerald-400">
+              {t("series.sqliteSourceQuery")}:{" "}
+              <span className="font-mono">{dataset.sqlite_query}</span>
+            </p>
+          )}
         </div>
+      )}
+    </div>
+  );
+}
+
+function SqliteConfigPanel({
+  dataset,
+  configuring,
+  configureError,
+  onConfigure,
+}: {
+  dataset: DataSet;
+  configuring: boolean;
+  configureError: string | null;
+  onConfigure: (input: { datasetId: number; table?: string; query?: string }) => Promise<void>;
+}) {
+  const { t } = useTranslation();
+  const tables: SqliteTableInfo[] = dataset.sqlite_tables ?? [];
+  const [mode, setMode] = useState<"table" | "query">("table");
+  const [selectedTable, setSelectedTable] = useState<string>(
+    dataset.sqlite_table ?? tables[0]?.name ?? "",
+  );
+  const [customQuery, setCustomQuery] = useState<string>(
+    dataset.sqlite_query ?? "SELECT * FROM your_table",
+  );
+
+  return (
+    <div className="space-y-3 rounded border border-indigo-900 bg-indigo-950/30 p-3">
+      <p className="text-sm text-indigo-200">{t("series.sqliteIntro")}</p>
+
+      <div className="space-y-2">
+        <label className="block text-xs font-medium uppercase tracking-wide text-indigo-300">
+          {t("series.sqlitePickTable")}
+        </label>
+        {tables.length === 0 ? (
+          <p className="text-xs text-indigo-400">{t("series.sqliteNoTables")}</p>
+        ) : (
+          <Select
+            value={mode === "table" ? selectedTable : ""}
+            onChange={(e) => {
+              setMode("table");
+              setSelectedTable(e.target.value);
+            }}
+          >
+            {tables.map((tbl) => (
+              <option key={tbl.name} value={tbl.name}>
+                {tbl.name} ({tbl.columns.length} {t("series.columns")}, {tbl.row_count}{" "}
+                {t("series.rows")})
+              </option>
+            ))}
+          </Select>
+        )}
+      </div>
+
+      <details className="rounded border border-indigo-900/60 bg-slate-900/40 p-2">
+        <summary
+          className="cursor-pointer text-xs font-medium text-indigo-300"
+          onClick={() => setMode("query")}
+        >
+          {t("series.sqliteAdvanced")}
+        </summary>
+        <div className="mt-2 space-y-2">
+          <textarea
+            value={customQuery}
+            onChange={(e) => {
+              setMode("query");
+              setCustomQuery(e.target.value);
+            }}
+            placeholder={t("series.sqliteQueryPlaceholder")}
+            rows={5}
+            className="w-full rounded border border-slate-700 bg-slate-950 px-2 py-1.5 font-mono text-xs text-slate-200 focus:border-indigo-500 focus:outline-none"
+            spellCheck={false}
+          />
+          <p className="text-[10px] text-slate-500">{t("series.sqliteAdvancedHint")}</p>
+        </div>
+      </details>
+
+      <div className="flex items-center gap-3">
+        <Button
+          onClick={() =>
+            void onConfigure(
+              mode === "table"
+                ? { datasetId: dataset.id, table: selectedTable }
+                : { datasetId: dataset.id, query: customQuery },
+            )
+          }
+          disabled={
+            configuring ||
+            (mode === "table" && !selectedTable) ||
+            (mode === "query" && !customQuery.trim())
+          }
+        >
+          {configuring ? t("common.loading") : t("series.sqliteApply")}
+        </Button>
+        {dataset.columns.length > 0 && (
+          <span className="text-xs text-emerald-400">
+            ✓ {dataset.row_count} {t("series.rows")}, {dataset.columns.length} {t("series.columns")}
+          </span>
+        )}
+      </div>
+
+      {configureError && (
+        <p className="rounded border border-rose-900 bg-rose-950/40 px-3 py-2 text-sm text-rose-300">
+          {configureError}
+        </p>
       )}
     </div>
   );
