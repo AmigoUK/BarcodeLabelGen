@@ -73,6 +73,7 @@ def create_job(
         "total": total,
         "pdf_path": None,
         "error": None,
+        "warnings": [],
     }
     _redis_client(redis_url).setex(_key(job_id), TTL_SECONDS, _serialize(state))
     return job_id
@@ -98,12 +99,14 @@ def run_in_thread(
     redis_url: str,
     job_id: str,
     *,
-    runner: Callable[[Callable[[int, int], None]], bytes],
+    runner: Callable[[Callable[[int, int], None], list[dict[str, Any]]], bytes],
     output_filename: str,
 ) -> None:
     """Spawn a daemon thread that runs `runner`, writes its output bytes to
     pdfs_dir(), and updates the job state along the way. `runner` is a
-    closure that takes a progress callback `(done, total) -> None`."""
+    closure that takes a progress callback `(done, total) -> None` and a
+    `warnings` list it appends soft-failure entries to (e.g. text-block
+    overflows)."""
 
     def _worker() -> None:
         _update(redis_url, job_id, {"status": JobStatus.RUNNING.value})
@@ -111,8 +114,9 @@ def run_in_thread(
         def _progress(done: int, total: int) -> None:
             _update(redis_url, job_id, {"progress": done, "total": total})
 
+        warnings: list[dict[str, Any]] = []
         try:
-            pdf_bytes = runner(_progress)
+            pdf_bytes = runner(_progress, warnings)
         except Exception as exc:  # noqa: BLE001
             _update(
                 redis_url,
@@ -131,6 +135,7 @@ def run_in_thread(
             {
                 "status": JobStatus.DONE.value,
                 "pdf_path": str(target.name),
+                "warnings": warnings,
             },
         )
 

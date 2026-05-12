@@ -149,6 +149,133 @@ def test_invalid_barcode_data_does_not_kill_other_objects() -> None:
     assert len(pdf) > 800
 
 
+def test_text_block_wraps_long_text_into_multiple_lines() -> None:
+    long_text = (
+        "Producent ABC oferuje wysokiej jakosci wyroby etykietowe "
+        "dostosowane do potrzeb przemyslu i handlu detalicznego."
+    )
+    canvas = {
+        "version": 1,
+        "stage": {"width_mm": 80, "height_mm": 80},
+        "objects": [
+            {
+                "id": "tb",
+                "type": "text",
+                "x": 5,
+                "y": 5,
+                "width": 50,
+                "height": 40,
+                "text": long_text,
+                "fontSize": 4,
+                "fontFamily": "Helvetica",
+                "fill": "#000",
+            }
+        ],
+    }
+    pdf = render_template_pdf(canvas, width_mm=80, height_mm=80)
+    assert pdf.startswith(PDF_MAGIC)
+
+    # Read back glyph y-positions; multiple distinct rows means wrapping
+    # actually happened.
+    import io as _io
+
+    import pdfplumber
+
+    with pdfplumber.open(_io.BytesIO(pdf)) as doc:
+        page = doc.pages[0]
+        rounded = sorted({round(c["top"]) for c in page.chars})
+    assert len(rounded) >= 3, f"expected ≥3 wrapped lines, got y-rows {rounded}"
+
+
+def test_text_block_autofit_no_warning_when_it_fits() -> None:
+    long_text = (
+        "Bardzo dlugi opis ktory na pewno nie zmiesci sie "
+        "w pudelku przy maksymalnej wielkosci czcionki."
+    )
+    canvas = {
+        "version": 1,
+        "stage": {"width_mm": 60, "height_mm": 30},
+        "objects": [
+            {
+                "id": "auto",
+                "type": "text",
+                "x": 2,
+                "y": 2,
+                "width": 50,
+                "height": 20,
+                "text": long_text,
+                "fontSize": 8,
+                "fontFamily": "Helvetica",
+                "fill": "#000",
+                "autoFit": True,
+                "minFontSize": 2.0,
+                "maxFontSize": 8.0,
+            }
+        ],
+    }
+    warnings: list[dict[str, Any]] = []
+    pdf = render_template_pdf(canvas, width_mm=60, height_mm=30, warnings=warnings)
+    assert pdf.startswith(PDF_MAGIC)
+    # AutoFit should find a size that fits — no warning expected.
+    assert warnings == []
+
+
+def test_text_block_warns_when_overflow_at_min_size() -> None:
+    huge_text = "X" * 400  # nothing fits in a 10×5 mm box, even at 2 mm
+    canvas = {
+        "version": 1,
+        "stage": {"width_mm": 30, "height_mm": 30},
+        "objects": [
+            {
+                "id": "overflow",
+                "type": "text",
+                "x": 1,
+                "y": 1,
+                "width": 10,
+                "height": 5,
+                "text": huge_text,
+                "fontSize": 4,
+                "fontFamily": "Helvetica",
+                "fill": "#000",
+                "autoFit": True,
+                "minFontSize": 2.0,
+                "maxFontSize": 6.0,
+            }
+        ],
+    }
+    warnings: list[dict[str, Any]] = []
+    pdf = render_template_pdf(canvas, width_mm=30, height_mm=30, warnings=warnings)
+    assert pdf.startswith(PDF_MAGIC)
+    assert len(warnings) == 1
+    assert warnings[0]["object_id"] == "overflow"
+    assert "didn't fit" in warnings[0]["message"]
+
+
+def test_legacy_text_object_unchanged_without_block_fields() -> None:
+    """Single-line TextObject (no width+height) keeps legacy behaviour
+    and never produces a warning, even with very long text."""
+    canvas = {
+        "version": 1,
+        "stage": {"width_mm": 100, "height_mm": 50},
+        "objects": [
+            {
+                "id": "leg",
+                "type": "text",
+                "x": 5,
+                "y": 10,
+                "text": "Single line that may run beyond the page; legacy mode does no wrapping",
+                "fontSize": 4,
+                "fontFamily": "Helvetica",
+                "fill": "#000",
+            }
+        ],
+    }
+    warnings: list[dict[str, Any]] = []
+    pdf = render_template_pdf(canvas, width_mm=100, height_mm=50, warnings=warnings)
+    assert pdf.startswith(PDF_MAGIC)
+    assert warnings == []
+
+
 def test_unknown_object_type_skipped() -> None:
     canvas = {
         "version": 1,

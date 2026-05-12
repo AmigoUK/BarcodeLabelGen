@@ -98,6 +98,14 @@
     "redo": "Redo",
     "autosaving": "Autosaving…",
     "autosavedAt": "Autosaved at {{time}}",
+    "textBlock": "Text block",
+    "textBlockSample": "Type a longer text here to see wrapping",
+    "autoFit": "Auto-fit font size",
+    "minFontSizeMm": "Min. size (mm)",
+    "maxFontSizeMm": "Max. size (mm)",
+    "overflowReportedAtRender": "Overflow warnings appear during PDF generation (not on the canvas).",
+    "pdfWarnings": "{{count}} warning(s)",
+    "pdfWarningsTooltip": "PDF was generated but some text didn't fit in its block.",
     "barcode": "Barcode",
     "barcodeType": "Code type",
     "barcodeData": "Barcode data",
@@ -147,7 +155,9 @@
     "generating": "Generating…",
     "done": "Done!",
     "failed": "Error",
-    "downloadStarted": "Download started."
+    "downloadStarted": "Download started.",
+    "warningsTitle": "{{count}} row(s) with text overflow",
+    "warningRow": "Row {{row}}:"
   },
   "admin": {
     "users": {

@@ -438,6 +438,7 @@ function GenerateStep({
     progress: number;
     total: number;
     error: string | null;
+    warnings?: { object_id: string; row?: number; message: string }[];
   } | null;
   submitting: boolean;
   submitError: string | null;
@@ -510,6 +511,25 @@ function GenerateStep({
           {status === "error" && job.error && <p className="text-xs text-rose-400">{job.error}</p>}
           {status === "done" && (
             <p className="text-xs text-emerald-400">{t("series.downloadStarted")}</p>
+          )}
+          {status === "done" && job.warnings && job.warnings.length > 0 && (
+            <div className="rounded-md border border-amber-900 bg-amber-950/40 p-3">
+              <p className="text-sm font-medium text-amber-200">
+                ⚠ {t("series.warningsTitle", { count: job.warnings.length })}
+              </p>
+              <ul className="mt-2 max-h-40 space-y-0.5 overflow-y-auto text-xs text-amber-300">
+                {job.warnings.map((w, i) => (
+                  <li key={`${w.row ?? "-"}-${w.object_id}-${i}`} className="font-mono">
+                    {w.row !== undefined && (
+                      <span className="text-amber-500">
+                        {t("series.warningRow", { row: w.row })}{" "}
+                      </span>
+                    )}
+                    <span className="text-amber-400">{w.object_id}:</span> {w.message}
+                  </li>
+                ))}
+              </ul>
+            </div>
           )}
         </div>
       )}

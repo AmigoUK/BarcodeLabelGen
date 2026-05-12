@@ -15,6 +15,7 @@ without splitting the API surface.
 
 from __future__ import annotations
 
+import json
 import re
 from collections.abc import Callable
 from typing import Any
@@ -116,12 +117,14 @@ def generate_pdf() -> ResponseReturnValue:
 
     # --- single-label sync mode -------------------------------------------
     if payload.dataset_id is None:
+        warnings: list[dict[str, Any]] = []
         try:
             pdf_bytes = render_template_pdf(
                 canvas_data,
                 width_mm=float(tpl.width_mm),
                 height_mm=float(tpl.height_mm),
                 resolve_asset=_resolve_asset_factory(),
+                warnings=warnings,
             )
         except PdfRenderError as exc:
             return jsonify({"error": "pdf_render_failed", "detail": str(exc)}), 500
@@ -130,6 +133,12 @@ def generate_pdf() -> ResponseReturnValue:
         response = Response(pdf_bytes, mimetype="application/pdf")
         response.headers["Content-Disposition"] = f'attachment; filename="{filename}"'
         response.headers["Cache-Control"] = "no-store"
+        if warnings:
+            # Side-channel: header carries JSON-encoded list of soft-failure
+            # entries (text overflow, etc.). Frontend reads it and shows a
+            # chip; the PDF download itself is unaffected.
+            response.headers["X-PDF-Warnings"] = json.dumps(warnings)
+            response.headers["Access-Control-Expose-Headers"] = "X-PDF-Warnings"
         return response
 
     # --- batch async mode --------------------------------------------------
@@ -164,7 +173,10 @@ def generate_pdf() -> ResponseReturnValue:
         total=len(projected),
     )
 
-    def _runner(progress_cb: Callable[[int, int], None]) -> bytes:
+    def _runner(
+        progress_cb: Callable[[int, int], None],
+        warnings: list[dict[str, Any]],
+    ) -> bytes:
         return render_batch_pdf(
             canvas_data,
             projected,
@@ -172,6 +184,7 @@ def generate_pdf() -> ResponseReturnValue:
             height_mm=height_mm,
             resolve_asset=resolve_asset,
             on_progress=progress_cb,
+            warnings=warnings,
         )
 
     output_filename = f"{job_id}_{_safe_filename(template_name)}.pdf"

@@ -95,6 +95,12 @@ export function useDeleteDataset() {
 
 export type JobStatus = "pending" | "running" | "done" | "error";
 
+export type JobWarning = {
+  object_id: string;
+  row?: number;
+  message: string;
+};
+
 export type JobState = {
   id: string;
   owner_id: number;
@@ -103,6 +109,7 @@ export type JobState = {
   progress: number;
   total: number;
   error: string | null;
+  warnings?: JobWarning[];
 };
 
 export function useSubmitBatch() {

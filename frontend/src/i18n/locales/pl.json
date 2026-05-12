@@ -98,6 +98,14 @@
     "redo": "Ponów",
     "autosaving": "Autozapis…",
     "autosavedAt": "Autozapisano {{time}}",
+    "textBlock": "Blok tekstu",
+    "textBlockSample": "Wpisz tutaj dłuższy tekst aby zobaczyć zawijanie",
+    "autoFit": "Automatyczne skalowanie tekstu",
+    "minFontSizeMm": "Min. czcionka (mm)",
+    "maxFontSizeMm": "Maks. czcionka (mm)",
+    "overflowReportedAtRender": "Ostrzeżenie o przepełnieniu pojawi się przy generowaniu PDF (nie na canvasie).",
+    "pdfWarnings": "{{count}} ostrzeżeń",
+    "pdfWarningsTooltip": "PDF został wygenerowany, ale część tekstu nie zmieściła się w bloku.",
     "barcode": "Kod kreskowy",
     "barcodeType": "Typ kodu",
     "barcodeData": "Dane kodu",
@@ -147,7 +155,9 @@
     "generating": "Generowanie…",
     "done": "Gotowe!",
     "failed": "Błąd",
-    "downloadStarted": "Pobieranie rozpoczęte."
+    "downloadStarted": "Pobieranie rozpoczęte.",
+    "warningsTitle": "{{count}} wierszy z przepełnieniem tekstu",
+    "warningRow": "Wiersz {{row}}:"
   },
   "admin": {
     "users": {

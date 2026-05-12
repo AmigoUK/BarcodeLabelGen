@@ -189,6 +189,79 @@ function TextProps({ obj, update }: { obj: TextObject; update: (p: Partial<TextO
         <option value="center">{t("editor.alignCenter")}</option>
         <option value="right">{t("editor.alignRight")}</option>
       </Select>
+
+      <TextBlockExtras obj={obj} update={update} />
+    </div>
+  );
+}
+
+function TextBlockExtras({
+  obj,
+  update,
+}: {
+  obj: TextObject;
+  update: (p: Partial<TextObject>) => void;
+}) {
+  const { t } = useTranslation();
+  // Block mode is implied by having both width and height. Width alone
+  // also exists for legacy single-line wrap-at-width. Show width/height
+  // controls on every text and the auto-fit controls only when both
+  // dimensions are set.
+  const hasWidth = typeof obj.width === "number" && obj.width > 0;
+  const hasHeight = typeof obj.height === "number" && obj.height > 0;
+  const isBlock = hasWidth && hasHeight;
+  const autoFit = obj.autoFit === true;
+  return (
+    <div className="space-y-2 border-t border-slate-800 pt-3">
+      <div className="grid grid-cols-2 gap-2">
+        <NumberInput
+          label={t("editor.widthMm")}
+          step={0.5}
+          min={1}
+          value={obj.width ?? 0}
+          onChange={(v) => update({ width: v > 0 ? v : undefined })}
+        />
+        <NumberInput
+          label={t("editor.heightMm")}
+          step={0.5}
+          min={1}
+          value={obj.height ?? 0}
+          onChange={(v) => update({ height: v > 0 ? v : undefined })}
+        />
+      </div>
+
+      {isBlock && (
+        <>
+          <label className="flex items-center gap-2 text-sm text-slate-200">
+            <input
+              type="checkbox"
+              checked={autoFit}
+              onChange={(e) => update({ autoFit: e.target.checked })}
+              className="h-4 w-4 rounded border-slate-700 bg-slate-900"
+            />
+            {t("editor.autoFit")}
+          </label>
+          {autoFit && (
+            <div className="grid grid-cols-2 gap-2">
+              <NumberInput
+                label={t("editor.minFontSizeMm")}
+                step={0.5}
+                min={0.5}
+                value={obj.minFontSize ?? 2}
+                onChange={(v) => update({ minFontSize: v })}
+              />
+              <NumberInput
+                label={t("editor.maxFontSizeMm")}
+                step={0.5}
+                min={0.5}
+                value={obj.maxFontSize ?? 8}
+                onChange={(v) => update({ maxFontSize: v })}
+              />
+            </div>
+          )}
+          <p className="text-xs text-slate-500">{t("editor.overflowReportedAtRender")}</p>
+        </>
+      )}
     </div>
   );
 }

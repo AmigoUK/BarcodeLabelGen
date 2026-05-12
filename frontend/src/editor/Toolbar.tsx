@@ -89,6 +89,18 @@ export function Toolbar({
             {t("editor.pdfFailed")}
           </span>
         )}
+        {generate.data && generate.data.warnings.length > 0 && (
+          <span
+            className="ml-2 cursor-help rounded bg-amber-900/40 px-2 py-0.5 text-xs text-amber-300"
+            title={
+              t("editor.pdfWarningsTooltip") +
+              "\n" +
+              generate.data.warnings.map((w) => `• ${w.object_id}: ${w.message}`).join("\n")
+            }
+          >
+            ⚠ {t("editor.pdfWarnings", { count: generate.data.warnings.length })}
+          </span>
+        )}
         <Button
           variant="secondary"
           className="ml-2"

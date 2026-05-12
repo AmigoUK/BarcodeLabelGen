@@ -18,6 +18,7 @@ from typing import Any
 from reportlab.lib.colors import HexColor
 from reportlab.lib.units import mm
 from reportlab.lib.utils import ImageReader
+from reportlab.pdfbase.pdfmetrics import stringWidth
 from reportlab.pdfgen import canvas as rl_canvas
 
 from app.models.asset import Asset
@@ -43,12 +44,17 @@ def render_template_pdf(
     width_mm: float,
     height_mm: float,
     resolve_asset: AssetResolver | None = None,
+    warnings: list[dict[str, Any]] | None = None,
 ) -> bytes:
     """Render `canvas_data` to a single-page PDF and return raw bytes.
 
     `resolve_asset` is a callable taking an asset id and returning an Asset
     instance (or None) — injected by the route layer so this function stays
     decoupled from Flask/SQLAlchemy.
+
+    `warnings`, if provided, is appended to with `{"object_id", "message"}`
+    entries for soft-failure cases (currently: text-block overflow at the
+    minimum font size). The PDF is still produced, just truncated.
     """
     if not isinstance(canvas_data, dict):
         raise PdfRenderError("canvas_data must be a dict")
@@ -67,7 +73,7 @@ def render_template_pdf(
         try:
             kind = obj.get("type")
             if kind == "text":
-                _draw_text(c, obj, page_h_pt)
+                _draw_text(c, obj, page_h_pt, warnings=warnings)
             elif kind == "rect":
                 _draw_rect(c, obj, page_h_pt)
             elif kind == "line":
@@ -110,29 +116,19 @@ def _y_flip(top_y_mm: float, height_mm: float, page_h_pt: float) -> float:
     return float(page_h_pt - (top_y_mm + height_mm) * mm)
 
 
-def _draw_text(c: rl_canvas.Canvas, obj: dict[str, Any], page_h_pt: float) -> None:
-    text = str(obj.get("text") or "")
-    if not text:
-        return
-    x_mm = float(obj.get("x") or 0)
-    y_mm = float(obj.get("y") or 0)
-    font_size_mm = float(obj.get("fontSize") or 4)
-    fill = _hex_to_rgb(obj.get("fill")) or HexColor("#000000")
-    align = obj.get("align") or "left"
+# Helvetica's ascent is ~71.8 % of the font size; the same ratio is close
+# enough for Times/Courier at label sizes that we don't bother per-family.
+_ASCENT_RATIO = 0.718
+_LINE_HEIGHT_FACTOR = 1.2
+
+
+def _resolve_font(obj: dict[str, Any]) -> str:
+    """Map the user-facing font family to one of ReportLab's standard PDF
+    fonts (no embedding needed). Inter/Arial/Helvetica are visually
+    indistinguishable at label sizes; same for Times/Georgia."""
+    family = (obj.get("fontFamily") or "").lower()
     bold = obj.get("fontWeight") == "bold"
     italic = obj.get("fontStyle") == "italic"
-    rotation = float(obj.get("rotation") or 0)
-    width_raw = obj.get("width")
-    has_explicit_width = isinstance(width_raw, int | float) and width_raw > 0
-    width_mm_value = (
-        float(width_raw) if isinstance(width_raw, int | float) and width_raw > 0 else 0.0
-    )
-
-    # Map the user-facing font family to one of ReportLab's built-in
-    # standard PDF fonts (the only ones that don't need embedding).
-    # Helvetica/Arial/Inter share visual metrics close enough that
-    # they're indistinguishable at label sizes; same for Times/Georgia.
-    family = (obj.get("fontFamily") or "").lower()
     if "courier" in family:
         base = "Courier"
         styles = ("", "-Bold", "-Oblique", "-BoldOblique")
@@ -142,16 +138,147 @@ def _draw_text(c: rl_canvas.Canvas, obj: dict[str, Any], page_h_pt: float) -> No
     else:
         base = "Helvetica"
         styles = ("", "-Bold", "-Oblique", "-BoldOblique")
-
     idx = (1 if bold else 0) + (2 if italic else 0)
-    font = f"{base}{styles[idx]}"
+    return f"{base}{styles[idx]}"
 
-    # Konva's `fontSize` is stored in mm in our schema. ReportLab's setFont
-    # expects PostScript points. 1 mm = 2.834 pt, so `font_size_mm * mm`
-    # (where `mm` is reportlab's points-per-mm constant) gives the right
-    # type size — a "6 mm font" prints at the same physical size as it
-    # appears on the canvas.
-    font_size_pt = font_size_mm * mm
+
+def _wrap_lines(text: str, font: str, font_size_pt: float, max_width_pt: float) -> list[str]:
+    """Greedy word-wrap honouring explicit \\n breaks. Words longer than
+    max_width are kept on their own line (overflow is detected later by
+    the caller measuring each returned line's width)."""
+    out: list[str] = []
+    for paragraph in text.split("\n"):
+        words = paragraph.split(" ")
+        if not words:
+            out.append("")
+            continue
+        current = words[0]
+        for w in words[1:]:
+            candidate = f"{current} {w}"
+            if stringWidth(candidate, font, font_size_pt) <= max_width_pt:
+                current = candidate
+            else:
+                out.append(current)
+                current = w
+        out.append(current)
+    return out
+
+
+def _layout_fits(
+    lines: list[str],
+    font: str,
+    font_size_pt: float,
+    max_width_pt: float,
+    max_height_pt: float,
+) -> bool:
+    """True if `lines` fits inside the given box (no per-line wider than
+    max_width and total height under max_height)."""
+    total_h = len(lines) * font_size_pt * _LINE_HEIGHT_FACTOR
+    if total_h > max_height_pt:
+        return False
+    return all(stringWidth(line, font, font_size_pt) <= max_width_pt for line in lines)
+
+
+def _autofit_size_pt(
+    text: str,
+    font: str,
+    max_width_pt: float,
+    max_height_pt: float,
+    min_size_pt: float,
+    max_size_pt: float,
+) -> tuple[float, list[str], bool]:
+    """Find the largest font size in [min, max] (0.5 pt steps) that lets
+    `text` fit inside the box after word-wrapping. Falls back to min_size
+    if nothing fits — caller logs a warning in that case.
+
+    Returns (chosen_size_pt, wrapped_lines, fits_cleanly).
+    """
+    step = 0.5  # pt — fine enough to feel smooth, coarse enough to be cheap
+    size = max_size_pt
+    while size >= min_size_pt:
+        lines = _wrap_lines(text, font, size, max_width_pt)
+        if _layout_fits(lines, font, size, max_width_pt, max_height_pt):
+            return size, lines, True
+        size -= step
+    # Nothing fit — render at minimum and report
+    final_lines = _wrap_lines(text, font, min_size_pt, max_width_pt)
+    return min_size_pt, final_lines, False
+
+
+def _draw_text(
+    c: rl_canvas.Canvas,
+    obj: dict[str, Any],
+    page_h_pt: float,
+    *,
+    warnings: list[dict[str, Any]] | None = None,
+) -> None:
+    text = str(obj.get("text") or "")
+    if not text:
+        return
+    x_mm = float(obj.get("x") or 0)
+    y_mm = float(obj.get("y") or 0)
+    font_size_mm = float(obj.get("fontSize") or 4)
+    fill = _hex_to_rgb(obj.get("fill")) or HexColor("#000000")
+    align = obj.get("align") or "left"
+    rotation = float(obj.get("rotation") or 0)
+
+    width_raw = obj.get("width")
+    has_explicit_width = isinstance(width_raw, int | float) and width_raw > 0
+    width_mm_value = (
+        float(width_raw) if isinstance(width_raw, int | float) and width_raw > 0 else 0.0
+    )
+
+    height_raw = obj.get("height")
+    has_explicit_height = isinstance(height_raw, int | float) and height_raw > 0
+    height_mm_value = (
+        float(height_raw) if isinstance(height_raw, int | float) and height_raw > 0 else 0.0
+    )
+
+    # Block mode kicks in only when the box is fully defined (width AND
+    # height). Single-line text (today's default) keeps the legacy path.
+    is_block = has_explicit_width and has_explicit_height
+
+    font = _resolve_font(obj)
+
+    # ---- choose font size + word-wrap if block mode ----
+    if is_block:
+        max_width_pt = width_mm_value * mm
+        max_height_pt = height_mm_value * mm
+        if obj.get("autoFit"):
+            min_pt = float(obj.get("minFontSize") or font_size_mm) * mm
+            max_pt = float(obj.get("maxFontSize") or font_size_mm) * mm
+            # Belt-and-suspenders: keep min ≤ max even on bad input
+            min_pt, max_pt = (min(min_pt, max_pt), max(min_pt, max_pt))
+            font_size_pt, lines, fits = _autofit_size_pt(
+                text, font, max_width_pt, max_height_pt, min_pt, max_pt
+            )
+            if not fits and warnings is not None:
+                warnings.append(
+                    {
+                        "object_id": str(obj.get("id") or ""),
+                        "message": (
+                            f"text didn't fit at minimum font size {min_pt / mm:.1f} mm; truncated"
+                        ),
+                    }
+                )
+        else:
+            font_size_pt = font_size_mm * mm
+            lines = _wrap_lines(text, font, font_size_pt, max_width_pt)
+            if warnings is not None and not _layout_fits(
+                lines, font, font_size_pt, max_width_pt, max_height_pt
+            ):
+                warnings.append(
+                    {
+                        "object_id": str(obj.get("id") or ""),
+                        "message": (
+                            f"text didn't fit at {font_size_mm:.1f} mm; "
+                            "enable auto-fit or enlarge the box"
+                        ),
+                    }
+                )
+    else:
+        font_size_pt = font_size_mm * mm
+        lines = text.split("\n")
 
     c.saveState()
     c.setFillColor(fill)
@@ -159,27 +286,21 @@ def _draw_text(c: rl_canvas.Canvas, obj: dict[str, Any], page_h_pt: float) -> No
 
     # In Konva, y is the TOP of the text bounding box. ReportLab's
     # drawString puts the BASELINE at y. Helvetica's ascent is ~71.8 % of
-    # the font size (cap height + a bit), so baseline = top + 0.718*size.
-    # 0.85 was wrong — it pushed the baseline too low, making text appear
-    # slightly clipped at the top and shifted down vs. the editor preview.
-    ascent_ratio = 0.718
+    # the font size, so baseline = top + 0.718*size.
     x_pt = x_mm * mm
-    baseline_y_pt = page_h_pt - (y_mm * mm) - font_size_pt * ascent_ratio
+    baseline_y_pt = page_h_pt - (y_mm * mm) - font_size_pt * _ASCENT_RATIO
 
     if rotation:
-        # Rotate around the top-left anchor so behaviour matches the editor
         c.translate(x_pt, page_h_pt - y_mm * mm)
         c.rotate(-rotation)
         c.translate(-x_pt, -(page_h_pt - y_mm * mm))
 
-    for i, line in enumerate(text.split("\n")):
-        line_y = baseline_y_pt - i * font_size_pt * 1.2
+    for i, line in enumerate(lines):
+        line_y = baseline_y_pt - i * font_size_pt * _LINE_HEIGHT_FACTOR
 
-        # Centering/right-aligning is only meaningful when the text has an
+        # Centering/right-aligning only makes sense when the text has an
         # explicit `width` (the wrap box). Without it, Konva lays out
-        # left-aligned regardless of the `align` value — so do the same in
-        # the PDF, otherwise the text shifts left by half its rendered
-        # width and looks wrong vs. the preview.
+        # left-aligned regardless of the `align` value — so do the same.
         if align == "center" and has_explicit_width:
             c.drawCentredString(x_pt + (width_mm_value * mm) / 2, line_y, line)
         elif align == "right" and has_explicit_width:

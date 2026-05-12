@@ -23,6 +23,11 @@ export type TextObject = EditorObjectBase & {
   fontWeight?: "normal" | "bold";
   align?: "left" | "center" | "right";
   width?: number; // mm — wraps at this width
+  // --- Text-block extensions (active when both width AND height are set) ---
+  height?: number; // mm — wrap-box height
+  autoFit?: boolean; // shrink fontSize to fit, between min/max
+  minFontSize?: number; // mm
+  maxFontSize?: number; // mm
 };
 
 export type RectObject = EditorObjectBase & {

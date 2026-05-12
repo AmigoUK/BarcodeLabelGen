@@ -64,8 +64,13 @@ def render_batch_pdf(
     height_mm: float,
     resolve_asset: AssetResolver | None = None,
     on_progress: ProgressCallback | None = None,
+    warnings: list[dict[str, Any]] | None = None,
 ) -> bytes:
-    """Render one page per row, substituting placeholders. Returns PDF bytes."""
+    """Render one page per row, substituting placeholders. Returns PDF bytes.
+
+    `warnings`, if provided, gets a per-row entry annotated with the row
+    index for any text-block that overflowed at its minimum font size.
+    """
     base_objects = canvas_data.get("objects") or []
     page_size = (width_mm * mm, height_mm * mm)
 
@@ -86,12 +91,16 @@ def render_batch_pdf(
         c.setFillColorRGB(0, 0, 0)
         c.setStrokeColorRGB(0, 0, 0)
 
+        # Per-row warnings buffer — annotated with the row index after
+        # rendering this page, then merged into the global accumulator.
+        row_warnings: list[dict[str, Any]] = [] if warnings is not None else []
+
         for obj in base_objects:
             substituted = substitute_object(deepcopy(obj), row)
             try:
                 kind = substituted.get("type")
                 if kind == "text":
-                    _draw_text(c, substituted, page_h_pt)
+                    _draw_text(c, substituted, page_h_pt, warnings=row_warnings)
                 elif kind == "rect":
                     _draw_rect(c, substituted, page_h_pt)
                 elif kind == "line":
@@ -102,6 +111,10 @@ def render_batch_pdf(
                     _draw_barcode(c, substituted, page_h_pt)
             except Exception:  # noqa: BLE001, S112 — per-object resilience
                 continue
+
+        if warnings is not None and row_warnings:
+            for w in row_warnings:
+                warnings.append({**w, "row": i + 1})  # 1-indexed for humans
 
         c.showPage()
         if on_progress is not None:

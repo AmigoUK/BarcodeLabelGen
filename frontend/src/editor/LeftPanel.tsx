@@ -44,6 +44,32 @@ export function LeftPanel() {
       <Button
         variant="secondary"
         className="w-full justify-start"
+        onClick={() => {
+          const w = Math.max(20, Math.min(60, canvas.stage.width_mm * 0.4));
+          const h = Math.max(10, Math.min(30, canvas.stage.height_mm * 0.15));
+          addObject({
+            id: newObjectId(),
+            type: "text",
+            x: Math.max(2, centerX - w / 2),
+            y: Math.max(2, centerY - h / 2),
+            text: t("editor.textBlockSample"),
+            fontSize: 5,
+            fontFamily: "Inter, sans-serif",
+            fill: "#0f172a",
+            width: w,
+            height: h,
+            autoFit: true,
+            minFontSize: 2,
+            maxFontSize: 8,
+          });
+        }}
+      >
+        ¶ &nbsp; {t("editor.textBlock")}
+      </Button>
+
+      <Button
+        variant="secondary"
+        className="w-full justify-start"
         onClick={() =>
           addObject({
             id: newObjectId(),
