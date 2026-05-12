@@ -55,11 +55,18 @@ function PlaceholderChips({ value, label }: { value: string; label: string }) {
 export function RightPanel() {
   const { t } = useTranslation();
   const canvas = useEditorStore((s) => s.canvas);
-  const selectedId = useEditorStore((s) => s.selectedId);
+  const selectedIds = useEditorStore((s) => s.selectedIds);
   const updateObject = useEditorStore((s) => s.updateObject);
   const deleteObject = useEditorStore((s) => s.deleteObject);
 
-  const selected = canvas?.objects.find((o) => o.id === selectedId) ?? null;
+  // Per-object props only make sense with exactly one selection. With
+  // 2+ selected, the user is in alignment mode (handled by AlignmentBar)
+  // and per-object property editing would just show one object's
+  // properties arbitrarily — so we surface a count instead.
+  const selected =
+    selectedIds.length === 1
+      ? (canvas?.objects.find((o) => o.id === selectedIds[0]) ?? null)
+      : null;
 
   return (
     <aside className="w-72 shrink-0 space-y-4 overflow-y-auto border-l border-slate-800 bg-slate-950 p-4">
@@ -67,7 +74,14 @@ export function RightPanel() {
         {t("editor.properties")}
       </h3>
 
-      {!selected && <p className="text-sm text-slate-500">{t("editor.selectToEdit")}</p>}
+      {selectedIds.length === 0 && (
+        <p className="text-sm text-slate-500">{t("editor.selectToEdit")}</p>
+      )}
+      {selectedIds.length >= 2 && (
+        <p className="text-sm text-slate-400">
+          {t("editor.multiSelected", { count: selectedIds.length })}
+        </p>
+      )}
 
       {selected && (
         <>

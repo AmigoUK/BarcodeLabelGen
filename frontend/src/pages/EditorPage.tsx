@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useParams } from "react-router-dom";
+import { AlignmentBar } from "../editor/AlignmentBar";
 import { Canvas } from "../editor/Canvas";
 import { LeftPanel } from "../editor/LeftPanel";
 import { RightPanel } from "../editor/RightPanel";
@@ -23,8 +24,10 @@ export function EditorPage() {
   const markClean = useEditorStore((s) => s.markClean);
   const canvas = useEditorStore((s) => s.canvas);
   const dirty = useEditorStore((s) => s.dirty);
-  const selectedId = useEditorStore((s) => s.selectedId);
+  const selectedIds = useEditorStore((s) => s.selectedIds);
   const deleteObject = useEditorStore((s) => s.deleteObject);
+  const selectMany = useEditorStore((s) => s.selectMany);
+  const clearSelection = useEditorStore((s) => s.clearSelection);
   const undo = useEditorStore((s) => s.undo);
   const redo = useEditorStore((s) => s.redo);
 
@@ -66,9 +69,12 @@ export function EditorPage() {
 
       const mod = e.ctrlKey || e.metaKey;
 
-      if ((e.key === "Delete" || e.key === "Backspace") && selectedId) {
+      if ((e.key === "Delete" || e.key === "Backspace") && selectedIds.length > 0) {
         e.preventDefault();
-        deleteObject(selectedId);
+        // Delete every selected object — store removes them from
+        // selectedIds as it goes, but copying first avoids shifting
+        // the array while we iterate.
+        for (const id of [...selectedIds]) deleteObject(id);
       } else if (mod && e.key.toLowerCase() === "z" && !e.shiftKey) {
         e.preventDefault();
         undo();
@@ -81,11 +87,24 @@ export function EditorPage() {
       } else if (mod && e.key.toLowerCase() === "s") {
         e.preventDefault();
         if (canvas) void saveCanvas(canvas);
+      } else if (mod && e.key.toLowerCase() === "a") {
+        // Ctrl/Cmd+A — select all objects on the canvas. Skips when
+        // there's nothing to select so the browser default doesn't fire
+        // either ("select all text on the page" would be jarring here).
+        if (canvas && canvas.objects.length > 0) {
+          e.preventDefault();
+          selectMany(canvas.objects.map((o) => o.id));
+        }
+      } else if (e.key === "Escape") {
+        if (selectedIds.length > 0) {
+          e.preventDefault();
+          clearSelection();
+        }
       }
     };
     window.addEventListener("keydown", onKey);
     return () => window.removeEventListener("keydown", onKey);
-  }, [selectedId, deleteObject, undo, redo, canvas, saveCanvas]);
+  }, [selectedIds, deleteObject, undo, redo, canvas, saveCanvas, selectMany, clearSelection]);
 
   // Warn before navigating away with unsaved changes.
   useEffect(() => {
@@ -125,6 +144,7 @@ export function EditorPage() {
         onGenerateSeries={() => setShowWizard(true)}
         seriesDisabled={dirty}
       />
+      <AlignmentBar />
       <div className="flex min-h-0 flex-1">
         <LeftPanel />
         <Canvas />

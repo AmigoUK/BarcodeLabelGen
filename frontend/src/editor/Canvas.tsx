@@ -15,9 +15,22 @@ export function Canvas() {
   const transformerRef = useRef<Konva.Transformer>(null);
 
   const canvas = useEditorStore((s) => s.canvas);
-  const selectedId = useEditorStore((s) => s.selectedId);
+  const selectedIds = useEditorStore((s) => s.selectedIds);
   const select = useEditorStore((s) => s.select);
+  const toggleSelect = useEditorStore((s) => s.toggleSelect);
+  const clearSelection = useEditorStore((s) => s.clearSelection);
   const updateObject = useEditorStore((s) => s.updateObject);
+
+  // Translate raw click events into the right selection mutation.
+  // Shift-click toggles the object in/out of the selection so users can
+  // build up a multi-select for the alignment tools.
+  const onObjectSelect = (id: string, e: Konva.KonvaEventObject<unknown>) => {
+    if (e.evt instanceof MouseEvent && e.evt.shiftKey) {
+      toggleSelect(id);
+    } else {
+      select(id);
+    }
+  };
 
   const [containerSize, setContainerSize] = useState({ width: 0, height: 0 });
 
@@ -45,23 +58,22 @@ export function Canvas() {
     return () => ro.disconnect();
   }, []);
 
-  // Bind transformer to the currently selected node.
+  // Bind transformer to the currently selected nodes (any non-zero count).
   useEffect(() => {
     const transformer = transformerRef.current;
     const stage = stageRef.current;
     if (!transformer || !stage) return;
-    if (!selectedId) {
+    if (selectedIds.length === 0) {
       transformer.nodes([]);
+      transformer.getLayer()?.batchDraw();
       return;
     }
-    const node = stage.findOne(`#${selectedId}`);
-    if (node) {
-      transformer.nodes([node]);
-    } else {
-      transformer.nodes([]);
-    }
+    const nodes = selectedIds
+      .map((id) => stage.findOne(`#${id}`))
+      .filter((n): n is Konva.Node => n !== undefined);
+    transformer.nodes(nodes);
     transformer.getLayer()?.batchDraw();
-  }, [selectedId, canvas]);
+  }, [selectedIds, canvas]);
 
   // Always render the container div so the ref attaches synchronously and
   // the measurement effects (which run once on mount) see real DOM. If we
@@ -83,8 +95,13 @@ export function Canvas() {
           width={stagePxW}
           height={stagePxH}
           onMouseDown={(e) => {
-            // Click on empty stage → deselect
-            if (e.target === e.target.getStage()) select(null);
+            // Click on empty stage → clear selection. Shift-click on
+            // empty stage is a no-op (avoids accidentally wiping a
+            // partially-built selection).
+            if (e.target === e.target.getStage()) {
+              const isShift = e.evt instanceof MouseEvent && e.evt.shiftKey;
+              if (!isShift) clearSelection();
+            }
           }}
           className="shadow-2xl"
         >
@@ -107,7 +124,7 @@ export function Canvas() {
                     object={o}
                     scale={scale}
                     draggable
-                    onSelect={() => select(o.id)}
+                    onSelect={(e) => onObjectSelect(o.id, e)}
                     onChange={(patch) => updateObject(o.id, patch)}
                   />
                 );
@@ -119,7 +136,7 @@ export function Canvas() {
                     object={o}
                     scale={scale}
                     draggable
-                    onSelect={() => select(o.id)}
+                    onSelect={(e) => onObjectSelect(o.id, e)}
                     onChange={(patch) => updateObject(o.id, patch)}
                   />
                 );
@@ -131,7 +148,7 @@ export function Canvas() {
                     object={o}
                     scale={scale}
                     draggable
-                    onSelect={() => select(o.id)}
+                    onSelect={(e) => onObjectSelect(o.id, e)}
                     onChange={(patch) => updateObject(o.id, patch)}
                   />
                 );
@@ -143,7 +160,7 @@ export function Canvas() {
                     object={o}
                     scale={scale}
                     draggable
-                    onSelect={() => select(o.id)}
+                    onSelect={(e) => onObjectSelect(o.id, e)}
                     onChange={(patch) => updateObject(o.id, patch)}
                   />
                 );
@@ -155,7 +172,7 @@ export function Canvas() {
                     object={o}
                     scale={scale}
                     draggable
-                    onSelect={() => select(o.id)}
+                    onSelect={(e) => onObjectSelect(o.id, e)}
                     onChange={(patch) => updateObject(o.id, patch)}
                   />
                 );

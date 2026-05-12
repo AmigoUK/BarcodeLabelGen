@@ -6,7 +6,7 @@ type Props = {
   object: LineObjectModel;
   scale: number;
   draggable: boolean;
-  onSelect: () => void;
+  onSelect: (e: Konva.KonvaEventObject<unknown>) => void;
   onChange: (patch: Partial<LineObjectModel>) => void;
 };
 
