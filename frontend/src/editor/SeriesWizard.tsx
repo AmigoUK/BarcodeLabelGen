@@ -25,7 +25,19 @@ import {
   useSubmitBatch,
   useUploadDataset,
 } from "../hooks/useDatasets";
+import { ApiError } from "../lib/api";
 import type { CanvasData } from "./types";
+
+/** Pull the most useful human-readable string out of an unknown thrown value.
+ *  ApiError carries server-side `detail` which the bare `.message` would hide. */
+function describeError(err: unknown): string {
+  if (err instanceof ApiError) {
+    if (typeof err.detail === "string" && err.detail.length > 0) return err.detail;
+    return err.code;
+  }
+  if (err instanceof Error) return err.message;
+  return String(err);
+}
 
 type Props = {
   templateId: number;
@@ -105,13 +117,7 @@ export function SeriesWizard({ templateId, templateName, canvas, onClose }: Prop
       {step === "upload" && (
         <UploadStep
           dataset={dataset}
-          uploadError={
-            upload.error
-              ? upload.error instanceof Error
-                ? upload.error.message
-                : String(upload.error)
-              : null
-          }
+          uploadError={upload.error ? describeError(upload.error) : null}
           uploading={upload.isPending}
           onFile={async (file) => {
             try {
@@ -122,13 +128,7 @@ export function SeriesWizard({ templateId, templateName, canvas, onClose }: Prop
             }
           }}
           configuring={configureSqlite.isPending}
-          configureError={
-            configureSqlite.error
-              ? configureSqlite.error instanceof Error
-                ? configureSqlite.error.message
-                : String(configureSqlite.error)
-              : null
-          }
+          configureError={configureSqlite.error ? describeError(configureSqlite.error) : null}
           onConfigureSqlite={async (input) => {
             try {
               const updated = await configureSqlite.mutateAsync(input);
@@ -172,13 +172,7 @@ export function SeriesWizard({ templateId, templateName, canvas, onClose }: Prop
           filter={filterEnabled ? filter : null}
           job={jobQuery.data ?? null}
           submitting={submit.isPending}
-          submitError={
-            submit.error
-              ? submit.error instanceof Error
-                ? submit.error.message
-                : String(submit.error)
-              : null
-          }
+          submitError={submit.error ? describeError(submit.error) : null}
           onSubmit={async () => {
             const res = await submit.mutateAsync({
               template_id: templateId,
@@ -363,7 +357,15 @@ function SqliteConfigPanel({
   onConfigure: (input: { datasetId: number; table?: string; query?: string }) => Promise<void>;
 }) {
   const { t } = useTranslation();
-  const tables: SqliteTableInfo[] = dataset.sqlite_tables ?? [];
+  // Surface non-empty tables first — an empty table can't be used for a series
+  // (the renderer would have nothing to print). Tie-break alphabetically.
+  const tables: SqliteTableInfo[] = useMemo(
+    () =>
+      [...(dataset.sqlite_tables ?? [])].sort(
+        (a, b) => b.row_count - a.row_count || a.name.localeCompare(b.name),
+      ),
+    [dataset.sqlite_tables],
+  );
   const [mode, setMode] = useState<"table" | "query">("table");
   const [selectedTable, setSelectedTable] = useState<string>(
     dataset.sqlite_table ?? tables[0]?.name ?? "",

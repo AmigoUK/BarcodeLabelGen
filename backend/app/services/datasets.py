@@ -211,8 +211,10 @@ def configure_sqlite(
         raise DataSetUploadError(str(exc)) from exc
 
     if row_count == 0:
-        # Renderer would have nothing to do — surface this now rather than at /generate.
-        raise DataSetUploadError("query/table returned 0 rows")
+        # Renderer would have nothing to do — surface this now rather than at /generate
+        # so the user can pick a different table without getting halfway through the wizard.
+        what = f"table '{table}'" if table else "the SELECT query"
+        raise DataSetUploadError(f"{what} returned 0 rows; pick a source with data")
 
     ds.sqlite_table = table.strip() if table else None
     ds.sqlite_query = query.strip() if query else None
