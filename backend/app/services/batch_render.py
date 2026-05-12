@@ -96,6 +96,10 @@ def render_batch_pdf(
         row_warnings: list[dict[str, Any]] = [] if warnings is not None else []
 
         for obj in base_objects:
+            # Skip reference-only (printable=False) objects — same rule
+            # as the single-label renderer.
+            if obj.get("printable") is False:
+                continue
             substituted = substitute_object(deepcopy(obj), row)
             try:
                 kind = substituted.get("type")

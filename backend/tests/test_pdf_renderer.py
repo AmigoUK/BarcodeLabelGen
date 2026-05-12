@@ -276,6 +276,94 @@ def test_legacy_text_object_unchanged_without_block_fields() -> None:
     assert warnings == []
 
 
+def test_printable_false_object_skipped_in_pdf() -> None:
+    """A `printable: False` object renders zero glyphs / images — exactly
+    the use case for a reference background that the user wants to see in
+    the editor but not in the print."""
+    import io as _io
+
+    import pdfplumber
+
+    canvas = {
+        "version": 1,
+        "stage": {"width_mm": 100, "height_mm": 100},
+        "objects": [
+            {
+                "id": "ref",
+                "type": "text",
+                "x": 10,
+                "y": 10,
+                "text": "REFERENCE_ONLY_MARKER",
+                "fontSize": 6,
+                "fontFamily": "Helvetica",
+                "fill": "#000",
+                "printable": False,
+            },
+            {
+                "id": "shown",
+                "type": "text",
+                "x": 10,
+                "y": 40,
+                "text": "PRINTED",
+                "fontSize": 6,
+                "fontFamily": "Helvetica",
+                "fill": "#000",
+            },
+        ],
+    }
+    pdf = render_template_pdf(canvas, width_mm=100, height_mm=100)
+    assert pdf.startswith(PDF_MAGIC)
+
+    # The hidden text must not be in the PDF; the visible one must.
+    with pdfplumber.open(_io.BytesIO(pdf)) as doc:
+        glyphs = "".join(c["text"] for c in doc.pages[0].chars)
+    assert "REFERENCE_ONLY_MARKER" not in glyphs
+    assert "PRINTED" in glyphs
+
+
+def test_printable_missing_or_true_renders_normally() -> None:
+    """Backward compat: omitting `printable` keeps the object printable
+    (same as the original behaviour). Explicit True also renders."""
+    canvas = {
+        "version": 1,
+        "stage": {"width_mm": 50, "height_mm": 50},
+        "objects": [
+            # no `printable` key
+            {
+                "id": "a",
+                "type": "text",
+                "x": 5,
+                "y": 5,
+                "text": "A",
+                "fontSize": 4,
+                "fontFamily": "Helvetica",
+                "fill": "#000",
+            },
+            # explicit True
+            {
+                "id": "b",
+                "type": "text",
+                "x": 5,
+                "y": 15,
+                "text": "B",
+                "fontSize": 4,
+                "fontFamily": "Helvetica",
+                "fill": "#000",
+                "printable": True,
+            },
+        ],
+    }
+    pdf = render_template_pdf(canvas, width_mm=50, height_mm=50)
+    assert pdf.startswith(PDF_MAGIC)
+    import io as _io
+
+    import pdfplumber
+
+    with pdfplumber.open(_io.BytesIO(pdf)) as doc:
+        glyphs = "".join(c["text"] for c in doc.pages[0].chars)
+    assert "A" in glyphs and "B" in glyphs
+
+
 def test_unknown_object_type_skipped() -> None:
     canvas = {
         "version": 1,

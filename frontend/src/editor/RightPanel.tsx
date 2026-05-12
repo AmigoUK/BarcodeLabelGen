@@ -85,6 +85,7 @@ export function RightPanel() {
 
       {selected && (
         <>
+          <LayerProps obj={selected} update={(p) => updateObject(selected.id, p)} />
           <CommonProps obj={selected} update={(p) => updateObject(selected.id, p)} />
           {selected.type === "text" && (
             <TextProps obj={selected} update={(p) => updateObject(selected.id, p)} />
@@ -110,6 +111,44 @@ export function RightPanel() {
         </>
       )}
     </aside>
+  );
+}
+
+function LayerProps({
+  obj,
+  update,
+}: {
+  obj: EditorObject;
+  update: (p: Partial<EditorObject>) => void;
+}) {
+  const { t } = useTranslation();
+  // Defaults: missing key = unlocked + printable. The onChange handlers
+  // emit the raw boolean so the persisted JSONB carries explicit values
+  // once the user toggles them — no implicit "true means same as
+  // missing" trickery.
+  const locked = obj.locked === true;
+  const printable = obj.printable !== false;
+  return (
+    <div className="space-y-2">
+      <label className="flex items-center gap-2 text-sm text-slate-200">
+        <input
+          type="checkbox"
+          checked={locked}
+          onChange={(e) => update({ locked: e.target.checked })}
+          className="h-4 w-4 rounded border-slate-700 bg-slate-900"
+        />
+        🔒 {t("editor.lock")}
+      </label>
+      <label className="flex items-center gap-2 text-sm text-slate-200">
+        <input
+          type="checkbox"
+          checked={printable}
+          onChange={(e) => update({ printable: e.target.checked })}
+          className="h-4 w-4 rounded border-slate-700 bg-slate-900"
+        />
+        🖨 {t("editor.includeInPdf")}
+      </label>
+    </div>
   );
 }
 

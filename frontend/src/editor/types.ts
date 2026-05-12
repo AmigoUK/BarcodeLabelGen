@@ -10,6 +10,14 @@ export type EditorObjectBase = {
   x: number;
   y: number;
   rotation?: number;
+  /** When true, the object can be selected (so it can be unlocked from
+   *  the right panel) but not dragged or transformed on the canvas.
+   *  Used by the background-reference workflow. Defaults to false. */
+  locked?: boolean;
+  /** When false, the renderer skips this object in PDF output (both
+   *  single-label sync and batch). Defaults to true (omitted = printable).
+   *  Used by reference images that should only appear in the editor. */
+  printable?: boolean;
 };
 
 export type TextObject = EditorObjectBase & {

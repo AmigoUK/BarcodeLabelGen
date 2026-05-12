@@ -7,9 +7,11 @@ import { newObjectId, useEditorStore } from "./store";
 export function LeftPanel() {
   const { t } = useTranslation();
   const addObject = useEditorStore((s) => s.addObject);
+  const reorderObjects = useEditorStore((s) => s.reorderObjects);
   const canvas = useEditorStore((s) => s.canvas);
   const upload = useUploadAsset();
   const fileRef = useRef<HTMLInputElement>(null);
+  const bgFileRef = useRef<HTMLInputElement>(null);
 
   if (!canvas) return null;
 
@@ -162,6 +164,46 @@ export function LeftPanel() {
           }
         }}
       />
+
+      <Button
+        variant="secondary"
+        className="w-full justify-start"
+        onClick={() => bgFileRef.current?.click()}
+        disabled={upload.isPending}
+        title={t("editor.backgroundHint")}
+      >
+        🌄 &nbsp; {t("editor.background")}
+      </Button>
+      <input
+        ref={bgFileRef}
+        type="file"
+        accept="image/png,image/jpeg,image/svg+xml"
+        className="hidden"
+        onChange={async (e) => {
+          const file = e.target.files?.[0];
+          if (!file) return;
+          try {
+            const asset = await upload.mutateAsync(file);
+            // Background = full canvas, locked, non-printable, sent to
+            // the back of the z-stack so anything else stays on top.
+            addObject({
+              id: newObjectId(),
+              type: "image",
+              x: 0,
+              y: 0,
+              width: canvas.stage.width_mm,
+              height: canvas.stage.height_mm,
+              assetId: asset.id,
+              locked: true,
+              printable: false,
+            });
+            reorderObjects("back");
+          } finally {
+            e.target.value = "";
+          }
+        }}
+      />
+      <p className="px-1 text-[10px] text-slate-500">{t("editor.backgroundHint")}</p>
 
       {upload.error && (
         <p className="px-1 text-xs text-rose-400">

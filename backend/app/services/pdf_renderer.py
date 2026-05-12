@@ -70,6 +70,12 @@ def render_template_pdf(
     page_h_pt = height_mm * mm
 
     for obj in objects:
+        # Reference-only objects (e.g. a background image used to align
+        # text against a pre-printed logo) are flagged printable=False
+        # in the editor; the renderer skips them entirely so the user
+        # gets only the new content in the PDF, not a double-print.
+        if obj.get("printable") is False:
+            continue
         try:
             kind = obj.get("type")
             if kind == "text":

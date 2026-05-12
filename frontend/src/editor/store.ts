@@ -30,6 +30,8 @@ export type AlignMode =
   | "sel.distributeH"
   | "sel.distributeV";
 
+export type ZOrderMode = "front" | "forward" | "backward" | "back";
+
 type State = {
   canvas: CanvasData | null;
   /** ids of currently selected objects; empty array = nothing selected */
@@ -60,6 +62,11 @@ type State = {
   /** Apply an alignment mode to the current selection in one undo step. */
   alignObjects: (mode: AlignMode) => void;
 
+  /** Reorder selected objects in the z-stack (array order =
+   *  back-to-front). One undoable step regardless of selection size;
+   *  multi-select preserves the relative order of selected items. */
+  reorderObjects: (mode: ZOrderMode) => void;
+
   undo: () => void;
   redo: () => void;
 };
@@ -68,6 +75,61 @@ const pushHistory = (past: CanvasData[], snapshot: CanvasData): CanvasData[] => 
   const next = [snapshot, ...past];
   return next.length > HISTORY_LIMIT ? next.slice(0, HISTORY_LIMIT) : next;
 };
+
+/** Reorder objects in the z-stack (array index 0 = bottom-most, last
+ *  = top-most). Multi-select keeps the relative order of selected
+ *  items intact (Canva/Figma convention). Returns the input array
+ *  unchanged when the operation is a no-op (already at the edge), so
+ *  the store can avoid pushing a useless history entry. */
+function computeReordered<T extends { id: string }>(
+  objects: T[],
+  selectedIds: string[],
+  mode: ZOrderMode,
+): T[] {
+  const selectedSet = new Set(selectedIds);
+  const selected = objects.filter((o) => selectedSet.has(o.id));
+  if (selected.length === 0) return objects;
+  const others = objects.filter((o) => !selectedSet.has(o.id));
+
+  if (mode === "front") {
+    // Already at the top? (every selected occupies the tail)
+    const tail = objects.slice(objects.length - selected.length);
+    if (tail.every((o) => selectedSet.has(o.id))) return objects;
+    return [...others, ...selected];
+  }
+  if (mode === "back") {
+    const head = objects.slice(0, selected.length);
+    if (head.every((o) => selectedSet.has(o.id))) return objects;
+    return [...selected, ...others];
+  }
+
+  // forward / backward — single-step swap, group-aware: move each
+  // selected past the next non-selected neighbour, preserving the
+  // selection's internal cohesion.
+  const result = [...objects];
+  if (mode === "forward") {
+    // Walk right-to-left so a swap doesn't double-process the same item.
+    for (let i = result.length - 1; i >= 0; i--) {
+      if (
+        selectedSet.has(result[i].id) &&
+        i + 1 < result.length &&
+        !selectedSet.has(result[i + 1].id)
+      ) {
+        [result[i], result[i + 1]] = [result[i + 1], result[i]];
+      }
+    }
+  } else {
+    // backward: walk left-to-right
+    for (let i = 0; i < result.length; i++) {
+      if (selectedSet.has(result[i].id) && i - 1 >= 0 && !selectedSet.has(result[i - 1].id)) {
+        [result[i], result[i - 1]] = [result[i - 1], result[i]];
+      }
+    }
+  }
+  // Detect no-op (everyone was already at the requested edge)
+  const changed = result.some((o, i) => o.id !== objects[i].id);
+  return changed ? result : objects;
+}
 
 /** Compute new x/y for each object so the alignment mode is satisfied.
  *  Returns a Map<id, {x, y}> — caller maps it onto canvas.objects. */
@@ -292,6 +354,19 @@ export const useEditorStore = create<State>((set) => ({
             return p ? ({ ...o, x: p.x, y: p.y } as EditorObject) : o;
           }),
         },
+        dirty: true,
+        past: pushHistory(s.past, s.canvas),
+        future: [],
+      };
+    }),
+
+  reorderObjects: (mode) =>
+    set((s) => {
+      if (!s.canvas || s.selectedIds.length === 0) return s;
+      const next = computeReordered(s.canvas.objects, s.selectedIds, mode);
+      if (next === s.canvas.objects) return s; // no-op (already at edge)
+      return {
+        canvas: { ...s.canvas, objects: next },
         dirty: true,
         past: pushHistory(s.past, s.canvas),
         future: [],

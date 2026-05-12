@@ -100,8 +100,17 @@
       "selMiddleV": "Center vertically inside selection",
       "selBottom": "Align bottom edges of selection",
       "distributeH": "Distribute horizontally (3+ objects)",
-      "distributeV": "Distribute vertically (3+ objects)"
+      "distributeV": "Distribute vertically (3+ objects)",
+      "layer": "Layer",
+      "toBack": "Send to back",
+      "backward": "Send backward",
+      "forward": "Bring forward",
+      "toFront": "Bring to front"
     },
+    "lock": "Lock position (no drag / resize)",
+    "includeInPdf": "Print in PDF",
+    "background": "Background (reference)",
+    "backgroundHint": "Uploads an image as locked background — visible only in the editor, not in the PDF.",
     "textValue": "Text",
     "fontFamily": "Font",
     "fontSizeMm": "Size (mm)",

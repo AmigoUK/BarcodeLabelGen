@@ -59,16 +59,20 @@ export function Canvas() {
   }, []);
 
   // Bind transformer to the currently selected nodes (any non-zero count).
+  // Locked objects are filtered out — they can be selected (so the right
+  // panel can offer "Unlock") but get no resize/rotate handles.
   useEffect(() => {
     const transformer = transformerRef.current;
     const stage = stageRef.current;
     if (!transformer || !stage) return;
-    if (selectedIds.length === 0) {
+    if (selectedIds.length === 0 || !canvas) {
       transformer.nodes([]);
       transformer.getLayer()?.batchDraw();
       return;
     }
+    const lockedIds = new Set(canvas.objects.filter((o) => o.locked === true).map((o) => o.id));
     const nodes = selectedIds
+      .filter((id) => !lockedIds.has(id))
       .map((id) => stage.findOne(`#${id}`))
       .filter((n): n is Konva.Node => n !== undefined);
     transformer.nodes(nodes);
@@ -123,7 +127,7 @@ export function Canvas() {
                     key={o.id}
                     object={o}
                     scale={scale}
-                    draggable
+                    draggable={!o.locked}
                     onSelect={(e) => onObjectSelect(o.id, e)}
                     onChange={(patch) => updateObject(o.id, patch)}
                   />
@@ -135,7 +139,7 @@ export function Canvas() {
                     key={o.id}
                     object={o}
                     scale={scale}
-                    draggable
+                    draggable={!o.locked}
                     onSelect={(e) => onObjectSelect(o.id, e)}
                     onChange={(patch) => updateObject(o.id, patch)}
                   />
@@ -147,7 +151,7 @@ export function Canvas() {
                     key={o.id}
                     object={o}
                     scale={scale}
-                    draggable
+                    draggable={!o.locked}
                     onSelect={(e) => onObjectSelect(o.id, e)}
                     onChange={(patch) => updateObject(o.id, patch)}
                   />
@@ -159,7 +163,7 @@ export function Canvas() {
                     key={o.id}
                     object={o}
                     scale={scale}
-                    draggable
+                    draggable={!o.locked}
                     onSelect={(e) => onObjectSelect(o.id, e)}
                     onChange={(patch) => updateObject(o.id, patch)}
                   />
@@ -171,7 +175,7 @@ export function Canvas() {
                     key={o.id}
                     object={o}
                     scale={scale}
-                    draggable
+                    draggable={!o.locked}
                     onSelect={(e) => onObjectSelect(o.id, e)}
                     onChange={(patch) => updateObject(o.id, patch)}
                   />

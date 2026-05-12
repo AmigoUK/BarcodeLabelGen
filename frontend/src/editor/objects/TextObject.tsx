@@ -37,6 +37,7 @@ export function TextObject({ object, scale, draggable, onSelect, onChange }: Pro
       height={isBlock ? object.height! * scale : undefined}
       wrap={hasWidth ? "word" : "none"}
       rotation={object.rotation ?? 0}
+      opacity={object.printable === false ? 0.5 : 1}
       draggable={draggable}
       onMouseDown={onSelect}
       onTap={onSelect}

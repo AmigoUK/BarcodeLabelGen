@@ -54,6 +54,7 @@ export function BarcodeObject({ object, scale, draggable, onSelect, onChange }: 
     width: object.width * scale,
     height: object.height * scale,
     rotation: object.rotation ?? 0,
+    opacity: object.printable === false ? 0.5 : 1,
     draggable,
     onMouseDown: onSelect,
     onTap: onSelect,

@@ -9,7 +9,7 @@
  */
 
 import { useTranslation } from "react-i18next";
-import type { AlignMode } from "./store";
+import type { AlignMode, ZOrderMode } from "./store";
 import { useEditorStore } from "./store";
 
 type IconBtnProps = {
@@ -42,12 +42,14 @@ export function AlignmentBar() {
   const { t } = useTranslation();
   const selectedIds = useEditorStore((s) => s.selectedIds);
   const align = useEditorStore((s) => s.alignObjects);
+  const reorder = useEditorStore((s) => s.reorderObjects);
 
   const hasOne = selectedIds.length >= 1;
   const hasTwo = selectedIds.length >= 2;
   const hasThree = selectedIds.length >= 3;
 
   const fire = (mode: AlignMode) => () => align(mode);
+  const fireZ = (mode: ZOrderMode) => () => reorder(mode);
 
   return (
     <div className="flex items-center gap-2 border-b border-slate-800 bg-slate-950 px-4 py-1.5 text-xs">
@@ -151,6 +153,39 @@ export function AlignmentBar() {
           title={t("editor.alignBar.distributeV")}
           disabled={!hasThree}
           onClick={fire("sel.distributeV")}
+        />
+      </div>
+
+      <span className="mx-2 h-4 w-px bg-slate-800" />
+
+      {/* Z-order (layer) group — operates on the same selection */}
+      <span className="text-[10px] uppercase tracking-wider text-slate-500">
+        {t("editor.alignBar.layer")}
+      </span>
+      <div className="flex items-center gap-0.5">
+        <IconBtn
+          symbol="⤓"
+          title={t("editor.alignBar.toBack")}
+          disabled={!hasOne}
+          onClick={fireZ("back")}
+        />
+        <IconBtn
+          symbol="↓"
+          title={t("editor.alignBar.backward")}
+          disabled={!hasOne}
+          onClick={fireZ("backward")}
+        />
+        <IconBtn
+          symbol="↑"
+          title={t("editor.alignBar.forward")}
+          disabled={!hasOne}
+          onClick={fireZ("forward")}
+        />
+        <IconBtn
+          symbol="⤒"
+          title={t("editor.alignBar.toFront")}
+          disabled={!hasOne}
+          onClick={fireZ("front")}
         />
       </div>
 

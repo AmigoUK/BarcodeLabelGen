@@ -100,8 +100,17 @@
       "selMiddleV": "Wyśrodkuj pionowo zaznaczone",
       "selBottom": "Wyrównaj dolne krawędzie zaznaczonych",
       "distributeH": "Rozłóż równomiernie poziomo (3+ obiektów)",
-      "distributeV": "Rozłóż równomiernie pionowo (3+ obiektów)"
+      "distributeV": "Rozłóż równomiernie pionowo (3+ obiektów)",
+      "layer": "Warstwa",
+      "toBack": "Przenieś na sam dół",
+      "backward": "Przesuń niżej",
+      "forward": "Przesuń wyżej",
+      "toFront": "Przenieś na sam wierzch"
     },
+    "lock": "Zablokuj pozycję (bez przesuwania / skalowania)",
+    "includeInPdf": "Drukuj w PDF",
+    "background": "Tło (referencja)",
+    "backgroundHint": "Wgrywa obraz jako zablokowane tło — widoczne tylko w edytorze, nie trafia do PDF.",
     "textValue": "Treść",
     "fontFamily": "Czcionka",
     "fontSizeMm": "Rozmiar (mm)",

@@ -22,6 +22,7 @@ export function RectObject({ object, scale, draggable, onSelect, onChange }: Pro
       stroke={object.stroke}
       strokeWidth={(object.strokeWidth ?? 0) * scale}
       rotation={object.rotation ?? 0}
+      opacity={object.printable === false ? 0.5 : 1}
       draggable={draggable}
       onMouseDown={onSelect}
       onTap={onSelect}
