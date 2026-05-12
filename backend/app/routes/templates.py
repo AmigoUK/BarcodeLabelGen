@@ -62,6 +62,8 @@ def create_template() -> ResponseReturnValue:
             description=payload.description,
             format_id=payload.format_id,
             canvas_data=payload.canvas_data,
+            width_mm=payload.width_mm,
+            height_mm=payload.height_mm,
         )
     except ValueError as exc:
         return jsonify({"error": "invalid_format", "detail": str(exc)}), 400

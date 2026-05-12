@@ -63,7 +63,16 @@
     "empty": "Nie masz jeszcze żadnych szablonów. Kliknij „Nowy szablon”, aby zacząć.",
     "confirmDelete": "Usunąć szablon „{{name}}”?",
     "searchPlaceholder": "Szukaj szablonu…",
-    "noMatches": "Brak szablonów pasujących do „{{query}}”."
+    "noMatches": "Brak szablonów pasujących do „{{query}}”.",
+    "presetGroup": "Predefiniowane",
+    "customGroup": "Własny rozmiar",
+    "customSize": "Własny rozmiar (zdefiniuj)",
+    "orientation": "Orientacja",
+    "portrait": "Pionowo",
+    "landscape": "Poziomo",
+    "customWidthMm": "Szerokość (mm)",
+    "customHeightMm": "Wysokość (mm)",
+    "resolvedSize": "Wybrano: {{w}} × {{h}} mm"
   },
   "editor": {
     "add": "Dodaj",

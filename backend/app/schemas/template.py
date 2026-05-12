@@ -48,6 +48,11 @@ class CreateTemplateRequest(BaseModel):
     description: str | None = Field(default=None, max_length=1000)
     format_id: int
     canvas_data: dict[str, Any] = Field(default_factory=dict)
+    # When set, override the format's dimensions on the new Template row —
+    # used for orientation swap (landscape) and the user-typed Custom size.
+    # Bounds match the editor's max sensible label (1 m).
+    width_mm: float | None = Field(default=None, gt=0, le=1000)
+    height_mm: float | None = Field(default=None, gt=0, le=1000)
 
 
 class UpdateTemplateRequest(BaseModel):

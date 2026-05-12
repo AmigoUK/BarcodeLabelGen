@@ -72,6 +72,69 @@ def test_create_template_with_unknown_format_returns_400(
     assert response.get_json()["error"] == "invalid_format"
 
 
+def test_create_template_landscape_swaps_dimensions(
+    app: Flask, client: FlaskClient, csrf: CsrfHelper
+) -> None:
+    """Client sends w/h swapped (landscape A6 = 148×105) — Template row +
+    empty canvas pick up the override, not the format's portrait values."""
+    fmt_id = _seed_format_and_login(app, client, csrf)
+    response = client.post(
+        "/api/templates",
+        json={"name": "Landscape", "format_id": fmt_id, "width_mm": 148, "height_mm": 105},
+        headers=csrf.headers(),
+    )
+    assert response.status_code == 201
+    body = response.get_json()
+    assert body["width_mm"] == 148
+    assert body["height_mm"] == 105
+    assert body["canvas_data"]["stage"]["width_mm"] == 148
+    assert body["canvas_data"]["stage"]["height_mm"] == 105
+
+
+def test_create_template_custom_size(app: Flask, client: FlaskClient, csrf: CsrfHelper) -> None:
+    """Custom-size flow: any format_id + arbitrary width_mm/height_mm."""
+    fmt_id = _seed_format_and_login(app, client, csrf)
+    response = client.post(
+        "/api/templates",
+        json={"name": "Custom", "format_id": fmt_id, "width_mm": 80, "height_mm": 60},
+        headers=csrf.headers(),
+    )
+    assert response.status_code == 201
+    body = response.get_json()
+    assert body["width_mm"] == 80
+    assert body["height_mm"] == 60
+
+
+def test_create_template_oversize_dimensions_rejected(
+    app: Flask, client: FlaskClient, csrf: CsrfHelper
+) -> None:
+    fmt_id = _seed_format_and_login(app, client, csrf)
+    response = client.post(
+        "/api/templates",
+        json={"name": "Huge", "format_id": fmt_id, "width_mm": 2000, "height_mm": 100},
+        headers=csrf.headers(),
+    )
+    assert response.status_code == 400
+    assert response.get_json()["error"] == "validation_error"
+
+
+def test_create_template_no_overrides_falls_back_to_format(
+    app: Flask, client: FlaskClient, csrf: CsrfHelper
+) -> None:
+    """Existing flow: no width_mm/height_mm in request → format's preset
+    dimensions win (backwards compatibility)."""
+    fmt_id = _seed_format_and_login(app, client, csrf)
+    response = client.post(
+        "/api/templates",
+        json={"name": "Default", "format_id": fmt_id},
+        headers=csrf.headers(),
+    )
+    assert response.status_code == 201
+    body = response.get_json()
+    assert body["width_mm"] == 105  # _seed_format_and_login uses A6
+    assert body["height_mm"] == 148
+
+
 def test_get_template_returns_full_canvas_data(
     app: Flask, client: FlaskClient, csrf: CsrfHelper
 ) -> None:

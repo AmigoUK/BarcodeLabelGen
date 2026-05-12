@@ -63,7 +63,16 @@
     "empty": "You don't have any templates yet. Click \"New template\" to start.",
     "confirmDelete": "Delete template \"{{name}}\"?",
     "searchPlaceholder": "Search templates…",
-    "noMatches": "No templates match \"{{query}}\"."
+    "noMatches": "No templates match \"{{query}}\".",
+    "presetGroup": "Predefined",
+    "customGroup": "Custom size",
+    "customSize": "Custom (define size)",
+    "orientation": "Orientation",
+    "portrait": "Portrait",
+    "landscape": "Landscape",
+    "customWidthMm": "Width (mm)",
+    "customHeightMm": "Height (mm)",
+    "resolvedSize": "Selected: {{w}} × {{h}} mm"
   },
   "editor": {
     "add": "Add",

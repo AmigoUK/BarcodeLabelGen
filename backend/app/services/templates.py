@@ -46,19 +46,29 @@ def create(
     description: str | None,
     format_id: int,
     canvas_data: dict[str, Any],
+    width_mm: float | None = None,
+    height_mm: float | None = None,
 ) -> Template:
+    """Create a Template snapshotting either the format's dimensions or the
+    optional `width_mm` / `height_mm` overrides (used for landscape
+    orientation and the Custom-size flow). Each override falls back
+    independently to the format value if the client only sent one — the UI
+    always sends both or neither, but staying defensive avoids surprises."""
     label_format = session.get(LabelFormat, format_id)
     if label_format is None:
         raise ValueError(f"label_format {format_id} not found")
+
+    final_w = float(width_mm) if width_mm is not None else float(label_format.width_mm)
+    final_h = float(height_mm) if height_mm is not None else float(label_format.height_mm)
 
     tpl = Template(
         owner_id=owner_id,
         name=name,
         description=description,
         format_id=format_id,
-        width_mm=float(label_format.width_mm),
-        height_mm=float(label_format.height_mm),
-        canvas_data=canvas_data or _empty_canvas(label_format),
+        width_mm=final_w,
+        height_mm=final_h,
+        canvas_data=canvas_data or _empty_canvas(final_w, final_h),
     )
     session.add(tpl)
     session.commit()
@@ -107,13 +117,13 @@ def delete(session: Session, template_id: int, *, requesting_user_id: int) -> No
     session.commit()
 
 
-def _empty_canvas(label_format: LabelFormat) -> dict[str, Any]:
+def _empty_canvas(width_mm: float, height_mm: float) -> dict[str, Any]:
     """Initial Konva-stage shape for a brand-new template."""
     return {
         "version": 1,
         "stage": {
-            "width_mm": float(label_format.width_mm),
-            "height_mm": float(label_format.height_mm),
+            "width_mm": float(width_mm),
+            "height_mm": float(height_mm),
         },
         "objects": [],
     }

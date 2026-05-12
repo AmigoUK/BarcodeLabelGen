@@ -107,8 +107,33 @@ function NewTemplateModal({ onClose }: { onClose: () => void }) {
 
   const [name, setName] = useState("");
   const [formatId, setFormatId] = useState<number | "">("");
+  const [orientation, setOrientation] = useState<"portrait" | "landscape">("portrait");
+  const [customW, setCustomW] = useState<number>(80);
+  const [customH, setCustomH] = useState<number>(60);
 
-  const canSubmit = name.length > 0 && formatId !== "";
+  const fmt = formats.data?.find((f) => f.id === formatId) ?? null;
+  const isCustom = fmt?.kind === "custom";
+  const isSquare = !!fmt && !isCustom && fmt.width_mm === fmt.height_mm;
+  const showOrientation = !!fmt && !isCustom && !isSquare;
+
+  // Resolve the dimensions the user is about to commit to — same math
+  // we'll send to the backend below. Used for the live "Wybrano: …"
+  // hint and for validation.
+  const resolved = (() => {
+    if (!fmt) return null;
+    if (isCustom) return { w: customW, h: customH };
+    if (orientation === "landscape") return { w: fmt.height_mm, h: fmt.width_mm };
+    return { w: fmt.width_mm, h: fmt.height_mm };
+  })();
+
+  const customInRange =
+    !isCustom || (customW >= 10 && customW <= 1000 && customH >= 10 && customH <= 1000);
+  const canSubmit = name.length > 0 && formatId !== "" && customInRange;
+
+  // Group formats so the custom row sits below a divider rather than
+  // mixed in with the system presets.
+  const presetFormats = formats.data?.filter((f) => f.kind !== "custom") ?? [];
+  const customFormats = formats.data?.filter((f) => f.kind === "custom") ?? [];
 
   return (
     <Modal
@@ -123,9 +148,14 @@ function NewTemplateModal({ onClose }: { onClose: () => void }) {
           <Button
             disabled={!canSubmit || create.isPending}
             onClick={() => {
-              if (formatId === "") return;
+              if (formatId === "" || !resolved) return;
               create.mutate(
-                { name, format_id: Number(formatId) },
+                {
+                  name,
+                  format_id: Number(formatId),
+                  width_mm: resolved.w,
+                  height_mm: resolved.h,
+                },
                 {
                   onSuccess: (created) => {
                     onClose();
@@ -153,12 +183,89 @@ function NewTemplateModal({ onClose }: { onClose: () => void }) {
           onChange={(e) => setFormatId(e.target.value === "" ? "" : Number(e.target.value))}
         >
           <option value="">— {t("templates.choose")} —</option>
-          {formats.data?.map((f) => (
-            <option key={f.id} value={f.id}>
-              {f.name}
-            </option>
-          ))}
+          {presetFormats.length > 0 && (
+            <optgroup label={t("templates.presetGroup")}>
+              {presetFormats.map((f) => (
+                <option key={f.id} value={f.id}>
+                  {f.name}
+                </option>
+              ))}
+            </optgroup>
+          )}
+          {customFormats.length > 0 && (
+            <optgroup label={t("templates.customGroup")}>
+              {customFormats.map((f) => (
+                <option key={f.id} value={f.id}>
+                  {t("templates.customSize")}
+                </option>
+              ))}
+            </optgroup>
+          )}
         </Select>
+
+        {showOrientation && (
+          <div className="space-y-1">
+            <label className="block text-sm font-medium text-slate-200">
+              {t("templates.orientation")}
+            </label>
+            <div className="inline-flex overflow-hidden rounded-md border border-slate-700">
+              <button
+                type="button"
+                onClick={() => setOrientation("portrait")}
+                className={[
+                  "px-3 py-1.5 text-xs",
+                  orientation === "portrait"
+                    ? "bg-indigo-600 text-white"
+                    : "bg-slate-900 text-slate-300 hover:bg-slate-800",
+                ].join(" ")}
+              >
+                ▯ {t("templates.portrait")}
+              </button>
+              <button
+                type="button"
+                onClick={() => setOrientation("landscape")}
+                className={[
+                  "px-3 py-1.5 text-xs",
+                  orientation === "landscape"
+                    ? "bg-indigo-600 text-white"
+                    : "bg-slate-900 text-slate-300 hover:bg-slate-800",
+                ].join(" ")}
+              >
+                ▭ {t("templates.landscape")}
+              </button>
+            </div>
+          </div>
+        )}
+
+        {isCustom && (
+          <div className="grid grid-cols-2 gap-2">
+            <Input
+              label={t("templates.customWidthMm")}
+              type="number"
+              min={10}
+              max={1000}
+              step={1}
+              value={customW}
+              onChange={(e) => setCustomW(Number(e.target.value) || 0)}
+            />
+            <Input
+              label={t("templates.customHeightMm")}
+              type="number"
+              min={10}
+              max={1000}
+              step={1}
+              value={customH}
+              onChange={(e) => setCustomH(Number(e.target.value) || 0)}
+            />
+          </div>
+        )}
+
+        {resolved && (
+          <p className="rounded border border-slate-800 bg-slate-900/40 px-3 py-2 text-xs text-slate-400">
+            {t("templates.resolvedSize", { w: resolved.w, h: resolved.h })}
+          </p>
+        )}
+
         {create.error && (
           <p className="text-sm text-rose-400">
             {create.error instanceof Error ? create.error.message : String(create.error)}

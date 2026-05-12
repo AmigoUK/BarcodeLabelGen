@@ -59,6 +59,12 @@ type CreateTemplateInput = {
   name: string;
   format_id: number;
   description?: string | null;
+  /** Override the format's preset dimensions (used for landscape
+   * orientation and the user-defined Custom size). Both must be sent
+   * together; the server falls back to the format's values for any
+   * missing field. */
+  width_mm?: number;
+  height_mm?: number;
 };
 
 export function useCreateTemplate() {
