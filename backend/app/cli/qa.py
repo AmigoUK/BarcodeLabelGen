@@ -583,5 +583,219 @@ def qa_templates(output_dir: str, clean: bool) -> None:
         os._exit(1)
 
 
+# --- text-alignment QA ---------------------------------------------------
+
+
+QA_TEXT_PREFIX = "QA Text: "
+
+# A long-ish Polish sentence that exercises wide glyphs ("w", "z" with
+# tail) and forces the bounding box to be unambiguously wider than the
+# wrap-box's centre/right inset, so a misalignment of even 1 mm shows up
+# clearly when measured against the 120 mm wrap box.
+QA_SENTENCE = "Producent ABC oferuje wysokiej jakosci wyroby etykietowe."
+
+
+@click.command("qa-text-align")
+@click.option(
+    "--output-dir",
+    default=str(DEFAULT_OUTPUT_DIR),
+    show_default=True,
+    help="Where rendered PDFs are written.",
+)
+@click.option("--clean/--no-clean", default=True, help="Remove existing QA Text templates first.")
+@with_appcontext
+def qa_text_align(output_dir: str, clean: bool) -> None:
+    """Build single-line text templates in left/center/right alignment,
+    render PDFs, measure where the glyphs actually land, and verify the
+    alignment is doing what the editor preview shows."""
+    output = Path(output_dir)
+    output.mkdir(parents=True, exist_ok=True)
+
+    session = get_session()
+    owner = _ensure_qa_owner(session)
+
+    if clean:
+        deleted = (
+            session.query(Template)
+            .filter(Template.name.like(f"{QA_TEXT_PREFIX}%"))
+            .delete(synchronize_session=False)
+        )
+        session.commit()
+        if deleted:
+            click.echo(f"🧹 cleaned {deleted} previous QA Text template(s)")
+
+    # Pick A4 portrait — wide enough that a 120 mm wrap box has clear
+    # space on both sides, so misalignment can't hide against the page
+    # edge.
+    a4 = (
+        session.execute(select(LabelFormat).where(LabelFormat.name.like("A4%")).limit(1))
+        .scalars()
+        .first()
+    )
+    if a4 is None:
+        raise click.ClickException("A4 LabelFormat missing — run migrations first")
+
+    page_w_mm = float(a4.width_mm)
+    page_h_mm = float(a4.height_mm)
+    text_box_w = 120.0
+    text_box_x = 30.0
+    text_box_y = 40.0
+    text_box_h = 20.0
+    font_size_mm = 5.0
+
+    overall_pass = True
+
+    for align in ("left", "center", "right"):
+        # Visible-on-canvas guides so the user can also eyeball the
+        # alignment in the editor: a thin grey wrap-box outline plus
+        # red vertical guides at left/centre/right.
+        objects: list[dict[str, Any]] = [
+            {
+                "id": "wrap_box",
+                "type": "rect",
+                "x": text_box_x,
+                "y": text_box_y,
+                "width": text_box_w,
+                "height": text_box_h,
+                "fill": "#ffffff",
+                "stroke": "#cccccc",
+                "strokeWidth": 0.2,
+            },
+            {
+                "id": "guide_left",
+                "type": "line",
+                "x": text_box_x,
+                "y": text_box_y - 5,
+                "points": [0, 0, 0, text_box_h + 10],
+                "stroke": "#dc2626",
+                "strokeWidth": 0.2,
+            },
+            {
+                "id": "guide_center",
+                "type": "line",
+                "x": text_box_x + text_box_w / 2,
+                "y": text_box_y - 5,
+                "points": [0, 0, 0, text_box_h + 10],
+                "stroke": "#dc2626",
+                "strokeWidth": 0.2,
+            },
+            {
+                "id": "guide_right",
+                "type": "line",
+                "x": text_box_x + text_box_w,
+                "y": text_box_y - 5,
+                "points": [0, 0, 0, text_box_h + 10],
+                "stroke": "#dc2626",
+                "strokeWidth": 0.2,
+            },
+            # The text under test — single line via wide enough wrap box.
+            {
+                "id": "txt",
+                "type": "text",
+                "x": text_box_x,
+                "y": text_box_y + 5,
+                "text": QA_SENTENCE,
+                "fontSize": font_size_mm,
+                "fontFamily": "Helvetica",
+                "fill": "#000000",
+                "align": align,
+                "width": text_box_w,
+            },
+        ]
+        canvas = {
+            "version": 1,
+            "stage": {"width_mm": page_w_mm, "height_mm": page_h_mm},
+            "objects": objects,
+        }
+
+        # Persist as a Template so the user can also open it in the UI
+        # and visually inspect (the red guides + grey wrap box reveal
+        # the geometry at a glance).
+        tpl = Template(
+            owner_id=owner.id,
+            name=f"{QA_TEXT_PREFIX}{align}",
+            description=f"Single-line text aligned {align} in a 120 mm wrap box",
+            format_id=a4.id,
+            width_mm=page_w_mm,
+            height_mm=page_h_mm,
+            canvas_data=canvas,
+        )
+        session.add(tpl)
+        session.commit()
+
+        # Render PDF (same code path /api/generate uses)
+        pdf_bytes = render_template_pdf(canvas, width_mm=page_w_mm, height_mm=page_h_mm)
+        pdf_path = output / f"qa_text_{align}.pdf"
+        pdf_path.write_bytes(pdf_bytes)
+
+        # Measure: bucket glyphs by line (rounded `top`), then check
+        # each line independently — wrap-at-width produces N lines and
+        # comparing min/max across all of them would mask a per-line
+        # misalignment.
+        from collections import defaultdict
+
+        box_left = text_box_x
+        box_right = text_box_x + text_box_w
+        box_center = text_box_x + text_box_w / 2
+
+        with pdfplumber.open(pdf_path) as doc:
+            page = doc.pages[0]
+            chars = page.chars
+            if not chars:
+                click.echo(f"❌ {align}: no glyphs found in PDF")
+                overall_pass = False
+                continue
+            buckets: dict[int, list[Any]] = defaultdict(list)
+            for ch in chars:
+                buckets[round(ch["top"])].append(ch)
+            text_lines = [sorted(b, key=lambda c: c["x0"]) for _, b in sorted(buckets.items())]
+
+        click.echo(
+            f"\n📦 align={align:6s}  box=[{box_left:.1f} .. {box_right:.1f}] mm  "
+            f"({len(text_lines)} line(s))"
+        )
+
+        all_ok = True
+        for i, line_chars in enumerate(text_lines):
+            min_x_mm = _pt_to_mm(min(c["x0"] for c in line_chars))
+            max_x_mm = _pt_to_mm(max(c["x1"] for c in line_chars))
+            center_x_mm = (min_x_mm + max_x_mm) / 2
+
+            if align == "left":
+                expected = box_left
+                actual = min_x_mm
+                anchor = "left"
+            elif align == "center":
+                expected = box_center
+                actual = center_x_mm
+                anchor = "centre"
+            else:
+                expected = box_right
+                actual = max_x_mm
+                anchor = "right"
+
+            dev = abs(actual - expected)
+            ok = dev <= TOLERANCE_MM
+            if not ok:
+                all_ok = False
+            symbol = "✅" if ok else "❌"
+            click.echo(
+                f"   {symbol} line {i + 1}: [{min_x_mm:.2f} .. {max_x_mm:.2f}] mm  "
+                f"(w={max_x_mm - min_x_mm:.2f} mm)  "
+                f"{anchor}: expect {expected:.2f}, got {actual:.2f}, Δ {dev:.2f} mm"
+            )
+        click.echo(f"   PDF → {pdf_path}")
+        click.echo(f"   Template id={tpl.id} (open in UI as 'QA Text: {align}')")
+        if not all_ok:
+            overall_pass = False
+
+    click.echo(
+        "\n" + ("✅ ALL TEXT-ALIGN CHECKS PASSED" if overall_pass else "❌ SOME CHECKS FAILED")
+    )
+    if not overall_pass:
+        os._exit(1)
+
+
 def register_qa_cli(app: Flask) -> None:
     app.cli.add_command(qa_templates)
+    app.cli.add_command(qa_text_align)

@@ -234,48 +234,57 @@ def _draw_text(
         float(height_raw) if isinstance(height_raw, int | float) and height_raw > 0 else 0.0
     )
 
-    # Block mode kicks in only when the box is fully defined (width AND
-    # height). Single-line text (today's default) keeps the legacy path.
-    is_block = has_explicit_width and has_explicit_height
-
+    # Konva semantics:
+    #  - no width            → single line, no wrap
+    #  - width only          → wrap-at-width (height grows with content)
+    #  - width + height      → bounded box; auto-fit shrinks font if asked
+    # We mirror those three modes here so the PDF lays text out the same
+    # way the editor preview does — otherwise a centred wrap-at-width text
+    # would be a single overflowing line in the PDF and visibly drift
+    # left of the wrap box.
     font = _resolve_font(obj)
+    has_box = has_explicit_width and has_explicit_height
+    has_wrap_only = has_explicit_width and not has_explicit_height
 
-    # ---- choose font size + word-wrap if block mode ----
-    if is_block:
+    if has_box and obj.get("autoFit"):
         max_width_pt = width_mm_value * mm
         max_height_pt = height_mm_value * mm
-        if obj.get("autoFit"):
-            min_pt = float(obj.get("minFontSize") or font_size_mm) * mm
-            max_pt = float(obj.get("maxFontSize") or font_size_mm) * mm
-            # Belt-and-suspenders: keep min ≤ max even on bad input
-            min_pt, max_pt = (min(min_pt, max_pt), max(min_pt, max_pt))
-            font_size_pt, lines, fits = _autofit_size_pt(
-                text, font, max_width_pt, max_height_pt, min_pt, max_pt
+        min_pt = float(obj.get("minFontSize") or font_size_mm) * mm
+        max_pt = float(obj.get("maxFontSize") or font_size_mm) * mm
+        min_pt, max_pt = (min(min_pt, max_pt), max(min_pt, max_pt))
+        font_size_pt, lines, fits = _autofit_size_pt(
+            text, font, max_width_pt, max_height_pt, min_pt, max_pt
+        )
+        if not fits and warnings is not None:
+            warnings.append(
+                {
+                    "object_id": str(obj.get("id") or ""),
+                    "message": (
+                        f"text didn't fit at minimum font size {min_pt / mm:.1f} mm; truncated"
+                    ),
+                }
             )
-            if not fits and warnings is not None:
-                warnings.append(
-                    {
-                        "object_id": str(obj.get("id") or ""),
-                        "message": (
-                            f"text didn't fit at minimum font size {min_pt / mm:.1f} mm; truncated"
-                        ),
-                    }
-                )
-        else:
-            font_size_pt = font_size_mm * mm
-            lines = _wrap_lines(text, font, font_size_pt, max_width_pt)
-            if warnings is not None and not _layout_fits(
-                lines, font, font_size_pt, max_width_pt, max_height_pt
-            ):
-                warnings.append(
-                    {
-                        "object_id": str(obj.get("id") or ""),
-                        "message": (
-                            f"text didn't fit at {font_size_mm:.1f} mm; "
-                            "enable auto-fit or enlarge the box"
-                        ),
-                    }
-                )
+    elif has_box:
+        max_width_pt = width_mm_value * mm
+        max_height_pt = height_mm_value * mm
+        font_size_pt = font_size_mm * mm
+        lines = _wrap_lines(text, font, font_size_pt, max_width_pt)
+        if warnings is not None and not _layout_fits(
+            lines, font, font_size_pt, max_width_pt, max_height_pt
+        ):
+            warnings.append(
+                {
+                    "object_id": str(obj.get("id") or ""),
+                    "message": (
+                        f"text didn't fit at {font_size_mm:.1f} mm; "
+                        "enable auto-fit or enlarge the box"
+                    ),
+                }
+            )
+    elif has_wrap_only:
+        max_width_pt = width_mm_value * mm
+        font_size_pt = font_size_mm * mm
+        lines = _wrap_lines(text, font, font_size_pt, max_width_pt)
     else:
         font_size_pt = font_size_mm * mm
         lines = text.split("\n")
