@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
 import { Navigate } from "react-router-dom";
+import { AppFooter } from "../components/AppFooter";
 import { LanguageSwitcher } from "../components/LanguageSwitcher";
 import { Button } from "../components/ui/Button";
 import { Input } from "../components/ui/Input";
@@ -30,48 +31,51 @@ export function LoginPage() {
   })();
 
   return (
-    <div className="flex min-h-screen items-center justify-center bg-slate-950 p-6 text-slate-100">
-      <div className="w-full max-w-md space-y-6">
-        <div className="flex justify-end">
-          <LanguageSwitcher />
+    <div className="flex min-h-screen flex-col bg-slate-950 text-slate-100">
+      <div className="flex flex-1 items-center justify-center p-6">
+        <div className="w-full max-w-md space-y-6">
+          <div className="flex justify-end">
+            <LanguageSwitcher />
+          </div>
+          <div className="space-y-2 text-center">
+            <h1 className="text-3xl font-bold">{t("app.name")}</h1>
+            <p className="text-slate-400">{t("auth.loginTitle")}</p>
+          </div>
+          <form
+            className="space-y-4 rounded-lg border border-slate-800 bg-slate-900/50 p-6"
+            onSubmit={(e) => {
+              e.preventDefault();
+              login.mutate({ email, password });
+            }}
+          >
+            <Input
+              label={t("auth.email")}
+              type="email"
+              autoComplete="username"
+              required
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+            />
+            <Input
+              label={t("auth.password")}
+              type="password"
+              autoComplete="current-password"
+              required
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+            />
+            {errorMessage && (
+              <div className="rounded-md border border-rose-900 bg-rose-950/50 px-3 py-2 text-sm text-rose-300">
+                {errorMessage}
+              </div>
+            )}
+            <Button type="submit" disabled={login.isPending} className="w-full">
+              {login.isPending ? t("auth.loggingIn") : t("auth.loginButton")}
+            </Button>
+          </form>
         </div>
-        <div className="space-y-2 text-center">
-          <h1 className="text-3xl font-bold">{t("app.name")}</h1>
-          <p className="text-slate-400">{t("auth.loginTitle")}</p>
-        </div>
-        <form
-          className="space-y-4 rounded-lg border border-slate-800 bg-slate-900/50 p-6"
-          onSubmit={(e) => {
-            e.preventDefault();
-            login.mutate({ email, password });
-          }}
-        >
-          <Input
-            label={t("auth.email")}
-            type="email"
-            autoComplete="username"
-            required
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-          />
-          <Input
-            label={t("auth.password")}
-            type="password"
-            autoComplete="current-password"
-            required
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-          />
-          {errorMessage && (
-            <div className="rounded-md border border-rose-900 bg-rose-950/50 px-3 py-2 text-sm text-rose-300">
-              {errorMessage}
-            </div>
-          )}
-          <Button type="submit" disabled={login.isPending} className="w-full">
-            {login.isPending ? t("auth.loggingIn") : t("auth.loginButton")}
-          </Button>
-        </form>
       </div>
+      <AppFooter />
     </div>
   );
 }

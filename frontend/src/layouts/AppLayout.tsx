@@ -1,6 +1,7 @@
 import type { ReactNode } from "react";
 import { useTranslation } from "react-i18next";
 import { Link, NavLink } from "react-router-dom";
+import { AppFooter } from "../components/AppFooter";
 import { LanguageSwitcher } from "../components/LanguageSwitcher";
 import { Button } from "../components/ui/Button";
 import { useLogout } from "../hooks/useAuth";
@@ -65,6 +66,7 @@ export function AppLayout({ children }: Props) {
         </header>
 
         <main className="flex-1 overflow-y-auto p-6">{children}</main>
+        <AppFooter />
       </div>
     </div>
   );
