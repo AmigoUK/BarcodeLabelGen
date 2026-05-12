@@ -54,4 +54,7 @@ def seed_admin() -> None:
 
 
 def register_cli(app: Flask) -> None:
+    from app.cli.qa import register_qa_cli
+
     app.cli.add_command(seed_admin)
+    register_qa_cli(app)
