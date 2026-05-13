@@ -12,6 +12,9 @@ export default defineConfig({
         changeOrigin: true,
       },
     },
+    // Allow `?raw` imports from the repo's top-level docs/ folder (HELP/FAQ
+    // markdown) in dev mode. The production build doesn't need this.
+    fs: { allow: [".."] },
   },
   build: {
     outDir: "dist",

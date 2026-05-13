@@ -13,11 +13,18 @@ import { UsersPage } from "./pages/admin/UsersPage";
 const EditorPage = lazy(() =>
   import("./pages/EditorPage").then((m) => ({ default: m.EditorPage })),
 );
+// Help bundles react-markdown + embedded docs (~200 KB). Rarely visited
+// → lazy-loaded so it doesn't bloat the main bundle.
+const HelpPage = lazy(() => import("./pages/HelpPage").then((m) => ({ default: m.HelpPage })));
 
 function EditorFallback() {
   return (
     <div className="flex h-screen items-center justify-center bg-slate-950 text-slate-400">…</div>
   );
+}
+
+function PageFallback() {
+  return <div className="p-6 text-sm text-slate-400">…</div>;
 }
 
 export function App() {
@@ -55,6 +62,18 @@ export function App() {
             <ProtectedRoute>
               <AppLayout>
                 <TemplatesPage />
+              </AppLayout>
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/help"
+          element={
+            <ProtectedRoute>
+              <AppLayout>
+                <Suspense fallback={<PageFallback />}>
+                  <HelpPage />
+                </Suspense>
               </AppLayout>
             </ProtectedRoute>
           }

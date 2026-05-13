@@ -13,8 +13,11 @@ name: barcodelabelgen
 services:
   nginx:
     build:
-      context: ./frontend
-      dockerfile: Dockerfile
+      # Root context so the frontend build can reach docs/ for HelpPage's
+      # markdown imports. Dockerfile lives in frontend/ but addresses paths
+      # relative to the repo root.
+      context: .
+      dockerfile: frontend/Dockerfile
     image: barcodelabelgen/frontend:latest
     container_name: blg-nginx
     restart: unless-stopped

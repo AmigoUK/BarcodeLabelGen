@@ -47,8 +47,14 @@
     "shared": "Udostępnione",
     "history": "Historia",
     "imports": "Importy danych",
+    "help": "Pomoc",
     "admin": "Administracja",
     "users": "Użytkownicy"
+  },
+  "help": {
+    "title": "Pomoc",
+    "tabHelp": "Przewodnik",
+    "tabFaq": "FAQ"
   },
   "dashboard": {
     "title": "Pulpit",

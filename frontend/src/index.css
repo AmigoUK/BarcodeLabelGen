@@ -15,3 +15,108 @@ body,
     Roboto,
     sans-serif;
 }
+
+/* Markdown rendered by react-markdown on the Help page. Scoped to .help-prose
+ * so the rest of the app keeps Tailwind's reset; no @tailwindcss/typography
+ * dependency needed. */
+.help-prose h1 {
+  font-size: 1.5rem;
+  font-weight: 700;
+  margin-top: 1.5rem;
+  margin-bottom: 0.75rem;
+  color: rgb(241 245 249);
+}
+.help-prose h2 {
+  font-size: 1.25rem;
+  font-weight: 600;
+  margin-top: 1.75rem;
+  margin-bottom: 0.5rem;
+  padding-bottom: 0.25rem;
+  border-bottom: 1px solid rgb(30 41 59);
+  color: rgb(226 232 240);
+}
+.help-prose h3 {
+  font-size: 1.05rem;
+  font-weight: 600;
+  margin-top: 1rem;
+  margin-bottom: 0.25rem;
+  color: rgb(199 210 254);
+}
+.help-prose p {
+  margin: 0.5rem 0 0.75rem;
+}
+.help-prose ul,
+.help-prose ol {
+  margin: 0.5rem 0 0.75rem 1.25rem;
+}
+.help-prose ul {
+  list-style: disc;
+}
+.help-prose ol {
+  list-style: decimal;
+}
+.help-prose li {
+  margin: 0.15rem 0;
+}
+.help-prose strong {
+  font-weight: 600;
+  color: rgb(248 250 252);
+}
+.help-prose code {
+  font-family: "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-size: 0.85em;
+  background: rgb(15 23 42);
+  border: 1px solid rgb(30 41 59);
+  border-radius: 4px;
+  padding: 1px 5px;
+  color: rgb(254 215 170);
+}
+.help-prose pre {
+  background: rgb(15 23 42);
+  border: 1px solid rgb(30 41 59);
+  border-radius: 6px;
+  padding: 0.75rem 1rem;
+  overflow-x: auto;
+  margin: 0.75rem 0;
+}
+.help-prose pre code {
+  background: transparent;
+  border: 0;
+  padding: 0;
+  color: rgb(226 232 240);
+}
+.help-prose blockquote {
+  border-left: 3px solid rgb(99 102 241);
+  padding-left: 0.75rem;
+  margin: 0.75rem 0;
+  color: rgb(148 163 184);
+}
+.help-prose table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 0.75rem 0;
+  font-size: 0.9rem;
+}
+.help-prose th,
+.help-prose td {
+  border: 1px solid rgb(30 41 59);
+  padding: 0.4rem 0.6rem;
+  text-align: left;
+}
+.help-prose th {
+  background: rgb(15 23 42);
+  font-weight: 600;
+  color: rgb(226 232 240);
+}
+.help-prose a {
+  color: rgb(165 180 252);
+  text-decoration: underline;
+}
+.help-prose a:hover {
+  color: rgb(199 210 254);
+}
+.help-prose hr {
+  border: 0;
+  border-top: 1px solid rgb(30 41 59);
+  margin: 1.25rem 0;
+}

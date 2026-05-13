@@ -47,8 +47,14 @@
     "shared": "Shared",
     "history": "History",
     "imports": "Data imports",
+    "help": "Help",
     "admin": "Administration",
     "users": "Users"
+  },
+  "help": {
+    "title": "Help",
+    "tabHelp": "Guide",
+    "tabFaq": "FAQ"
   },
   "dashboard": {
     "title": "Dashboard",
