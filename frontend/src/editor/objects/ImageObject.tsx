@@ -10,9 +10,19 @@ type Props = {
   draggable: boolean;
   onSelect: (e: Konva.KonvaEventObject<unknown>) => void;
   onChange: (patch: Partial<ImageObjectModel>) => void;
+  onDragStart?: (e: Konva.KonvaEventObject<DragEvent>) => void;
+  onDragMoved?: (patch: { x: number; y: number }, e: Konva.KonvaEventObject<DragEvent>) => void;
 };
 
-export function ImageObject({ object, scale, draggable, onSelect, onChange }: Props) {
+export function ImageObject({
+  object,
+  scale,
+  draggable,
+  onSelect,
+  onChange,
+  onDragStart,
+  onDragMoved,
+}: Props) {
   const [img] = useImage(assetImageUrl(object.assetId), "anonymous");
   return (
     <KonvaImage
@@ -27,7 +37,12 @@ export function ImageObject({ object, scale, draggable, onSelect, onChange }: Pr
       draggable={draggable}
       onMouseDown={onSelect}
       onTap={onSelect}
-      onDragEnd={(e) => onChange({ x: e.target.x() / scale, y: e.target.y() / scale })}
+      onDragStart={onDragStart}
+      onDragEnd={(e) => {
+        const patch = { x: e.target.x() / scale, y: e.target.y() / scale };
+        if (onDragMoved) onDragMoved(patch, e);
+        else onChange(patch);
+      }}
       onTransformEnd={(e) => {
         const node = e.target as Konva.Image;
         const scaleX = node.scaleX();

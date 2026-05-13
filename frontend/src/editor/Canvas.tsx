@@ -6,8 +6,24 @@ import { ImageObject } from "./objects/ImageObject";
 import { LineObject } from "./objects/LineObject";
 import { RectObject } from "./objects/RectObject";
 import { TextObject } from "./objects/TextObject";
-import { useEditorStore } from "./store";
+import { newObjectId, useEditorStore } from "./store";
+import type { EditorObject } from "./types";
 import { fitScale } from "./units";
+
+/** Transient state for an in-flight Alt+drag gesture.
+ *  Lives in a ref (not the store) because it's UI-only — never persisted,
+ *  never undoable. One pending-clones buffer per gesture; flushed in a
+ *  single rAF so a multi-select Alt+drag is one undo step. */
+type AltDragSnapshot = {
+  active: boolean;
+  /** Source positions in mm, keyed by object id. Set on drag-start of
+   *  whichever node the user clicked; we snapshot every selected id so
+   *  Konva's Transformer-driven multi-drag can be cloned wholesale. */
+  positions: Map<string, { x: number; y: number }>;
+  /** Clones accumulated by per-object onDragEnd, flushed together. */
+  pendingClones: EditorObject[];
+  flushScheduled: boolean;
+};
 
 export function Canvas() {
   const containerRef = useRef<HTMLDivElement>(null);
@@ -20,6 +36,89 @@ export function Canvas() {
   const toggleSelect = useEditorStore((s) => s.toggleSelect);
   const clearSelection = useEditorStore((s) => s.clearSelection);
   const updateObject = useEditorStore((s) => s.updateObject);
+  const addObjects = useEditorStore((s) => s.addObjects);
+  const selectMany = useEditorStore((s) => s.selectMany);
+
+  // Per-gesture Alt+drag state. Reset after each rAF flush.
+  const altDragRef = useRef<AltDragSnapshot>({
+    active: false,
+    positions: new Map(),
+    pendingClones: [],
+    flushScheduled: false,
+  });
+
+  const handleAltDragStart = (obj: EditorObject, e: Konva.KonvaEventObject<DragEvent>) => {
+    // Honour Alt only at drag start — releasing Alt mid-drag still duplicates,
+    // pressing Alt mid-drag does not (matches Figma).
+    if (!e.evt?.altKey) return;
+    if (!canvas) return;
+    const ref = altDragRef.current;
+    ref.active = true;
+    ref.positions.clear();
+    // Snapshot every selected node's start position. Konva's Transformer
+    // drags them together; each will fire its own onDragEnd which we use to
+    // build one clone per source.
+    const seen = new Set<string>();
+    for (const id of selectedIds) {
+      const target = canvas.objects.find((o) => o.id === id);
+      if (target) {
+        ref.positions.set(id, { x: target.x, y: target.y });
+        seen.add(id);
+      }
+    }
+    if (!seen.has(obj.id)) {
+      // Alt+drag on a non-selected object — operate on just that one.
+      ref.positions.set(obj.id, { x: obj.x, y: obj.y });
+    }
+  };
+
+  const flushAltDrag = () => {
+    const ref = altDragRef.current;
+    if (ref.pendingClones.length > 0) {
+      const ids = ref.pendingClones.map((c) => c.id);
+      addObjects(ref.pendingClones);
+      selectMany(ids); // explicit — addObjects already does this, but pin it
+    }
+    ref.active = false;
+    ref.positions.clear();
+    ref.pendingClones = [];
+    ref.flushScheduled = false;
+  };
+
+  const handleDragEnd = (
+    obj: EditorObject,
+    patch: { x: number; y: number },
+    e: Konva.KonvaEventObject<DragEvent>,
+  ) => {
+    const ref = altDragRef.current;
+    if (!ref.active) {
+      // Plain drag — commit the new position the way we always did.
+      updateObject(obj.id, patch);
+      return;
+    }
+    const original = ref.positions.get(obj.id);
+    if (!original) {
+      // Source wasn't part of the snapshotted set — treat as normal drag.
+      updateObject(obj.id, patch);
+      return;
+    }
+    // Build a clone at the drop position.
+    ref.pendingClones.push({
+      ...obj,
+      id: newObjectId(),
+      x: patch.x,
+      y: patch.y,
+    } as EditorObject);
+    // Snap the source's Konva node back to its starting screen position so
+    // it visibly stays put. The store position never updated, so on the
+    // next React render the node would already be back here anyway — but
+    // setting position() now avoids a one-frame flicker.
+    e.target.position({ x: original.x * scale, y: original.y * scale });
+    if (!ref.flushScheduled) {
+      ref.flushScheduled = true;
+      requestAnimationFrame(flushAltDrag);
+    }
+  };
 
   // Translate raw click events into the right selection mutation.
   // Shift-click toggles the object in/out of the selection so users can
@@ -121,6 +220,14 @@ export function Canvas() {
               strokeWidth={1}
             />
             {canvas.objects.map((o) => {
+              // Shared drag handlers — Canvas decides whether to commit the
+              // move (plain drag) or queue a clone (Alt+drag).
+              const onDragStart = (e: Konva.KonvaEventObject<DragEvent>) =>
+                handleAltDragStart(o, e);
+              const onDragMoved = (
+                patch: { x: number; y: number },
+                e: Konva.KonvaEventObject<DragEvent>,
+              ) => handleDragEnd(o, patch, e);
               if (o.type === "text") {
                 return (
                   <TextObject
@@ -130,6 +237,8 @@ export function Canvas() {
                     draggable={!o.locked}
                     onSelect={(e) => onObjectSelect(o.id, e)}
                     onChange={(patch) => updateObject(o.id, patch)}
+                    onDragStart={onDragStart}
+                    onDragMoved={onDragMoved}
                   />
                 );
               }
@@ -142,6 +251,8 @@ export function Canvas() {
                     draggable={!o.locked}
                     onSelect={(e) => onObjectSelect(o.id, e)}
                     onChange={(patch) => updateObject(o.id, patch)}
+                    onDragStart={onDragStart}
+                    onDragMoved={onDragMoved}
                   />
                 );
               }
@@ -154,6 +265,8 @@ export function Canvas() {
                     draggable={!o.locked}
                     onSelect={(e) => onObjectSelect(o.id, e)}
                     onChange={(patch) => updateObject(o.id, patch)}
+                    onDragStart={onDragStart}
+                    onDragMoved={onDragMoved}
                   />
                 );
               }
@@ -166,6 +279,8 @@ export function Canvas() {
                     draggable={!o.locked}
                     onSelect={(e) => onObjectSelect(o.id, e)}
                     onChange={(patch) => updateObject(o.id, patch)}
+                    onDragStart={onDragStart}
+                    onDragMoved={onDragMoved}
                   />
                 );
               }
@@ -178,6 +293,8 @@ export function Canvas() {
                     draggable={!o.locked}
                     onSelect={(e) => onObjectSelect(o.id, e)}
                     onChange={(patch) => updateObject(o.id, patch)}
+                    onDragStart={onDragStart}
+                    onDragMoved={onDragMoved}
                   />
                 );
               }

@@ -55,6 +55,13 @@ Select all 5 (Shift + click) → alignment bar → **Distribute horizontally** b
 ### I undid too much. How do I get it back?
 **Ctrl/Cmd + Shift + Z** or **Ctrl/Cmd + Y**.
 
+### How do I quickly duplicate an object?
+Two ways:
+- **Alt + drag** — hold Alt (Option on Mac) and drag a selected object. The original stays put; the clone lands where you release. Works for multi-select too — relative positions are preserved.
+- **Ctrl/Cmd + D** — duplicate in place with a +5 mm offset. Selection jumps to the clones, so a repeated Ctrl+D builds a staircase of copies.
+
+The clone inherits every setting (font, colour, lock, *Print in PDF*); images share the same Asset.
+
 ---
 
 ## Series generation (CSV / Excel)

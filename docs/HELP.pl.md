@@ -121,6 +121,15 @@ Wszystkie poniższe są w **lewym panelu**, sekcja *Dodaj*.
 
 Jedna operacja = jeden krok historii (np. wyrównanie 5 obiektów cofa się jednym Ctrl+Z).
 
+### Duplikowanie
+
+Dwa szybkie sposoby zrobienia kopii zaznaczonego obiektu (lub całego multi-selectu):
+
+- **Alt + przeciąganie** — przytrzymaj **Alt** (lub **Option** na Mac) i przeciągnij zaznaczony obiekt. Oryginał zostaje w miejscu, klon ląduje pod kursorem w momencie puszczenia myszki. Multi-select zachowuje względne pozycje — przeciągnij jeden z 3 zaznaczonych, dostaniesz 3 klony w nowej lokalizacji.
+- **Ctrl/Cmd + D** — duplikuje zaznaczone "w miejscu" z drobnym przesunięciem (+5 mm w prawo i w dół). Selekcja od razu skacze na klony, więc kolejne Ctrl+D buduje schodek kopii w prawo-w-dół.
+
+Klon dziedziczy wszystko: font, kolor, rotację, flagi *Zablokuj* / *Drukuj w PDF*, a obrazy współdzielą ten sam Asset (jedna binarka → wiele obiektów). Pełne duplikowanie multi-selectu cofniesz jednym Ctrl+Z.
+
 ### Kolejność warstw (z-order)
 
 W **pasku wyrównania**, grupa **Warstwa**:
@@ -292,6 +301,8 @@ Klik **Importuj** → tworzy nowy szablon i otwiera go w edytorze.
 | Ctrl/Cmd + Z | Cofnij |
 | Ctrl/Cmd + Shift + Z | Ponów |
 | Ctrl/Cmd + A | Zaznacz wszystko (w canvasie) |
+| Ctrl/Cmd + D | Duplikuj zaznaczone (offset +5 mm) |
+| Alt + przeciąganie | Duplikuj zaznaczone pod kursorem |
 | Delete / Backspace | Usuń zaznaczone |
 | Shift + klik | Dodaj do zaznaczenia |
 

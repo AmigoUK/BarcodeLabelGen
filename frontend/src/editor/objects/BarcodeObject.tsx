@@ -9,6 +9,8 @@ type Props = {
   draggable: boolean;
   onSelect: (e: Konva.KonvaEventObject<unknown>) => void;
   onChange: (patch: Partial<BarcodeObjectModel>) => void;
+  onDragStart?: (e: Konva.KonvaEventObject<DragEvent>) => void;
+  onDragMoved?: (patch: { x: number; y: number }, e: Konva.KonvaEventObject<DragEvent>) => void;
 };
 
 /** The URL the backend serves the rendered PNG from.
@@ -24,7 +26,15 @@ function barcodePreviewUrl(o: BarcodeObjectModel): string {
   return `/api/barcodes/preview?${params.toString()}`;
 }
 
-export function BarcodeObject({ object, scale, draggable, onSelect, onChange }: Props) {
+export function BarcodeObject({
+  object,
+  scale,
+  draggable,
+  onSelect,
+  onChange,
+  onDragStart,
+  onDragMoved,
+}: Props) {
   // useImage transitions through "loading" → "loaded" / "failed". On
   // failure (e.g. invalid data) we show a clearly-broken placeholder
   // box so the user sees that something's wrong without the canvas
@@ -58,8 +68,12 @@ export function BarcodeObject({ object, scale, draggable, onSelect, onChange }: 
     draggable,
     onMouseDown: onSelect,
     onTap: onSelect,
-    onDragEnd: (e: Konva.KonvaEventObject<DragEvent>) =>
-      onChange({ x: e.target.x() / scale, y: e.target.y() / scale }),
+    onDragStart,
+    onDragEnd: (e: Konva.KonvaEventObject<DragEvent>) => {
+      const patch = { x: e.target.x() / scale, y: e.target.y() / scale };
+      if (onDragMoved) onDragMoved(patch, e);
+      else onChange(patch);
+    },
     onTransformEnd,
   };
 

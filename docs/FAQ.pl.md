@@ -55,6 +55,13 @@ Zaznacz wszystkie 5 (Shift + klik) → pasek wyrównania → przycisk **Rozłó�
 ### Cofnąłem za dużo. Jak to przywrócić?
 **Ctrl/Cmd + Shift + Z** lub **Ctrl/Cmd + Y**.
 
+### Jak szybko zrobić kopię obiektu?
+Dwa sposoby:
+- **Alt + przeciąganie** — przytrzymaj Alt (Option na Mac) i przeciągnij zaznaczony obiekt. Oryginał zostaje, klon ląduje pod kursorem. Działa też dla multi-select — zachowuje względne pozycje.
+- **Ctrl/Cmd + D** — duplikuje w miejscu z przesunięciem +5 mm. Selekcja przeskakuje na klony, więc kolejne Ctrl+D buduje schodek kopii.
+
+Klon dziedziczy wszystkie ustawienia (font, kolor, lock, *Drukuj w PDF*); obrazy współdzielą Asset.
+
 ---
 
 ## Generowanie serii (CSV / Excel)

@@ -8,9 +8,23 @@ type Props = {
   draggable: boolean;
   onSelect: (e: Konva.KonvaEventObject<unknown>) => void;
   onChange: (patch: Partial<TextObjectModel>) => void;
+  /** Forwarded to the Konva node so Canvas can detect altKey at gesture start. */
+  onDragStart?: (e: Konva.KonvaEventObject<DragEvent>) => void;
+  /** Called on drag end with both the mm-space position AND the raw event so
+   *  Canvas can hijack the move (snap-back the source + queue a clone) when
+   *  the gesture is an Alt+drag. When unset, falls back to plain onChange. */
+  onDragMoved?: (patch: { x: number; y: number }, e: Konva.KonvaEventObject<DragEvent>) => void;
 };
 
-export function TextObject({ object, scale, draggable, onSelect, onChange }: Props) {
+export function TextObject({
+  object,
+  scale,
+  draggable,
+  onSelect,
+  onChange,
+  onDragStart,
+  onDragMoved,
+}: Props) {
   // "Block mode": both width and height set → Konva wraps text inside the
   // box. Without height the element behaves like the legacy single-line
   // text object.
@@ -41,7 +55,12 @@ export function TextObject({ object, scale, draggable, onSelect, onChange }: Pro
       draggable={draggable}
       onMouseDown={onSelect}
       onTap={onSelect}
-      onDragEnd={(e) => onChange({ x: e.target.x() / scale, y: e.target.y() / scale })}
+      onDragStart={onDragStart}
+      onDragEnd={(e) => {
+        const patch = { x: e.target.x() / scale, y: e.target.y() / scale };
+        if (onDragMoved) onDragMoved(patch, e);
+        else onChange(patch);
+      }}
       onTransformEnd={(e) => {
         // Konva's Transformer applies scaleX/scaleY to the node. Fold it
         // back into fontSize / width / height so the change persists.

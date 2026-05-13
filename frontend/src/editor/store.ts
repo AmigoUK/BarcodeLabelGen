@@ -56,8 +56,18 @@ type State = {
   clearSelection: () => void;
 
   addObject: (o: EditorObject) => void;
+  /** Bulk-add many objects in one history step + select them as a group.
+   *  Used by Alt+drag (which queues a clone per dragged node and flushes
+   *  the whole batch in one rAF) and any future "paste many" flow. */
+  addObjects: (list: EditorObject[]) => void;
   updateObject: (id: string, patch: Partial<EditorObject>) => void;
   deleteObject: (id: string) => void;
+
+  /** Clone every currently-selected object with an optional mm offset.
+   *  New ids; every other field (font, fill, assetId, locked, printable,
+   *  rotation, …) carries over verbatim. Selection moves to the clones
+   *  so a follow-up Ctrl+D stacks neatly. Returns the new ids. */
+  duplicateSelected: (offset?: { dx: number; dy: number }) => string[];
 
   /** Apply an alignment mode to the current selection in one undo step. */
   alignObjects: (mode: AlignMode) => void;
@@ -304,6 +314,50 @@ export const useEditorStore = create<State>((set) => ({
         future: [],
       };
     }),
+
+  addObjects: (list) =>
+    set((s) => {
+      if (!s.canvas || list.length === 0) return s;
+      return {
+        canvas: { ...s.canvas, objects: [...s.canvas.objects, ...list] },
+        selectedIds: list.map((o) => o.id),
+        dirty: true,
+        past: pushHistory(s.past, s.canvas),
+        future: [],
+      };
+    }),
+
+  duplicateSelected: (offset = { dx: 0, dy: 0 }) => {
+    // Zustand's `set` callback runs synchronously, so we can capture the
+    // generated ids via closure and return them to the caller after `set`.
+    let newIds: string[] = [];
+    set((s) => {
+      if (!s.canvas || s.selectedIds.length === 0) return s;
+      const selectedSet = new Set(s.selectedIds);
+      const clones: EditorObject[] = [];
+      for (const obj of s.canvas.objects) {
+        if (!selectedSet.has(obj.id)) continue;
+        // Spread preserves the `type` discriminator so TS keeps the union
+        // narrow per-object — text stays text, image stays image, etc.
+        clones.push({
+          ...obj,
+          id: newObjectId(),
+          x: obj.x + offset.dx,
+          y: obj.y + offset.dy,
+        } as EditorObject);
+      }
+      if (clones.length === 0) return s;
+      newIds = clones.map((c) => c.id);
+      return {
+        canvas: { ...s.canvas, objects: [...s.canvas.objects, ...clones] },
+        selectedIds: newIds,
+        dirty: true,
+        past: pushHistory(s.past, s.canvas),
+        future: [],
+      };
+    });
+    return newIds;
+  },
 
   updateObject: (id, patch) =>
     set((s) => {

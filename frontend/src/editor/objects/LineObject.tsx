@@ -8,9 +8,19 @@ type Props = {
   draggable: boolean;
   onSelect: (e: Konva.KonvaEventObject<unknown>) => void;
   onChange: (patch: Partial<LineObjectModel>) => void;
+  onDragStart?: (e: Konva.KonvaEventObject<DragEvent>) => void;
+  onDragMoved?: (patch: { x: number; y: number }, e: Konva.KonvaEventObject<DragEvent>) => void;
 };
 
-export function LineObject({ object, scale, draggable, onSelect, onChange }: Props) {
+export function LineObject({
+  object,
+  scale,
+  draggable,
+  onSelect,
+  onChange,
+  onDragStart,
+  onDragMoved,
+}: Props) {
   return (
     <Line
       id={object.id}
@@ -26,7 +36,12 @@ export function LineObject({ object, scale, draggable, onSelect, onChange }: Pro
       hitStrokeWidth={Math.max(8, object.strokeWidth * scale * 4)}
       onMouseDown={onSelect}
       onTap={onSelect}
-      onDragEnd={(e) => onChange({ x: e.target.x() / scale, y: e.target.y() / scale })}
+      onDragStart={onDragStart}
+      onDragEnd={(e) => {
+        const patch = { x: e.target.x() / scale, y: e.target.y() / scale };
+        if (onDragMoved) onDragMoved(patch, e);
+        else onChange(patch);
+      }}
       onTransformEnd={(e) => {
         // Points are relative to the line's anchor (x,y). Scale each pair
         // by scaleX/scaleY so the geometry persists; then reset the

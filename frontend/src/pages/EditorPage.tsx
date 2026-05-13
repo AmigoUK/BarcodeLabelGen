@@ -28,6 +28,7 @@ export function EditorPage() {
   const deleteObject = useEditorStore((s) => s.deleteObject);
   const selectMany = useEditorStore((s) => s.selectMany);
   const clearSelection = useEditorStore((s) => s.clearSelection);
+  const duplicateSelected = useEditorStore((s) => s.duplicateSelected);
   const undo = useEditorStore((s) => s.undo);
   const redo = useEditorStore((s) => s.redo);
 
@@ -87,6 +88,12 @@ export function EditorPage() {
       } else if (mod && e.key.toLowerCase() === "s") {
         e.preventDefault();
         if (canvas) void saveCanvas(canvas);
+      } else if (mod && e.key.toLowerCase() === "d" && !e.shiftKey) {
+        // Ctrl/Cmd+D — duplicate selection in place with a small offset so
+        // the clones don't overlap the originals. preventDefault stops the
+        // browser's "bookmark this page" handler.
+        e.preventDefault();
+        if (selectedIds.length > 0) duplicateSelected({ dx: 5, dy: 5 });
       } else if (mod && e.key.toLowerCase() === "a") {
         // Ctrl/Cmd+A — select all objects on the canvas. Skips when
         // there's nothing to select so the browser default doesn't fire
@@ -104,7 +111,17 @@ export function EditorPage() {
     };
     window.addEventListener("keydown", onKey);
     return () => window.removeEventListener("keydown", onKey);
-  }, [selectedIds, deleteObject, undo, redo, canvas, saveCanvas, selectMany, clearSelection]);
+  }, [
+    selectedIds,
+    deleteObject,
+    duplicateSelected,
+    undo,
+    redo,
+    canvas,
+    saveCanvas,
+    selectMany,
+    clearSelection,
+  ]);
 
   // Warn before navigating away with unsaved changes.
   useEffect(() => {

@@ -121,6 +121,15 @@ Everything below lives in the **left panel**, *Add* section.
 
 One operation = one history step (e.g. aligning 5 objects undoes in a single Ctrl+Z).
 
+### Duplicating
+
+Two quick ways to clone the selected object (or a whole multi-selection):
+
+- **Alt + drag** — hold **Alt** (or **Option** on Mac) and drag a selected object. The original stays put; a clone lands wherever you release. With multi-select the clones keep their relative positions — drag one of three selected items and you get three clones offset together at the drop point.
+- **Ctrl/Cmd + D** — duplicate in place with a small offset (+5 mm right and down). Selection jumps to the clones, so a follow-up Ctrl+D stacks neatly down-right.
+
+The clone inherits everything: font, colour, rotation, the *Lock* / *Print in PDF* flags. Images share the same Asset (one binary → many objects). A multi-select duplication is one Ctrl+Z away.
+
 ### Layer order (z-order)
 
 In the **alignment bar**, **Layer** group:
@@ -292,6 +301,8 @@ Click **Import** → a new template is created and opens in the editor.
 | Ctrl/Cmd + Z | Undo |
 | Ctrl/Cmd + Shift + Z | Redo |
 | Ctrl/Cmd + A | Select everything (in the canvas) |
+| Ctrl/Cmd + D | Duplicate selection (+5 mm offset) |
+| Alt + drag | Duplicate selection at the drop point |
 | Delete / Backspace | Delete selected |
 | Shift + click | Add to selection |
 
