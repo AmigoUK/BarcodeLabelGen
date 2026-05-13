@@ -118,6 +118,39 @@ The file probably isn't actually SQLite (e.g. it has the `.db` extension but is 
 
 ---
 
+## Importing / exporting templates
+
+### Why export a template to a file?
+Three main reasons: **backup** (save the file before a big change), **cloning** (export + import with a size override = a ready-made template for another format), **moving** (between instances or between users).
+
+### Where's the export button?
+- In the template list (tile) — the **⬇** icon at the bottom-right (appears on hover).
+- In the editor toolbar — the **⬇ Export** button next to *Download PDF*.
+
+### What exactly is in the .blg-template.json file?
+Label size, every object (text, barcode, rectangle, line, image) with its exact position and all settings, and **every image** base64-encoded inside the file itself. The file is self-contained — you don't need anything else besides this one JSON.
+
+### Can I import a template from a different BarcodeLabelGen instance?
+Yes. The file format (`$schema: "blg-template/v1"`) is stable. If the target instance doesn't have the same label format as the source, you get a warning and the program falls back to the "Custom" format.
+
+### Can I import only some of the objects?
+Yes — in the second step of the import modal there's a **checklist**. Everything is checked by default; uncheck what you don't want. Skipped `image` objects don't create unused images in your asset library.
+
+### What happens if the file contains an image I already have?
+The app detects duplicates by SHA-256 hash and asks you: **Reuse existing** (FK points to the existing image, no disk duplicates) or **Create new copy** (fresh entry with the same content — useful when you want a separately editable copy).
+
+### Can I import a template with a different size?
+Yes — the second step has **Width/Height** fields. Leave blank to keep the original, or type new values. Objects keep their positions in mm, so the layout transfers but the format is different.
+
+### I'm getting "Couldn't read the file"
+The file is not a valid JSON (e.g. corrupted, opened in an editor and saved with errors). Try re-exporting from the source template.
+
+### I'm getting "sha256 mismatch"
+The base64 content doesn't match the declared hash — the file was manually modified. The app deliberately refuses such files (it could hide a swapped image). Re-export from the source.
+
+### Limits?
+File ≤ 20 MB, template ≤ 50 objects, ≤ 20 images, each image ≤ 5 MB.
+
 ## Accounts and security
 
 ### How does an admin add a new user?

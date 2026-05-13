@@ -118,6 +118,39 @@ Plik prawdopodobnie nie jest SQLite (np. ma rozszerzenie `.db` ale to inny forma
 
 ---
 
+## Import / eksport szablonów
+
+### Po co eksportować szablon do pliku?
+Trzy główne powody: **backup** (zachowujesz plik przed dużą zmianą), **klonowanie** (eksport + import z nadpisanym rozmiarem to gotowy szablon na inny format), **przenoszenie** (między instancjami / między userami).
+
+### Gdzie jest przycisk eksportu?
+- W liście szablonów (kafelek) — ikona **⬇** w prawym dolnym rogu (pojawia się po najechaniu).
+- W edytorze toolbar — przycisk **⬇ Eksportuj** obok *Pobierz PDF*.
+
+### Co dokładnie jest w pliku .blg-template.json?
+Rozmiar etykiety, każdy obiekt (tekst, kod, prostokąt, linia, obraz) z dokładną pozycją i wszystkimi ustawieniami, oraz **wszystkie obrazki** zakodowane base64 w samym pliku. Plik jest samowystarczalny — nie potrzebujesz nic poza tym jednym JSON-em.
+
+### Czy mogę zaimportować szablon z innej instancji BarcodeLabelGen?
+Tak. Format pliku (`$schema: "blg-template/v1"`) jest stabilny. Jeśli docelowa instancja nie ma takiego samego formatu etykiety jak źródłowa, użytkownik zostanie ostrzeżony i program podstawi format „Custom".
+
+### Czy mogę zaimportować tylko część obiektów?
+Tak — w drugim kroku okna importu jest **czeklista**. Domyślnie wszystko jest zaznaczone; odznaczasz to, czego nie chcesz. Pominięte obiekty `image` nie tworzą zbędnych obrazków u Ciebie w bibliotece.
+
+### Co się dzieje gdy w pliku jest obrazek, który już mam?
+Program sprawdza duplikat po hashu SHA-256 i pyta Cię: **Użyj istniejącego** (FK pokazuje istniejący obrazek, zero duplikatów na dysku) albo **Utwórz nową kopię** (świeży wpis z tą samą zawartością — przydatne gdy chcesz mieć osobną edytowalną kopię).
+
+### Czy mogę zaimportować szablon zmieniając jego rozmiar?
+Tak — w drugim kroku są dwa pola **Szerokość/Wysokość**. Zostaw puste żeby zachować oryginał, albo wpisz nowe wartości. Obiekty zachowują swoje pozycje w mm, więc szablon zachowuje układ ale na innym formacie.
+
+### Dostaję "Couldn't read the file"
+Plik nie jest poprawnym JSON-em (np. uszkodzony, otwarty w edytorze i zapisany z błędem). Spróbuj ponownie wyeksportować źródłowy szablon.
+
+### Dostaję "sha256 mismatch"
+Treść base64 w pliku nie zgadza się z zadeklarowanym hashem — plik został zmodyfikowany ręcznie. Program odrzuca takie pliki świadomie (mogłoby to ukrywać podmieniony obrazek). Re-eksportuj ze źródła.
+
+### Limity?
+Plik ≤ 20 MB, szablon ≤ 50 obiektów, ≤ 20 obrazków, każdy obrazek ≤ 5 MB.
+
 ## Konta i bezpieczeństwo
 
 ### Jak admin dodaje nowego użytkownika?

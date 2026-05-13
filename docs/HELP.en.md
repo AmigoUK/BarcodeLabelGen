@@ -246,6 +246,44 @@ Toggle **Active** on the row. You cannot deactivate your own account (safety che
 
 ---
 
+## 8a. Importing / exporting templates
+
+You can save any template as a single `.blg-template.json` file (label size + every object's position + content + bundled images). The file is portable: archive it, mail it, or import it into another BarcodeLabelGen instance.
+
+### Export
+
+Two entry points:
+- **Templates** → hover a template tile → **⬇** icon in the bottom-right corner.
+- Editor toolbar → **⬇ Export** button (next to *Download PDF*).
+
+You get a `<name>.blg-template.json` — keep it somewhere safe as a backup.
+
+### Import
+
+**Templates** → **⬆ Import** opens a 2-step modal:
+
+1. **Pick a file** — choose your `.blg-template.json`. The app validates it and shows a preview.
+2. **Configure** — you can:
+   - change the **name** of the new template (default is the name from the file; on collision a "(kopia)" suffix is appended automatically),
+   - **override the size** (leave blank = keep original),
+   - **uncheck objects** you don't want to bring in (checklist with type icons + short content preview),
+   - for every **duplicate image** decide: *Reuse existing* (save space) or *Create new copy*.
+
+Click **Import** → a new template is created and opens in the editor.
+
+### Typical workflows
+
+- **Backup before a big change** — export, archive the file, edit freely. Something broke → re-import.
+- **Clone a layout to a different size** — export, import with size override (e.g. same label for A6 and 100×50 mm).
+- **Move a template between instances** (dev → prod) — export on one side, import on the other.
+- **Partial import** — take the barcode block + a couple of fields from a finished template and uncheck the rest.
+
+### Limits and safety
+
+- Max 20 MB file, 50 objects, 20 images (5 MB each).
+- Images are integrity-checked: sha256 must match the base64 payload. Tampered files are rejected.
+- The new template always belongs to your account, regardless of who exported the file.
+
 ## 9. Keyboard shortcuts
 
 | Shortcut | Action |

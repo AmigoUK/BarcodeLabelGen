@@ -1,11 +1,13 @@
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
+import { ImportTemplateModal } from "../components/ImportTemplateModal";
 import { Button } from "../components/ui/Button";
 import { Input } from "../components/ui/Input";
 import { Modal } from "../components/ui/Modal";
 import { Select } from "../components/ui/Select";
 import {
+  exportTemplateToFile,
   useCreateTemplate,
   useDeleteTemplate,
   useLabelFormats,
@@ -17,6 +19,7 @@ export function TemplatesPage() {
   const templates = useTemplates();
   const del = useDeleteTemplate();
   const [showCreate, setShowCreate] = useState(false);
+  const [showImport, setShowImport] = useState(false);
   const [query, setQuery] = useState("");
 
   const filtered = templates.data
@@ -39,6 +42,9 @@ export function TemplatesPage() {
               className="w-64"
             />
           )}
+          <Button variant="secondary" onClick={() => setShowImport(true)}>
+            ⬆ {t("templates.import")}
+          </Button>
           <Button onClick={() => setShowCreate(true)}>+ {t("templates.new")}</Button>
         </div>
       </header>
@@ -75,19 +81,36 @@ export function TemplatesPage() {
               <div className="mt-3 flex items-center justify-between text-xs text-slate-500">
                 <span>v{tpl.version}</span>
                 <span>{new Date(tpl.updated_at).toLocaleDateString()}</span>
-                <button
-                  type="button"
-                  onClick={(e) => {
-                    e.preventDefault();
-                    if (confirm(t("templates.confirmDelete", { name: tpl.name }))) {
-                      del.mutate(tpl.id);
-                    }
-                  }}
-                  className="rounded px-1.5 py-0.5 text-rose-400 opacity-0 hover:bg-rose-950/50 group-hover:opacity-100"
-                  aria-label={t("common.delete")}
-                >
-                  ✕
-                </button>
+                <div className="flex items-center gap-1 opacity-0 group-hover:opacity-100">
+                  <button
+                    type="button"
+                    onClick={(e) => {
+                      e.preventDefault();
+                      const safe =
+                        tpl.name.replace(/[^A-Za-z0-9._-]+/g, "_").replace(/^_|_$/g, "") ||
+                        "template";
+                      void exportTemplateToFile(tpl.id, `${safe}.blg-template.json`);
+                    }}
+                    className="rounded px-1.5 py-0.5 text-slate-400 hover:bg-slate-800 hover:text-slate-100"
+                    aria-label={t("templates.export")}
+                    title={t("templates.exportTooltip")}
+                  >
+                    ⬇
+                  </button>
+                  <button
+                    type="button"
+                    onClick={(e) => {
+                      e.preventDefault();
+                      if (confirm(t("templates.confirmDelete", { name: tpl.name }))) {
+                        del.mutate(tpl.id);
+                      }
+                    }}
+                    className="rounded px-1.5 py-0.5 text-rose-400 hover:bg-rose-950/50"
+                    aria-label={t("common.delete")}
+                  >
+                    ✕
+                  </button>
+                </div>
               </div>
             </a>
           ))}
@@ -95,6 +118,7 @@ export function TemplatesPage() {
       )}
 
       {showCreate && <NewTemplateModal onClose={() => setShowCreate(false)} />}
+      {showImport && <ImportTemplateModal onClose={() => setShowImport(false)} />}
     </div>
   );
 }

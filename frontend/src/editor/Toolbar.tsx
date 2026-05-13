@@ -2,7 +2,7 @@ import { useTranslation } from "react-i18next";
 import { Link } from "react-router-dom";
 import { Button } from "../components/ui/Button";
 import { useGeneratePdf } from "../hooks/useGeneratePdf";
-import type { TemplateDetail } from "../hooks/useTemplates";
+import { type TemplateDetail, exportTemplateToFile } from "../hooks/useTemplates";
 import { useEditorStore } from "./store";
 
 type Props = {
@@ -109,6 +109,16 @@ export function Toolbar({
           title={seriesDisabled ? t("editor.saveFirstHint") : ""}
         >
           {t("editor.generateSeries")}
+        </Button>
+        <Button
+          variant="secondary"
+          onClick={() => {
+            const safeName = template.name.replace(/[^A-Za-z0-9._-]+/g, "_");
+            void exportTemplateToFile(template.id, `${safeName}.blg-template.json`);
+          }}
+          title={t("templates.exportTooltip")}
+        >
+          ⬇ {t("templates.export")}
         </Button>
         <Button
           variant="secondary"

@@ -32,6 +32,12 @@ class Asset(Base):
     width_px: Mapped[int] = mapped_column(Integer, nullable=False)
     height_px: Mapped[int] = mapped_column(Integer, nullable=False)
 
+    # SHA-256 of the on-disk binary (hex). Used by template import to dedupe
+    # an incoming asset against the user's existing uploads — same hash =
+    # offer to reuse the existing Asset row instead of creating a duplicate.
+    # Nullable for rows written before migration 0006; backfilled lazily.
+    sha256: Mapped[str | None] = mapped_column(String(64), nullable=True, index=True)
+
     created_at: Mapped[datetime] = mapped_column(
         DateTime(timezone=True), nullable=False, default=_utcnow
     )

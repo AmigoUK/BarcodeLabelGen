@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import hashlib
 import io
 import os
 import uuid
@@ -70,6 +71,7 @@ def save_image(
         size_bytes=len(raw),
         width_px=width,
         height_px=height,
+        sha256=hashlib.sha256(raw).hexdigest(),
     )
     session.add(asset)
     session.commit()
@@ -84,3 +86,41 @@ def get_asset(session: Session, asset_id: int) -> Asset | None:
 def list_user_assets(session: Session, *, owner_id: int) -> list[Asset]:
     stmt = select(Asset).where(Asset.owner_id == owner_id).order_by(Asset.created_at.desc())
     return list(session.execute(stmt).scalars().all())
+
+
+def find_by_sha256(session: Session, *, owner_id: int, sha256: str) -> Asset | None:
+    """Return the user's first existing Asset with this content hash.
+
+    Used by template import to offer "reuse existing" when an incoming
+    image is byte-identical to one the user already has.
+    """
+    stmt = (
+        select(Asset)
+        .where(Asset.owner_id == owner_id, Asset.sha256 == sha256)
+        .order_by(Asset.created_at.asc())
+        .limit(1)
+    )
+    return session.execute(stmt).scalar_one_or_none()
+
+
+def save_image_from_bytes(
+    session: Session,
+    *,
+    owner_id: int,
+    original_filename: str,
+    raw: bytes,
+    declared_mime: str,
+) -> Asset:
+    """Alias for save_image with raw bytes — same validation pipeline.
+
+    Used by template import where the binary comes from a base64-decoded
+    field rather than a multipart upload. Kept thin so future divergence
+    (e.g. import-specific size limits) stays localized.
+    """
+    return save_image(
+        session,
+        owner_id=owner_id,
+        original_filename=original_filename,
+        raw=raw,
+        declared_mime=declared_mime,
+    )

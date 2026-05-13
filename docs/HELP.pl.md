@@ -246,6 +246,44 @@ Toggle **Aktywne** w wierszu użytkownika. Nie możesz dezaktywować własnego k
 
 ---
 
+## 8a. Import / eksport szablonów
+
+Każdy szablon możesz zapisać jako jeden plik `.blg-template.json` (rozmiar etykiety + pozycje wszystkich obiektów + ich treść + obrazki zakodowane w pliku). Plik jest przenośny: zarchiwizujesz go, wyślesz mailem albo zaimportujesz na drugiej instancji BarcodeLabelGen.
+
+### Eksport
+
+Dwa miejsca:
+- **Szablony** → najedź na kafelek szablonu → ikona **⬇** w prawym dolnym rogu.
+- W edytorze → toolbar → przycisk **⬇ Eksportuj** (obok *Pobierz PDF*).
+
+Pobiera się plik `<nazwa>.blg-template.json` — najlepiej trzymaj go w katalogu backupów.
+
+### Import
+
+**Szablony** → **⬆ Importuj** otwiera 2-krokowe okno:
+
+1. **Wybór pliku** — podaj `.blg-template.json`. Program sprawdza poprawność i pokazuje podgląd.
+2. **Konfiguracja** — możesz:
+   - zmienić **nazwę** nowego szablonu (domyślnie nazwa z pliku; jeśli kolizja → automatyczny suffix „(kopia)"),
+   - **nadpisać rozmiar** (puste = oryginalny),
+   - **odznaczyć obiekty** które nie mają zostać zaimportowane (czeklista — każdy obiekt z ikoną typu i preview treści),
+   - dla każdego **duplikatu obrazka** wybrać: *Użyj istniejącego* (oszczędność miejsca) lub *Utwórz nową kopię*.
+
+Klik **Importuj** → tworzy nowy szablon i otwiera go w edytorze.
+
+### Typowe przypadki użycia
+
+- **Backup przed dużą zmianą** — eksportuj, zostaw plik w archiwum, edytuj swobodnie. Coś poszło źle → reimportuj.
+- **Klonowanie układu na inny rozmiar** — eksport, import z nadpisanym rozmiarem (np. ta sama etykieta dla A6 i 100×50 mm).
+- **Przeniesienie szablonu między instancjami** (dev → prod) — eksport po jednej stronie, import po drugiej.
+- **Wybiórczy import** — bierzesz układ kodu kreskowego + 2-3 pola z gotowego szablonu, resztę odznaczasz.
+
+### Limity i bezpieczeństwo
+
+- Maks. 20 MB plik, 50 obiektów, 20 obrazków (5 MB każdy).
+- Obrazki są weryfikowane: sha256 musi się zgadzać z zawartością base64. Pliki manipulowane są odrzucane.
+- Nowy szablon zawsze trafia do twojego konta (niezależnie kto wyeksportował plik).
+
 ## 9. Skróty klawiaturowe
 
 | Skrót | Akcja |

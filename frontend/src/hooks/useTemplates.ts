@@ -1,5 +1,7 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { api } from "../lib/api";
+import { ApiError, api } from "../lib/api";
+import { triggerDownload } from "../lib/download";
+import { readCsrfCookie } from "../lib/csrf";
 import type { CanvasData } from "../editor/types";
 
 export type LabelFormat = {
@@ -110,6 +112,84 @@ export function useDeleteTemplate() {
   const qc = useQueryClient();
   return useMutation({
     mutationFn: (id: number) => api<void>(`/api/templates/${id}`, { method: "DELETE" }),
+    onSuccess: () => {
+      void qc.invalidateQueries({ queryKey: TEMPLATES_KEY });
+    },
+  });
+}
+
+// ---------------- Template export / import ----------------
+
+export type AssetDupReport = {
+  ref: string;
+  sha256: string;
+  matches_existing: boolean;
+  existing_asset_id: number | null;
+  existing_filename: string | null;
+};
+
+export type ObjectSummary = {
+  id: string;
+  type: string;
+  label: string;
+  has_dynamic: boolean;
+};
+
+export type ImportPreview = {
+  template_name: string;
+  width_mm: number;
+  height_mm: number;
+  object_summary: ObjectSummary[];
+  asset_duplicates: AssetDupReport[];
+  warnings: string[];
+};
+
+export type ImportOptions = {
+  name?: string;
+  width_mm?: number;
+  height_mm?: number;
+  skip_object_ids?: string[];
+  asset_resolution?: Record<string, "reuse" | "new">;
+};
+
+/** Download a template as a `.blg-template.json` file. Uses fetch directly
+ *  (rather than the JSON-y `api()` helper) so the response is treated as
+ *  a binary blob rather than parsed. */
+export async function exportTemplateToFile(templateId: number, fileName: string): Promise<void> {
+  const csrf = readCsrfCookie();
+  const response = await fetch(`/api/templates/${templateId}/export`, {
+    credentials: "include",
+    headers: csrf ? { "X-CSRF-Token": csrf } : undefined,
+  });
+  if (!response.ok) {
+    const body = (await response.json().catch(() => ({}))) as { error?: string; detail?: string };
+    throw new ApiError(response.status, {
+      error: body.error ?? "export_failed",
+      detail: body.detail,
+    });
+  }
+  const blob = await response.blob();
+  triggerDownload(blob, fileName);
+}
+
+export function usePreviewImport() {
+  return useMutation({
+    mutationFn: (source: unknown) =>
+      api<ImportPreview>("/api/templates/import/preview", {
+        method: "POST",
+        body: JSON.stringify(source),
+      }),
+  });
+}
+
+export function useImportTemplate() {
+  const qc = useQueryClient();
+  return useMutation({
+    mutationFn: (input: { source: unknown; options: ImportOptions }) =>
+      api<TemplateDetail>("/api/templates/import", {
+        method: "POST",
+        body: JSON.stringify(input),
+      }),
     onSuccess: () => {
       void qc.invalidateQueries({ queryKey: TEMPLATES_KEY });
     },
