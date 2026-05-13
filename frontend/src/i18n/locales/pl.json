@@ -59,7 +59,13 @@
   "dashboard": {
     "title": "Pulpit",
     "welcome": "Witaj, {{email}}!",
-    "comingSoon": "Otwórz Szablony aby utworzyć pierwszą etykietę."
+    "comingSoon": "Otwórz Szablony aby utworzyć pierwszą etykietę.",
+    "cards": {
+      "templatesTitle": "Szablony etykiet",
+      "templatesBody": "Utwórz nowy szablon albo otwórz istniejący do edycji i generowania PDF.",
+      "helpTitle": "Pomoc i FAQ",
+      "helpBody": "Przewodnik po programie, najczęstsze pytania i rozwiązywanie problemów."
+    }
   },
   "templates": {
     "new": "Nowy szablon",

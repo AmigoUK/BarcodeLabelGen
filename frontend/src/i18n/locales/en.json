@@ -59,7 +59,13 @@
   "dashboard": {
     "title": "Dashboard",
     "welcome": "Welcome, {{email}}!",
-    "comingSoon": "Open Templates to design your first label."
+    "comingSoon": "Open Templates to design your first label.",
+    "cards": {
+      "templatesTitle": "Label templates",
+      "templatesBody": "Create a new template, or open an existing one to edit and generate PDFs.",
+      "helpTitle": "Help & FAQ",
+      "helpBody": "App walkthrough, common questions, and troubleshooting."
+    }
   },
   "templates": {
     "new": "New template",
