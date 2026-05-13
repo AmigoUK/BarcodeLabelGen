@@ -72,6 +72,8 @@
 
 > One PDF, one page per row. Each `{{placeholder}}` is replaced by the row's value — here `Victoria Sponge Cake` is row 5 of 60, with its own ingredients, batch number, and GS1-128 barcode. Long ingredients lists wrap inside the text block; the renderer reports a warning if anything doesn't fit.
 
+📄 **[Download a sample PDF →](docs/screenshots/QA_Zebra_2_1__50.pdf)** (50 Zebra 2×1″ labels, 668 KB) — generated from the products dataset above, ready to inspect or print.
+
 ### 8 · Import / export templates
 
 ![Import template modal](docs/screenshots/import-template.png)
