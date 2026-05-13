@@ -417,16 +417,16 @@ Dashboard → wybiera szablon → "Generuj serię"
 - Brak staging dla MVP (LAN-internal, prod = środowisko firmowe)
 
 ### 10.1.1 Dostęp przez Tailscale (HTTPS)
-- **Host**: `HOST` (`0.0.0.0`)
-- **URL produkcyjny**: `https://HOST.TAILNET.ts.net:18003`
+- **Host**: dowolny serwer w tailnecie (Linux z Dockerem)
+- **URL produkcyjny**: `https://<host>.<tailnet>.ts.net:18003`
 - **Port lokalny aplikacji** (nginx w kontenerze): `127.0.0.1:18003`
-- **Wybór portu**: `18003` — najniższy wolny port w zakresie 18000+ (18001, 18002 zajęte przez inne usługi serwowane przez Tailscale)
+- **Wybór portu**: `18003` — domyślny dla MVP; zmień jeśli kolizja z innymi usługami serwowanymi przez Tailscale
 - **TLS**: automatycznie zarządzany przez Tailscale (cert Let's Encrypt dla `*.ts.net`) — **brak potrzeby self-signed**
 - **Komenda ekspozycji** (po starcie kontenera, jednorazowo):
   ```bash
   tailscale serve --bg --https=18003 http://127.0.0.1:18003
   ```
-- **Dostęp**: tylko członkowie tailnetu `TAILNET` (lewandowski.tl@ + autoryzowani użytkownicy)
+- **Dostęp**: tylko członkowie tailnetu (autoryzowani użytkownicy)
 - **Brak Funnel** (nie wystawiamy publicznie do internetu)
 
 ### 10.2 docker-compose.yml (struktura)
@@ -509,7 +509,7 @@ networks:
 3. Setup nginx config (port `127.0.0.1:18003`), Flask skeleton, Vite skeleton, połączenie z PostgreSQL i Redis
 4. Pre-commit hooks, ruff, mypy, eslint, prettier
 5. Tailscale Serve setup: `tailscale serve --bg --https=18003 http://127.0.0.1:18003`
-6. Weryfikacja: otwarcie `https://HOST.TAILNET.ts.net:18003` zwraca placeholder "Hello from BarcodeLabelGen"
+6. Weryfikacja: otwarcie `https://<host>.<tailnet>.ts.net:18003` zwraca placeholder "Hello from BarcodeLabelGen"
 7. CI workflow (lint + test) — opcjonalnie GitHub Actions
 
 **Sprint 1 — Auth + Admin (3–5 dni)**
@@ -565,7 +565,7 @@ networks:
 4. ✅ **Nazwa**: `BarcodeLabelGen` (zachowana)
 5. ✅ **Repo**: `git@github.com:AmigoUK/BarcodeLabelGen.git`
 6. ✅ **Workflow**: commit + push po każdym dużym kroku implementacyjnym
-7. ✅ **Dostęp**: Tailscale Serve, `https://HOST.TAILNET.ts.net:18003` (port 18003, tylko tailnet)
+7. ✅ **Dostęp**: Tailscale Serve, `https://<host>.<tailnet>.ts.net:18003` (port 18003, tylko tailnet)
 
 ---
 

@@ -1,12 +1,12 @@
 # BarcodeLabelGen — production docker-compose
 #
 # Exposes nginx ONLY on 127.0.0.1:18003 — the host port is meant to be
-# fronted by Tailscale Serve, not exposed publicly. After `docker compose up -d`
-# run on the host:
+# fronted by Tailscale Serve (or a reverse proxy of your choice), not
+# exposed publicly. After `docker compose up -d` run on the host:
 #
 #     tailscale serve --bg --https=18003 http://127.0.0.1:18003
 #
-# Then access via: https://HOST.TAILNET.ts.net:18003
+# Then access via: https://<your-host>.<your-tailnet>.ts.net:18003
 
 name: barcodelabelgen
 
