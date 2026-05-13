@@ -3,23 +3,15 @@
 > Web-based label editor and PDF batch generator for non-technical office users.
 > Self-hosted, multilingual (PL + EN), runs on a single Docker host behind Tailscale.
 
-<!--
-  📸 SCREENSHOT — docs/screenshots/01-editor-hero.png
-  ────────────────────────────────────────────────────
-  Hero shot: the editor open on a real label template (e.g. Faktura A6 with
-  a barcode + a couple of {{placeholder}} text fields). Capture the WHOLE
-  editor — Toolbar at the top, LeftPanel (Add: T / ¶ / ▭ / ╱ / ▤ / 🖼 / 🌄)
-  on the left, the Canvas with one object selected (transformer handles
-  visible), AlignmentBar above the canvas, RightPanel with LayerProps
-  expanded on the right. Browser chrome cropped out. ~1600 px wide.
--->
-![Editor hero shot](docs/screenshots/01-editor-hero.png)
+![Editor with a real label template](docs/screenshots/editor.png)
+
+> The editor open on a Zebra 2×1″ template — text, dynamic `{{placeholders}}`, an EAN-128 barcode, all positioned in millimetres. Right panel shows the per-object inspector with Lock + Print-in-PDF toggles, font, size, alignment.
 
 ---
 
 ## What it does
 
-- **Online label editor** — Konva-powered drag-and-drop canvas (text, blocks with auto-fit, rectangles, lines, images, barcodes, dynamic `{{column}}` fields).
+- **Online label editor** — Konva-powered drag-and-drop canvas (text, text blocks with auto-fit, rectangles, lines, images, barcodes, dynamic `{{column}}` fields).
 - **Lockable + non-printable objects** — pin a logo so it can't be moved; drop a scan of a pre-printed sheet as a layout reference that stays out of the final PDF.
 - **Layer order + alignment + distribute** — z-stack controls (front/back/forward/backward), 6 page-relative + 6 selection-relative align operations, equal distribution.
 - **Duplicate fast** — Alt+drag a selected object to clone it under the cursor; Ctrl/Cmd+D to duplicate in place. Multi-select supported.
@@ -32,110 +24,59 @@
 
 ---
 
-## Screens
+## Tour
 
-### The editor
+### 1 · Dashboard
 
-<!--
-  📸 SCREENSHOT — docs/screenshots/02-editor-multiselect.png
-  ────────────────────────────────────────────────────────
-  Same template as the hero, but with 3 objects selected via Shift+click.
-  Show the AlignmentBar with the Selection group highlighted and the
-  Layer/Distribute buttons visible. Right panel showing "3 objects
-  selected — use the alignment bar above the canvas".
--->
-![Multi-select alignment](docs/screenshots/02-editor-multiselect.png)
+![Dashboard with two CTA cards](docs/screenshots/Dashboard.png)
 
-> Multi-select via Shift+click. The alignment bar grows a selection-relative group + a 4-button layer reorder group + horizontal/vertical distribute (3+ objects). One operation = one undo step.
+> First screen after signing in. Two cards point straight at the user's job: open the template editor, or read the in-app guide. Sidebar exposes Dashboard / Templates / Help / Administration → Users.
 
-### Series wizard — CSV/Excel
+### 2 · Templates library
 
-<!--
-  📸 SCREENSHOT — docs/screenshots/03-series-csv-mapping.png
-  ────────────────────────────────────────────────────────
-  Generate Series modal at Step 2 (Mapping). Show the placeholders
-  panel with 3-4 dynamic fields (e.g. {{sku}}, {{name}}, {{price}})
-  auto-mapped to spreadsheet columns. Show the step indicator at the
-  top. Use a real product CSV — readable column names.
--->
-![Series wizard — mapping step](docs/screenshots/03-series-csv-mapping.png)
+![Templates grid](docs/screenshots/templates.png)
 
-> Step 2 of the Generate Series wizard auto-maps `{{placeholder}}` fields whose names match a spreadsheet column. Otherwise pick the column from the dropdown.
+> Every template you (or a shared admin) own. Search filters by name; each tile shows the size + version + last-modified date. Hover a tile to reveal Export (⬇) and Delete (✕). Top-right pair: **Import** (from a `.blg-template.json` file) and **New template** (pick a format).
 
-### Series wizard — SQLite source
+### 3 · Bring your data
 
-<!--
-  📸 SCREENSHOT — docs/screenshots/04-series-sqlite-picker.png
-  ────────────────────────────────────────────────────────
-  Generate Series Step 1 after uploading a real .db file (e.g. parana.db
-  or any sample SQLite with a few tables). Show the table dropdown
-  expanded — sorted by row count, each row with "name (N columns, M
-  rows)". Below it, the "Show advanced: custom SQL query" details
-  block expanded with a sample SELECT query in the textarea.
--->
-![SQLite source picker](docs/screenshots/04-series-sqlite-picker.png)
+![Sample data file in Numbers](docs/screenshots/data-file.png)
 
-> Upload a `.db` / `.sqlite` / `.sqlite3` and the wizard offers a table picker (sorted by row count, biggest first) plus an "advanced" SELECT editor. Read-only connection, single-statement validator, 1,000-row cap.
+> The "left side" of the mail-merge flow. Any CSV / Excel / SQLite with column headers works. Here: 60 products with `SKU`, `ProductName`, `Ingredients`, `BatchNo`, `BestBefore`, `EAN-128` — feeds straight into a template that uses `{{SKU}}`, `{{ProductName}}` etc.
 
-### Template import / export
+### 4 · Generate Series — pick the source
 
-<!--
-  📸 SCREENSHOT — docs/screenshots/05-import-modal.png
-  ────────────────────────────────────────────────────────
-  ImportTemplateModal at Phase 2 (Configure). Show:
-    - the imported template name (editable),
-    - width/height override fields (pre-filled),
-    - the "Objects to import" checkbox list with 4-5 entries (some
-      checked, one unchecked) and a {{…}} chip on the dynamic ones,
-    - a "Duplicate images detected" radio row with reuse/copy choice,
-    - one yellow warning if format hint missing,
-    - the Cancel/Import buttons at the bottom.
--->
-![Import template modal](docs/screenshots/05-import-modal.png)
+![Generate Series wizard — upload step](docs/screenshots/generate-series.png)
 
-> Each template exports to one `.blg-template.json` (size, objects, embedded images). Re-import with size override + per-object checklist + per-duplicate-image reuse/copy decision.
+> Step 1 of the 4-step wizard. Accept any of: `.csv`, `.xls`, `.xlsx` (max 10 MB / 1,000 rows) **or** `.db` / `.sqlite` / `.sqlite3` (max 50 MB).
 
-### Templates page
+### 5 · SQLite source — table picker + custom SELECT
 
-<!--
-  📸 SCREENSHOT — docs/screenshots/06-templates-list.png
-  ────────────────────────────────────────────────────────
-  Templates page with 6-12 template cards in the grid (real names,
-  varied sizes). Hover one card to show the ⬇ Export + ✕ Delete
-  icons. Top-right shows the Search box + "⬆ Import" + "+ New
-  template" buttons. Sidebar visible on the left.
--->
-![Templates list](docs/screenshots/06-templates-list.png)
+![SQLite source picker](docs/screenshots/sql-import.png)
 
-> Search-filterable grid. Each card hovers to reveal Export (⬇) + Delete (✕). The top-right pair gives Import (from file) and New (create from a format).
+> When the uploaded file is a SQLite database the wizard detects every user-visible table (sorted by row count — biggest first) and lets you either pick one or expand "Show advanced" to write a `SELECT` with `WHERE`/`JOIN`/`UPPER(...)` etc. Read-only connection; single-statement validator blocks `INSERT` / `UPDATE` / `DELETE` / `DROP` / `ATTACH` / `PRAGMA`; auto-LIMIT 1000.
 
-### In-app help
+### 6 · Map placeholders to columns
 
-<!--
-  📸 SCREENSHOT — docs/screenshots/07-help-page.png
-  ────────────────────────────────────────────────────────
-  /help page in Polish, with the Guide tab selected. Show the markdown
-  rendered with proper styling — headings, bullet lists, the keyboard
-  shortcuts table. Sidebar visible on the left with "Pomoc" highlighted.
-  The two-tab toggle (Przewodnik / FAQ) visible top-right.
--->
-![In-app help](docs/screenshots/07-help-page.png)
+![Mapping placeholders](docs/screenshots/series-maping-data.png)
 
-> The canonical HELP + FAQ Markdown lives in `docs/` and is bundled into the app at build time — one source, both an in-repo doc and an in-app page.
+> Step 2 detects every `{{name}}` placeholder in the template and auto-maps it to a same-named column. Mismatched names are pickable from a dropdown — the wizard refuses to move on until every placeholder has a source.
 
-### Batch PDF output
+![Picking a column manually](docs/screenshots/maping-sql.png)
 
-<!--
-  📸 SCREENSHOT — docs/screenshots/08-batch-pdf-pages.png
-  ────────────────────────────────────────────────────────
-  Screenshot of a generated PDF opened in a viewer (Acrobat / Preview /
-  Chrome) showing 4-6 thumbnails of consecutive label pages. Each label
-  has different data substituted from the spreadsheet, so the variation
-  is visible at a glance. PDF info bar visible.
--->
-![Generated batch PDF](docs/screenshots/08-batch-pdf-pages.png)
+> The fallback dropdown showing every column the source carries. Works the same whether the source was CSV, Excel, or a SQLite query.
 
-> One PDF, one label per row, ready to print. Up to 1,000 pages per batch.
+### 7 · Per-row PDF output
+
+![Generated label preview](docs/screenshots/generated-label.png)
+
+> One PDF, one page per row. Each `{{placeholder}}` is replaced by the row's value — here `Victoria Sponge Cake` is row 5 of 60, with its own ingredients, batch number, and GS1-128 barcode. Long ingredients lists wrap inside the text block; the renderer reports a warning if anything doesn't fit.
+
+### 8 · Import / export templates
+
+![Import template modal](docs/screenshots/import-template.png)
+
+> Every template exports to a single `.blg-template.json` (size + objects + embedded images, all base64). The import modal lets you rename the new template, override the size, and **uncheck** specific objects to bring in — the `{{…}}` chip flags objects that carry dynamic placeholders. Duplicate images (detected by SHA-256) prompt a reuse-vs-copy choice.
 
 ---
 
@@ -148,21 +89,8 @@
 | Database | PostgreSQL 16 (production) · SQLite (test fixture) |
 | Cache + sessions + job queue | Redis 7 |
 | Infrastructure | Docker + Docker Compose + nginx |
-| Deployment | Linux host (`HOST`) fronted by Tailscale Serve |
+| Deployment | Linux host fronted by Tailscale Serve |
 | Tests | pytest (backend, 172 tests) + tsc + eslint (frontend) |
-
-### Architecture overview
-
-<!--
-  📸 SCREENSHOT — docs/screenshots/09-architecture.png OR docs/architecture.svg
-  ──────────────────────────────────────────────────────────────────────
-  Optional: a simple 4-box diagram —
-    Browser ─→ nginx (TLS via Tailscale) ─→ {Flask API, static SPA}
-                                              ↓        ↑
-                                     Postgres + Redis  Konva editor
-  Plus uploads/ + assets/ + pdfs/ docker volumes.
-  Can be hand-drawn, excalidraw, mermaid-rendered. Skip if too much.
--->
 
 ---
 
@@ -248,7 +176,7 @@ BarcodeLabelGen/
 
 ## Status
 
-✅ **Production** on `HOST.TAILNET.ts.net:18003` (Tailscale-only).
+✅ **Production** on a Tailscale-only host.
 - Backend: 172 / 172 tests passing.
 - QA harness (PDF render geometry checks): all formats ✅.
 - Frontend: typecheck + lint + build clean; bundle 153 KB (gzipped 47 KB) main + lazy chunks for editor (Konva) and help (react-markdown).
