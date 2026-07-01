@@ -18,6 +18,11 @@ export type EditorObjectBase = {
    *  single-label sync and batch). Defaults to true (omitted = printable).
    *  Used by reference images that should only appear in the editor. */
   printable?: boolean;
+  /** Round-trip hints preserved when a label is imported from ZPL (exact
+   *  font token, barcode command, field-block params, hex-escape, ^FO
+   *  justification). Opaque to the editor and PDF renderer; consumed only
+   *  by the backend ZPL generator so re-export stays faithful. */
+  zpl?: Record<string, unknown>;
 };
 
 export type TextObject = EditorObjectBase & {
@@ -77,7 +82,7 @@ export type EditorObject = TextObject | RectObject | LineObject | ImageObject | 
 
 export type CanvasData = {
   version: 1;
-  stage: { width_mm: number; height_mm: number };
+  stage: { width_mm: number; height_mm: number; zpl?: Record<string, unknown> };
   objects: EditorObject[];
 };
 

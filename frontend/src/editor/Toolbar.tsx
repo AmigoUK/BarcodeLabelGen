@@ -17,6 +17,8 @@ type Props = {
    * generation always uses the last-saved canvas, so the user should save
    * first to avoid generating from stale data. */
   seriesDisabled: boolean;
+  onImportZpl: () => void;
+  onExportZpl: () => void;
 };
 
 export function Toolbar({
@@ -28,6 +30,8 @@ export function Toolbar({
   autosaveAt,
   onGenerateSeries,
   seriesDisabled,
+  onImportZpl,
+  onExportZpl,
 }: Props) {
   const { t } = useTranslation();
   const dirty = useEditorStore((s) => s.dirty);
@@ -119,6 +123,12 @@ export function Toolbar({
           title={t("templates.exportTooltip")}
         >
           ⬇ {t("templates.export")}
+        </Button>
+        <Button variant="ghost" onClick={onImportZpl} title={t("zpl.importTooltip")}>
+          {t("zpl.import")}
+        </Button>
+        <Button variant="ghost" onClick={onExportZpl} title={t("zpl.exportTooltip")}>
+          {t("zpl.export")}
         </Button>
         <Button
           variant="secondary"

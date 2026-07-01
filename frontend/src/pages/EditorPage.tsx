@@ -3,6 +3,8 @@ import { useTranslation } from "react-i18next";
 import { useParams } from "react-router-dom";
 import { AlignmentBar } from "../editor/AlignmentBar";
 import { Canvas } from "../editor/Canvas";
+import { ExportZplModal } from "../editor/ExportZplModal";
+import { ImportZplModal } from "../editor/ImportZplModal";
 import { LeftPanel } from "../editor/LeftPanel";
 import { RightPanel } from "../editor/RightPanel";
 import { SeriesWizard } from "../editor/SeriesWizard";
@@ -21,6 +23,7 @@ export function EditorPage() {
   const update = useUpdateTemplate();
 
   const setCanvas = useEditorStore((s) => s.setCanvas);
+  const replaceCanvas = useEditorStore((s) => s.replaceCanvas);
   const markClean = useEditorStore((s) => s.markClean);
   const canvas = useEditorStore((s) => s.canvas);
   const dirty = useEditorStore((s) => s.dirty);
@@ -135,6 +138,8 @@ export function EditorPage() {
   }, [dirty]);
 
   const [showWizard, setShowWizard] = useState(false);
+  const [showImportZpl, setShowImportZpl] = useState(false);
+  const [showExportZpl, setShowExportZpl] = useState(false);
 
   if (template.isLoading) {
     return <div className="p-6 text-slate-400">{t("common.loading")}</div>;
@@ -160,6 +165,8 @@ export function EditorPage() {
         autosaveAt={autosave.lastSavedAt}
         onGenerateSeries={() => setShowWizard(true)}
         seriesDisabled={dirty}
+        onImportZpl={() => setShowImportZpl(true)}
+        onExportZpl={() => setShowExportZpl(true)}
       />
       <AlignmentBar />
       <div className="flex min-h-0 flex-1">
@@ -173,6 +180,20 @@ export function EditorPage() {
           templateName={template.data.name}
           canvas={canvas}
           onClose={() => setShowWizard(false)}
+        />
+      )}
+      <ImportZplModal
+        open={showImportZpl}
+        onClose={() => setShowImportZpl(false)}
+        onImported={(c) => replaceCanvas(c)}
+      />
+      {canvas && (
+        <ExportZplModal
+          open={showExportZpl}
+          onClose={() => setShowExportZpl(false)}
+          canvas={canvas}
+          templateId={template.data.id}
+          templateName={template.data.name}
         />
       )}
     </div>

@@ -44,6 +44,9 @@ type State = {
 
   // --- mutations ---
   setCanvas: (c: CanvasData) => void;
+  /** Replace the whole canvas as an undoable, dirty-marking edit — used by
+   *  ZPL import, which swaps in a freshly parsed tree the user then saves. */
+  replaceCanvas: (c: CanvasData) => void;
   markClean: () => void;
 
   /** Replace the entire selection with this object (or clear if null). */
@@ -287,6 +290,15 @@ export const useEditorStore = create<State>((set) => ({
       past: [],
       future: [],
     }),
+
+  replaceCanvas: (c) =>
+    set((s) => ({
+      canvas: c,
+      selectedIds: [],
+      dirty: true,
+      past: s.canvas ? pushHistory(s.past, s.canvas) : s.past,
+      future: [],
+    })),
 
   markClean: () => set({ dirty: false }),
 
