@@ -19,6 +19,7 @@ type Props = {
   seriesDisabled: boolean;
   onImportZpl: () => void;
   onExportZpl: () => void;
+  onLabelSize: () => void;
 };
 
 export function Toolbar({
@@ -32,6 +33,7 @@ export function Toolbar({
   seriesDisabled,
   onImportZpl,
   onExportZpl,
+  onLabelSize,
 }: Props) {
   const { t } = useTranslation();
   const dirty = useEditorStore((s) => s.dirty);
@@ -39,6 +41,7 @@ export function Toolbar({
   const future = useEditorStore((s) => s.future.length);
   const undo = useEditorStore((s) => s.undo);
   const redo = useEditorStore((s) => s.redo);
+  const stage = useEditorStore((s) => s.canvas?.stage);
   const generate = useGeneratePdf();
 
   const autosaveLabel = (() => {
@@ -123,6 +126,9 @@ export function Toolbar({
           title={t("templates.exportTooltip")}
         >
           ⬇ {t("templates.export")}
+        </Button>
+        <Button variant="ghost" onClick={onLabelSize} title={t("labelSize.tooltip")}>
+          {stage ? `📐 ${stage.width_mm}×${stage.height_mm}` : t("labelSize.title")}
         </Button>
         <Button variant="ghost" onClick={onImportZpl} title={t("zpl.importTooltip")}>
           {t("zpl.import")}

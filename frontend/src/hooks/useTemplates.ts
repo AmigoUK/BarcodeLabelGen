@@ -90,6 +90,8 @@ type UpdateTemplateInput = {
     description: string | null;
     canvas_data: CanvasData;
     is_shared: boolean;
+    width_mm: number;
+    height_mm: number;
   }>;
 };
 

@@ -25,7 +25,7 @@
     "importTitle": "Importuj ZPL",
     "exportTitle": "Eksportuj ZPL",
     "importHelp": "Wklej etykietę ZPL/ZPL II. Elementy staną się edytowalnymi obiektami na kanwie; nierozpoznane komendy są zachowywane bez zmian.",
-    "importReplaceWarning": "Import zastąpi bieżącą kanwę.",
+    "importReplaceWarning": "Import zastępuje obiekty na kanwie, ale zachowuje bieżący rozmiar etykiety — zmień go przyciskiem rozmiaru.",
     "importAction": "Importuj",
     "exportHelp": "Kod ZPL na żywo dla bieżącej etykiety. Zmienne jak {NAZWA} i ^PQ{NoLabel} pozostają nienaruszone dla zewnętrznego oprogramowania.",
     "dpi": "DPI drukarki",
@@ -40,6 +40,15 @@
     "datasetPick": "Wybierz dataset…",
     "generateBatch": "Generuj .zpl",
     "generating": "Generowanie…"
+  },
+  "labelSize": {
+    "title": "Rozmiar etykiety",
+    "tooltip": "Zmień wymiary etykiety",
+    "help": "Ustaw rozmiar obszaru etykiety w milimetrach. Pozycje obiektów pozostają bez zmian.",
+    "width": "Szerokość",
+    "height": "Wysokość",
+    "presets": "Gotowe rozmiary (mm)",
+    "apply": "Zastosuj"
   },
   "auth": {
     "login": "Zaloguj",

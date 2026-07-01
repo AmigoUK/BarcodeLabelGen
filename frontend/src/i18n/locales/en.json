@@ -25,7 +25,7 @@
     "importTitle": "Import ZPL",
     "exportTitle": "Export ZPL",
     "importHelp": "Paste a ZPL/ZPL II label. Elements become editable objects on the canvas; unrecognised commands are preserved as-is.",
-    "importReplaceWarning": "Importing replaces the current canvas.",
+    "importReplaceWarning": "Import replaces the objects on the canvas but keeps the current label size — change it with the size button.",
     "importAction": "Import",
     "exportHelp": "Live ZPL for the current label. Variables like {NAZWA} and ^PQ{NoLabel} are kept intact for your external software.",
     "dpi": "Printer DPI",
@@ -40,6 +40,15 @@
     "datasetPick": "Choose a dataset…",
     "generateBatch": "Generate .zpl",
     "generating": "Generating…"
+  },
+  "labelSize": {
+    "title": "Label size",
+    "tooltip": "Change the label dimensions",
+    "help": "Set the printable label size in millimetres. Object positions are unchanged.",
+    "width": "Width",
+    "height": "Height",
+    "presets": "Presets (mm)",
+    "apply": "Apply"
   },
   "auth": {
     "login": "Log in",

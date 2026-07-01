@@ -110,6 +110,8 @@ def update_template(template_id: int) -> ResponseReturnValue:
             description=payload.description,
             canvas_data=payload.canvas_data,
             is_shared=payload.is_shared,
+            width_mm=payload.width_mm,
+            height_mm=payload.height_mm,
         )
     except tpl_svc.TemplateNotFoundError:
         return jsonify({"error": "template_not_found"}), 404

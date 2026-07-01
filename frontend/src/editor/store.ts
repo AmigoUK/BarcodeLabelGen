@@ -47,6 +47,9 @@ type State = {
   /** Replace the whole canvas as an undoable, dirty-marking edit — used by
    *  ZPL import, which swaps in a freshly parsed tree the user then saves. */
   replaceCanvas: (c: CanvasData) => void;
+  /** Resize the label (stage) in mm as one undoable, dirty-marking edit.
+   *  Object positions are unchanged — only the printable area resizes. */
+  setStageSize: (widthMm: number, heightMm: number) => void;
   markClean: () => void;
 
   /** Replace the entire selection with this object (or clear if null). */
@@ -299,6 +302,20 @@ export const useEditorStore = create<State>((set) => ({
       past: s.canvas ? pushHistory(s.past, s.canvas) : s.past,
       future: [],
     })),
+
+  setStageSize: (widthMm, heightMm) =>
+    set((s) => {
+      if (!s.canvas) return s;
+      const w = Math.max(1, Math.min(1000, widthMm));
+      const h = Math.max(1, Math.min(1000, heightMm));
+      if (s.canvas.stage.width_mm === w && s.canvas.stage.height_mm === h) return s;
+      return {
+        canvas: { ...s.canvas, stage: { ...s.canvas.stage, width_mm: w, height_mm: h } },
+        dirty: true,
+        past: pushHistory(s.past, s.canvas),
+        future: [],
+      };
+    }),
 
   markClean: () => set({ dirty: false }),
 

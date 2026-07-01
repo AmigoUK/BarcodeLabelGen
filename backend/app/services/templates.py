@@ -85,6 +85,8 @@ def update(
     description: str | None = None,
     canvas_data: dict[str, Any] | None = None,
     is_shared: bool | None = None,
+    width_mm: float | None = None,
+    height_mm: float | None = None,
 ) -> Template:
     tpl = session.get(Template, template_id)
     if tpl is None:
@@ -98,6 +100,10 @@ def update(
         tpl.description = description
     if is_shared is not None:
         tpl.is_shared = is_shared
+    if width_mm is not None:
+        tpl.width_mm = float(width_mm)
+    if height_mm is not None:
+        tpl.height_mm = float(height_mm)
     if canvas_data is not None:
         tpl.canvas_data = canvas_data
         tpl.version += 1

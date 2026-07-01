@@ -243,6 +243,46 @@ def test_shared_template_visible_to_other_users(
     assert client.get(f"/api/templates/{tid}").status_code == 200
 
 
+def test_update_template_dimensions(app: Flask, client: FlaskClient, csrf: CsrfHelper) -> None:
+    fmt_id = _seed_format_and_login(app, client, csrf)
+    created = client.post(
+        "/api/templates", json={"name": "resize me", "format_id": fmt_id}, headers=csrf.headers()
+    )
+    tid = created.get_json()["id"]
+
+    resp = client.put(
+        f"/api/templates/{tid}",
+        json={"width_mm": 40, "height_mm": 100},
+        headers=csrf.headers(),
+    )
+    assert resp.status_code == 200
+    body = resp.get_json()
+    assert body["width_mm"] == 40
+    assert body["height_mm"] == 100
+
+
+def test_update_template_rejects_out_of_range_dimensions(
+    app: Flask, client: FlaskClient, csrf: CsrfHelper
+) -> None:
+    fmt_id = _seed_format_and_login(app, client, csrf)
+    tid = client.post(
+        "/api/templates", json={"name": "t", "format_id": fmt_id}, headers=csrf.headers()
+    ).get_json()["id"]
+    # 0 and >1000 mm are rejected by the schema (gt=0, le=1000)
+    assert (
+        client.put(
+            f"/api/templates/{tid}", json={"width_mm": 0}, headers=csrf.headers()
+        ).status_code
+        == 400
+    )
+    assert (
+        client.put(
+            f"/api/templates/{tid}", json={"height_mm": 5000}, headers=csrf.headers()
+        ).status_code
+        == 400
+    )
+
+
 def test_delete_template_removes_it(app: Flask, client: FlaskClient, csrf: CsrfHelper) -> None:
     fmt_id = _seed_format_and_login(app, client, csrf)
     created = client.post(

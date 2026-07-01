@@ -60,6 +60,10 @@ class UpdateTemplateRequest(BaseModel):
     description: str | None = Field(default=None, max_length=1000)
     canvas_data: dict[str, Any] | None = None
     is_shared: bool | None = None
+    # Label dimensions — editable so a user can resize a template (or correct
+    # the size after importing ZPL) without recreating it.
+    width_mm: float | None = Field(default=None, gt=0, le=1000)
+    height_mm: float | None = Field(default=None, gt=0, le=1000)
 
 
 class AssetPublic(BaseModel):

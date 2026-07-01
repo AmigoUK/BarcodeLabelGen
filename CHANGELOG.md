@@ -9,6 +9,23 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 _Nothing yet._
 
+## [0.3.0] — 2026-07-01
+
+### Added
+- **Editable label size.** A new size button in the editor toolbar opens a
+  dialog to change the label's width × height in millimetres (with common
+  presets); the change is undoable and persists to the template, so a label
+  can be resized without recreating it. `PUT /api/templates/:id` now accepts
+  `width_mm` / `height_mm`, and saving the canvas keeps the template record
+  in sync with the on-screen stage.
+
+### Fixed
+- **ZPL import no longer overrides the label size.** Importing ZPL brings in
+  the elements but keeps the label dimensions you already set, instead of
+  resizing the stage to the ZPL's `^PW`/`^LL` (or a 100×150 default when the
+  code carried none). Use the new size button to change dimensions
+  deliberately.
+
 ## [0.2.1] — 2026-07-01
 
 ### Fixed
@@ -47,7 +64,8 @@ _Nothing yet._
   label formats, dataset upload (CSV/XLSX/SQLite) with `{{column}}`
   mail-merge, and PDF single-label + batch generation via ReportLab.
 
-[Unreleased]: https://github.com/AmigoUK/BarcodeLabelGen/compare/v0.2.1...HEAD
+[Unreleased]: https://github.com/AmigoUK/BarcodeLabelGen/compare/v0.3.0...HEAD
+[0.3.0]: https://github.com/AmigoUK/BarcodeLabelGen/releases/tag/v0.3.0
 [0.2.1]: https://github.com/AmigoUK/BarcodeLabelGen/releases/tag/v0.2.1
 [0.2.0]: https://github.com/AmigoUK/BarcodeLabelGen/releases/tag/v0.2.0
 [0.1.0]: https://github.com/AmigoUK/BarcodeLabelGen/releases/tag/v0.1.0

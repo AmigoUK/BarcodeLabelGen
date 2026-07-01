@@ -5,6 +5,7 @@ import { AlignmentBar } from "../editor/AlignmentBar";
 import { Canvas } from "../editor/Canvas";
 import { ExportZplModal } from "../editor/ExportZplModal";
 import { ImportZplModal } from "../editor/ImportZplModal";
+import { LabelSettingsModal } from "../editor/LabelSettingsModal";
 import { LeftPanel } from "../editor/LeftPanel";
 import { RightPanel } from "../editor/RightPanel";
 import { SeriesWizard } from "../editor/SeriesWizard";
@@ -24,6 +25,7 @@ export function EditorPage() {
 
   const setCanvas = useEditorStore((s) => s.setCanvas);
   const replaceCanvas = useEditorStore((s) => s.replaceCanvas);
+  const setStageSize = useEditorStore((s) => s.setStageSize);
   const markClean = useEditorStore((s) => s.markClean);
   const canvas = useEditorStore((s) => s.canvas);
   const dirty = useEditorStore((s) => s.dirty);
@@ -53,7 +55,17 @@ export function EditorPage() {
   const saveCanvas = useCallback(
     async (c: CanvasData) => {
       if (!templateId) return;
-      await update.mutateAsync({ id: templateId, patch: { canvas_data: c } });
+      // Persist the label dimensions alongside the canvas so the template
+      // record (used by PDF/ZPL generation) stays in sync with the stage the
+      // user sees — e.g. after editing the label size.
+      await update.mutateAsync({
+        id: templateId,
+        patch: {
+          canvas_data: c,
+          width_mm: c.stage.width_mm,
+          height_mm: c.stage.height_mm,
+        },
+      });
       if (useEditorStore.getState().canvas === c) {
         markClean();
       }
@@ -140,6 +152,7 @@ export function EditorPage() {
   const [showWizard, setShowWizard] = useState(false);
   const [showImportZpl, setShowImportZpl] = useState(false);
   const [showExportZpl, setShowExportZpl] = useState(false);
+  const [showLabelSize, setShowLabelSize] = useState(false);
 
   if (template.isLoading) {
     return <div className="p-6 text-slate-400">{t("common.loading")}</div>;
@@ -167,6 +180,7 @@ export function EditorPage() {
         seriesDisabled={dirty}
         onImportZpl={() => setShowImportZpl(true)}
         onExportZpl={() => setShowExportZpl(true)}
+        onLabelSize={() => setShowLabelSize(true)}
       />
       <AlignmentBar />
       <div className="flex min-h-0 flex-1">
@@ -185,17 +199,47 @@ export function EditorPage() {
       <ImportZplModal
         open={showImportZpl}
         onClose={() => setShowImportZpl(false)}
-        onImported={(c) => replaceCanvas(c)}
+        onImported={(parsed) => replaceCanvas(keepCurrentLabelSize(parsed))}
       />
       {canvas && (
-        <ExportZplModal
-          open={showExportZpl}
-          onClose={() => setShowExportZpl(false)}
-          canvas={canvas}
-          templateId={template.data.id}
-          templateName={template.data.name}
-        />
+        <>
+          <ExportZplModal
+            open={showExportZpl}
+            onClose={() => setShowExportZpl(false)}
+            canvas={canvas}
+            templateId={template.data.id}
+            templateName={template.data.name}
+          />
+          <LabelSettingsModal
+            open={showLabelSize}
+            onClose={() => setShowLabelSize(false)}
+            widthMm={canvas.stage.width_mm}
+            heightMm={canvas.stage.height_mm}
+            onApply={(w, h) => setStageSize(w, h)}
+          />
+        </>
       )}
     </div>
   );
+}
+
+/** ZPL import brings in elements, not a new label format: keep the label
+ *  size the user already set. We overwrite the parsed stage dimensions with
+ *  the current ones and drop the imported ^PW/^LL so a later ZPL export
+ *  matches the size shown on screen. */
+function keepCurrentLabelSize(parsed: CanvasData): CanvasData {
+  const current = useEditorStore.getState().canvas;
+  if (!current) return parsed;
+  const nextZpl = { ...(parsed.stage.zpl ?? {}) };
+  delete nextZpl.pw;
+  delete nextZpl.ll;
+  return {
+    ...parsed,
+    stage: {
+      ...parsed.stage,
+      width_mm: current.stage.width_mm,
+      height_mm: current.stage.height_mm,
+      zpl: nextZpl,
+    },
+  };
 }
