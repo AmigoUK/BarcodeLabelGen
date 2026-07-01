@@ -1,6 +1,6 @@
 [project]
 name = "barcodelabelgen-backend"
-version = "0.2.0"
+version = "0.2.1"
 description = "BarcodeLabelGen — Flask REST API backend"
 requires-python = ">=3.12"
 dependencies = [

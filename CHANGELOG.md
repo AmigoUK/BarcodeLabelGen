@@ -9,6 +9,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 _Nothing yet._
 
+## [0.2.1] — 2026-07-01
+
+### Fixed
+- **White screen after a deploy.** nginx now serves `index.html` (and every
+  SPA route) with `Cache-Control: no-cache`, so browsers always revalidate
+  the entrypoint instead of holding a stale copy that references hashed JS
+  chunks removed by the new build (`Failed to fetch dynamically imported
+  module`). Fingerprinted assets stay `immutable`.
+
 ## [0.2.0] — 2026-07-01
 
 ### Added
@@ -38,6 +47,7 @@ _Nothing yet._
   label formats, dataset upload (CSV/XLSX/SQLite) with `{{column}}`
   mail-merge, and PDF single-label + batch generation via ReportLab.
 
-[Unreleased]: https://github.com/AmigoUK/BarcodeLabelGen/compare/v0.2.0...HEAD
+[Unreleased]: https://github.com/AmigoUK/BarcodeLabelGen/compare/v0.2.1...HEAD
+[0.2.1]: https://github.com/AmigoUK/BarcodeLabelGen/releases/tag/v0.2.1
 [0.2.0]: https://github.com/AmigoUK/BarcodeLabelGen/releases/tag/v0.2.0
 [0.1.0]: https://github.com/AmigoUK/BarcodeLabelGen/releases/tag/v0.1.0
