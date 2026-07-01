@@ -228,9 +228,12 @@ def download_job_pdf(job_id: str) -> ResponseReturnValue:
     pdf_file = jobs_svc.pdfs_dir() / state["pdf_path"]
     if not pdf_file.is_file():
         return jsonify({"error": "pdf_missing"}), 410
+    # Jobs also back ZPL batch output (.zpl); pick the mimetype from the
+    # suffix so the browser labels the download correctly.
+    mimetype = "text/plain; charset=utf-8" if pdf_file.suffix == ".zpl" else "application/pdf"
     return send_file(
         pdf_file,
-        mimetype="application/pdf",
+        mimetype=mimetype,
         as_attachment=True,
         download_name=pdf_file.name,
     )

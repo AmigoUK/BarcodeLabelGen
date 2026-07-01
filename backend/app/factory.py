@@ -22,6 +22,7 @@ from app.routes.generate import generate_bp, jobs_bp
 from app.routes.health import health_bp
 from app.routes.me import me_bp
 from app.routes.templates import templates_bp
+from app.routes.zpl import zpl_bp
 
 
 def create_app(
@@ -89,6 +90,7 @@ def create_app(
     app.register_blueprint(generate_bp, url_prefix="/api")
     app.register_blueprint(datasets_bp, url_prefix="/api")
     app.register_blueprint(jobs_bp, url_prefix="/api")
+    app.register_blueprint(zpl_bp, url_prefix="/api")
 
     # CLI
     register_cli(app)

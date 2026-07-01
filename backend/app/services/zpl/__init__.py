@@ -1,0 +1,25 @@
+"""ZPL/ZPL II round-trip engine.
+
+Public surface:
+  * `parse_zpl(zpl, dpmm)`   — ZPL text  → {"canvas_data", "warnings"}
+  * `generate_zpl(canvas)`   — canvas    → ZPL text
+  * `render_batch_zpl(...)`  — canvas + rows → concatenated ZPL bytes
+  * `dpmm_for_dpi(dpi)`      — 203/300 dpi → 8/12 dots-per-mm
+"""
+
+from __future__ import annotations
+
+from app.services.zpl.batch import render_batch_zpl
+from app.services.zpl.generator import generate_zpl
+from app.services.zpl.parser import parse_zpl
+from app.services.zpl.units import DEFAULT_DPI, DEFAULT_DPMM, DPMM_BY_DPI, dpmm_for_dpi
+
+__all__ = [
+    "DEFAULT_DPI",
+    "DEFAULT_DPMM",
+    "DPMM_BY_DPI",
+    "dpmm_for_dpi",
+    "generate_zpl",
+    "parse_zpl",
+    "render_batch_zpl",
+]
