@@ -17,6 +17,8 @@
 - **Duplicate fast** — Alt+drag a selected object to clone it under the cursor; Ctrl/Cmd+D to duplicate in place. Multi-select supported.
 - **Barcodes** — EAN-13, EAN-14, GTIN, Code 128, GS1-128, QR (with checksum validation).
 - **Series generation** — upload a CSV, Excel, or **SQLite** file, map placeholders to columns (or write a custom SELECT), optionally filter rows, get a single PDF with one label per row. Up to 1,000 labels per batch.
+- **ZPL / ZPL II round-trip** — paste an existing ZPL label, adjust element positions on the canvas, and export native ZPL back out (copy to clipboard or download `.zpl`) for use in external software. Single-brace `{VARIABLES}`, `^PQ{NoLabel}` quantity, resident fonts (`E:ARIxxx.TTF`) and native QR are preserved 1:1; a batch mode fills `{{column}}` values from a dataset. DPI is auto-detected from `^PW`/`^LL`.
+- **Editable label size** — resize a template (width × height in mm, with presets) at any time from the editor; undoable and persisted, so a label never has to be recreated just to change its dimensions.
 - **Template import / export** — every template is a single self-contained `.blg-template.json` (size, objects, embedded images). Cross-instance portable; partial import lets you skip objects + override the size.
 - **Multilingual UI + in-app docs** — Polish + English from day one, with HELP + FAQ rendered inside the app.
 - **Roles** — admin / editor / viewer; admin manages users + temporary password resets.
@@ -80,6 +82,25 @@
 
 > Every template exports to a single `.blg-template.json` (size + objects + embedded images, all base64). The import modal lets you rename the new template, override the size, and **uncheck** specific objects to bring in — the `{{…}}` chip flags objects that carry dynamic placeholders. Duplicate images (detected by SHA-256) prompt a reuse-vs-copy choice.
 
+### 9 · ZPL / ZPL II round-trip — paste, adjust, copy back
+
+![ZPL import dialog — paste, Auto-detect DPI, Analyze](docs/screenshots/zpl-import.png)
+<!-- TODO: replace with a real screenshot of the ZPL import dialog (paste box + DPI Auto + Analyze result). -->
+
+> _⚠️ Placeholder — screenshot pending._ Paste an existing ZPL label, leave **DPI** on **Auto-detect** (or force 203 / 300), and hit **Analyze**: the elements become editable canvas objects, the dialog reports the detected DPI + object count and warns when the content spills past the label (a wrong-DPI signal). Import keeps the label size you already set; single-brace `{VARIABLES}`, `^PQ{NoLabel}`, resident fonts and native QR survive the round-trip.
+
+![ZPL export panel — live preview, Copy, Download .zpl](docs/screenshots/zpl-export.png)
+<!-- TODO: replace with a real screenshot of the ZPL export panel (live preview + Copy/Download, template + batch modes). -->
+
+> _⚠️ Placeholder — screenshot pending._ A live native-ZPL preview of the current label with **Copy** and **Download .zpl**. Template mode keeps the variables intact for your external system; batch mode substitutes `{{column}}` values from a dataset and emits one `^XA…^XZ` block per row.
+
+### 10 · Resize the label anytime
+
+![Label-size dialog — width × height in mm with presets](docs/screenshots/label-size.png)
+<!-- TODO: replace with a real screenshot of the label-size dialog (width/height inputs + presets). -->
+
+> _⚠️ Placeholder — screenshot pending._ The size button (**📐 W×H**) in the toolbar opens a dialog to change the label's width × height in millimetres, with one-click presets (40×100, 50×30, 100×150, A6, A4). The change is undoable and saved to the template — object positions stay put.
+
 ---
 
 ## Tech stack
@@ -92,7 +113,7 @@
 | Cache + sessions + job queue | Redis 7 |
 | Infrastructure | Docker + Docker Compose + nginx |
 | Deployment | Linux host fronted by Tailscale Serve |
-| Tests | pytest (backend, 172 tests) + tsc + eslint (frontend) |
+| Tests | pytest (backend, 203 tests) + tsc + eslint (frontend) |
 
 ---
 
@@ -154,7 +175,7 @@ BarcodeLabelGen/
 │   │   ├── services/      # Business logic (PDF render, batch, datasets, …)
 │   │   └── factory.py     # Flask app factory
 │   ├── alembic/           # DB migrations (0001…0006)
-│   ├── tests/             # pytest — 172 tests
+│   ├── tests/             # pytest — 203 tests
 │   └── pyproject.toml
 ├── frontend/
 │   ├── src/
@@ -179,7 +200,7 @@ BarcodeLabelGen/
 ## Status
 
 ✅ **Production** on a Tailscale-only host.
-- Backend: 172 / 172 tests passing.
+- Backend: 203 / 203 tests passing.
 - QA harness (PDF render geometry checks): all formats ✅.
 - Frontend: typecheck + lint + build clean; bundle 153 KB (gzipped 47 KB) main + lazy chunks for editor (Konva) and help (react-markdown).
 
