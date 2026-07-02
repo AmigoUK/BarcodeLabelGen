@@ -1,7 +1,7 @@
 /**
- * Project credit footer. Always visible on the dashboard, templates list,
- * admin pages, and the auth screens. Skipped on the full-screen editor
- * workspace where every pixel of vertical space matters.
+ * Project credit footer. Rendered on every full-shell page (dashboard,
+ * templates list, admin, auth screens) and — at the owner's explicit
+ * request — as a slim strip at the bottom of the editor workspace too.
  */
 
 const REPO_URL = "https://github.com/AmigoUK/BarcodeLabelGen";

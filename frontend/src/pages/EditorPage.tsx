@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useParams } from "react-router-dom";
+import { AppFooter } from "../components/AppFooter";
 import { AlignmentBar } from "../editor/AlignmentBar";
 import { Canvas } from "../editor/Canvas";
 import { ExportZplModal } from "../editor/ExportZplModal";
@@ -188,6 +189,7 @@ export function EditorPage() {
         <Canvas />
         <RightPanel />
       </div>
+      <AppFooter />
       {showWizard && canvas && (
         <SeriesWizard
           templateId={template.data.id}

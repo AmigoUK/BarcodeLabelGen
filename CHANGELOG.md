@@ -9,6 +9,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 _Nothing yet._
 
+## [0.4.1] — 2026-07-02
+
+### Changed
+- The project credit footer now also appears as a slim strip at the bottom
+  of the editor workspace (previously shown only on full-shell pages).
+
 ## [0.4.0] — 2026-07-02
 
 ### Added
@@ -78,7 +84,8 @@ _Nothing yet._
   label formats, dataset upload (CSV/XLSX/SQLite) with `{{column}}`
   mail-merge, and PDF single-label + batch generation via ReportLab.
 
-[Unreleased]: https://github.com/AmigoUK/BarcodeLabelGen/compare/v0.4.0...HEAD
+[Unreleased]: https://github.com/AmigoUK/BarcodeLabelGen/compare/v0.4.1...HEAD
+[0.4.1]: https://github.com/AmigoUK/BarcodeLabelGen/releases/tag/v0.4.1
 [0.4.0]: https://github.com/AmigoUK/BarcodeLabelGen/releases/tag/v0.4.0
 [0.3.0]: https://github.com/AmigoUK/BarcodeLabelGen/releases/tag/v0.3.0
 [0.2.1]: https://github.com/AmigoUK/BarcodeLabelGen/releases/tag/v0.2.1
