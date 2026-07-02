@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 from app.services.zpl import (
+    detect_dpi,
     dpmm_for_dpi,
     generate_zpl,
     parse_zpl,
@@ -51,6 +52,24 @@ def test_mm_dots_roundtrip_203() -> None:
 def test_mm_dots_300() -> None:
     assert mm_to_dots(10, 12) == 120
     assert dots_to_mm(120, 12) == 10.0
+
+
+def test_detect_dpi_matches_target_size() -> None:
+    # ^PW320 dots is 40 mm at 203 dpi (8 dpmm) but 26.7 mm at 300 dpi.
+    assert detect_dpi("^XA^PW320^LL800^XZ", target_width_mm=40, target_height_mm=100) == 203
+    # ^PW480 dots is 40 mm at 300 dpi (12 dpmm).
+    assert detect_dpi("^XA^PW480^LL1200^XZ", target_width_mm=40, target_height_mm=100) == 300
+
+
+def test_detect_dpi_without_pw_defaults_203() -> None:
+    assert detect_dpi("^XA^FO10,10^A@N,20,20,E:ARI000.TTF^FDhi^FS^XZ", target_width_mm=40) == 203
+
+
+def test_detect_dpi_no_target_uses_plausibility() -> None:
+    # 3000 dots → 375 mm @203 (implausible) vs 250 mm @300 (plausible) → 300.
+    assert detect_dpi("^XA^PW3000^XZ") == 300
+    # No dimensions at all → default.
+    assert detect_dpi("^XA^FDx^FS^XZ") == 203
 
 
 def test_rotation_orientation_mapping() -> None:

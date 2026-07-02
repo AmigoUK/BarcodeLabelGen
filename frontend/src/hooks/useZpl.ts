@@ -8,12 +8,23 @@ export type ZplWarning = { object_id: string; row?: number; message: string };
 export type ZplParseResult = {
   canvas_data: CanvasData;
   warnings: ZplWarning[];
+  /** The DPI actually used — echoes the request, or the detected value when
+   *  `dpi: "auto"` was sent. */
+  detected_dpi?: number;
+};
+
+export type ParseZplInput = {
+  zpl: string;
+  /** A concrete DPI or "auto" to detect it from ^PW/^LL vs the label size. */
+  dpi: number | "auto";
+  target_width_mm?: number;
+  target_height_mm?: number;
 };
 
 /** Parse pasted ZPL into an editable canvas tree. */
 export function useParseZpl() {
   return useMutation({
-    mutationFn: (input: { zpl: string; dpi: number }) =>
+    mutationFn: (input: ParseZplInput) =>
       api<ZplParseResult>("/api/zpl/parse", {
         method: "POST",
         body: JSON.stringify(input),

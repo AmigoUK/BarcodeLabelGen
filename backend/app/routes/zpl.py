@@ -28,7 +28,7 @@ from app.routes.generate import FilterSpec, _apply_mapping, _safe_filename
 from app.services import datasets as ds_svc
 from app.services import jobs as jobs_svc
 from app.services import templates as tpl_svc
-from app.services.zpl import dpmm_for_dpi, generate_zpl, parse_zpl
+from app.services.zpl import detect_dpi, dpmm_for_dpi, generate_zpl, parse_zpl
 from app.services.zpl.batch import render_batch_zpl
 
 zpl_bp = Blueprint("zpl", __name__)
@@ -38,7 +38,11 @@ _MAX_ZPL_BYTES = 512 * 1024  # generous ceiling for a pasted label definition
 
 class ZplParseRequest(BaseModel):
     zpl: str = Field(min_length=1, max_length=_MAX_ZPL_BYTES)
-    dpi: int = 203
+    # A concrete DPI, or "auto" to detect it from ^PW/^LL against the current
+    # label size (passed as target_width_mm / target_height_mm).
+    dpi: int | Literal["auto"] = 203
+    target_width_mm: float | None = Field(default=None, gt=0, le=1000)
+    target_height_mm: float | None = Field(default=None, gt=0, le=1000)
 
 
 class ZplGenerateRequest(BaseModel):
@@ -59,7 +63,17 @@ def parse_endpoint() -> ResponseReturnValue:
     except ValidationError as exc:
         return validation_error_response(exc)
 
-    result = parse_zpl(payload.zpl, dpmm_for_dpi(payload.dpi))
+    if payload.dpi == "auto":
+        dpi = detect_dpi(
+            payload.zpl,
+            target_width_mm=payload.target_width_mm,
+            target_height_mm=payload.target_height_mm,
+        )
+    else:
+        dpi = int(payload.dpi)
+
+    result = parse_zpl(payload.zpl, dpmm_for_dpi(dpi))
+    result["detected_dpi"] = dpi
     return jsonify(result)
 
 

@@ -196,13 +196,14 @@ export function EditorPage() {
           onClose={() => setShowWizard(false)}
         />
       )}
-      <ImportZplModal
-        open={showImportZpl}
-        onClose={() => setShowImportZpl(false)}
-        onImported={(parsed) => replaceCanvas(keepCurrentLabelSize(parsed))}
-      />
       {canvas && (
         <>
+          <ImportZplModal
+            open={showImportZpl}
+            onClose={() => setShowImportZpl(false)}
+            currentStage={canvas.stage}
+            onImported={(parsed) => replaceCanvas(keepCurrentLabelSize(parsed))}
+          />
           <ExportZplModal
             open={showExportZpl}
             onClose={() => setShowExportZpl(false)}

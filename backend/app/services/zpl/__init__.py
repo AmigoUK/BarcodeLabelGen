@@ -10,6 +10,7 @@ Public surface:
 from __future__ import annotations
 
 from app.services.zpl.batch import render_batch_zpl
+from app.services.zpl.detect import detect_dpi, scan_pw_ll
 from app.services.zpl.generator import generate_zpl
 from app.services.zpl.parser import parse_zpl
 from app.services.zpl.units import DEFAULT_DPI, DEFAULT_DPMM, DPMM_BY_DPI, dpmm_for_dpi
@@ -18,8 +19,10 @@ __all__ = [
     "DEFAULT_DPI",
     "DEFAULT_DPMM",
     "DPMM_BY_DPI",
+    "detect_dpi",
     "dpmm_for_dpi",
     "generate_zpl",
     "parse_zpl",
     "render_batch_zpl",
+    "scan_pw_ll",
 ]

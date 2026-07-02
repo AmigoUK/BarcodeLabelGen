@@ -9,6 +9,20 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 _Nothing yet._
 
+## [0.4.0] — 2026-07-02
+
+### Added
+- **DPI auto-detection on ZPL import.** The import dialog now has an
+  "Analyze" step and an "Auto-detect" DPI option (default): the backend
+  infers the authoring density from the label's `^PW`/`^LL` measured against
+  the current label size (falling back to a plausibility check, then 203
+  dpi). `POST /api/zpl/parse` accepts `dpi: "auto"` with
+  `target_width_mm`/`target_height_mm` and returns the `detected_dpi`.
+- **Wrong-DPI / oversize hint.** After analyzing, the dialog shows the object
+  count, the DPI used, and warns when the imported content extends beyond the
+  label — a strong signal the DPI (or label size) needs adjusting before
+  importing.
+
 ## [0.3.0] — 2026-07-01
 
 ### Added
@@ -64,7 +78,8 @@ _Nothing yet._
   label formats, dataset upload (CSV/XLSX/SQLite) with `{{column}}`
   mail-merge, and PDF single-label + batch generation via ReportLab.
 
-[Unreleased]: https://github.com/AmigoUK/BarcodeLabelGen/compare/v0.3.0...HEAD
+[Unreleased]: https://github.com/AmigoUK/BarcodeLabelGen/compare/v0.4.0...HEAD
+[0.4.0]: https://github.com/AmigoUK/BarcodeLabelGen/releases/tag/v0.4.0
 [0.3.0]: https://github.com/AmigoUK/BarcodeLabelGen/releases/tag/v0.3.0
 [0.2.1]: https://github.com/AmigoUK/BarcodeLabelGen/releases/tag/v0.2.1
 [0.2.0]: https://github.com/AmigoUK/BarcodeLabelGen/releases/tag/v0.2.0
