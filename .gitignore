@@ -98,3 +98,7 @@ logs/
 *.tmp
 .cache/
 .claude/
+
+# macOS metadata junk (AppleDouble sidecars, Finder state)
+.DS_Store
+._*

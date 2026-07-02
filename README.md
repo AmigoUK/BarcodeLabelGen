@@ -85,21 +85,18 @@
 ### 9 · ZPL / ZPL II round-trip — paste, adjust, copy back
 
 ![ZPL import dialog — paste, Auto-detect DPI, Analyze](docs/screenshots/zpl-import.png)
-<!-- TODO: replace with a real screenshot of the ZPL import dialog (paste box + DPI Auto + Analyze result). -->
 
-> _⚠️ Placeholder — screenshot pending._ Paste an existing ZPL label, leave **DPI** on **Auto-detect** (or force 203 / 300), and hit **Analyze**: the elements become editable canvas objects, the dialog reports the detected DPI + object count and warns when the content spills past the label (a wrong-DPI signal). Import keeps the label size you already set; single-brace `{VARIABLES}`, `^PQ{NoLabel}`, resident fonts and native QR survive the round-trip.
+> Paste an existing ZPL label, leave **DPI** on **Auto-detect** (or force 203 / 300), and hit **Analyze**: the elements become editable canvas objects, the dialog reports the detected DPI + object count and warns when the content spills past the label (a wrong-DPI signal). Import keeps the label size you already set; single-brace `{VARIABLES}`, `^PQ{NoLabel}`, resident fonts (`E:ARIxxx.TTF`) and native QR survive the round-trip.
 
 ![ZPL export panel — live preview, Copy, Download .zpl](docs/screenshots/zpl-export.png)
-<!-- TODO: replace with a real screenshot of the ZPL export panel (live preview + Copy/Download, template + batch modes). -->
 
-> _⚠️ Placeholder — screenshot pending._ A live native-ZPL preview of the current label with **Copy** and **Download .zpl**. Template mode keeps the variables intact for your external system; batch mode substitutes `{{column}}` values from a dataset and emits one `^XA…^XZ` block per row.
+> A live native-ZPL preview of the current label with **Copy** and **Download .zpl**. Template mode keeps the variables intact for your external system; batch mode substitutes `{{column}}` values from a dataset and emits one `^XA…^XZ` block per row.
 
 ### 10 · Resize the label anytime
 
 ![Label-size dialog — width × height in mm with presets](docs/screenshots/label-size.png)
-<!-- TODO: replace with a real screenshot of the label-size dialog (width/height inputs + presets). -->
 
-> _⚠️ Placeholder — screenshot pending._ The size button (**📐 W×H**) in the toolbar opens a dialog to change the label's width × height in millimetres, with one-click presets (40×100, 50×30, 100×150, A6, A4). The change is undoable and saved to the template — object positions stay put.
+> The size button (**📐 W×H**) in the toolbar opens a dialog to change the label's width × height in millimetres, with one-click presets (40×100, 50×30, 100×150, 105×148, 210×297). The change is undoable and saved to the template — object positions stay put.
 
 ---
 
