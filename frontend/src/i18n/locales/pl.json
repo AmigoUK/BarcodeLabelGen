@@ -233,7 +233,15 @@
     "generatingPdf": "Generowanie…",
     "pdfFailed": "Błąd PDF",
     "generateSeries": "Generuj serię",
-    "saveFirstHint": "Zapisz szablon przed generowaniem serii"
+    "saveFirstHint": "Zapisz szablon przed generowaniem serii",
+    "table": "Tabela",
+    "tableRows": "Wiersze",
+    "tableCols": "Kolumny",
+    "tableCells": "Komórki",
+    "tableColWidths": "Szerokości kolumn (mm)",
+    "tableHeaderRow": "Pogrubiony nagłówek (1. wiersz)",
+    "tableSampleHeaderA": "Cecha",
+    "tableSampleHeaderB": "Wartość"
   },
   "series": {
     "title": "Generuj serię",

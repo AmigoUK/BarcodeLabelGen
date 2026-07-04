@@ -53,7 +53,14 @@ const FILTER_OPS: FilterOp[] = ["eq", "neq", "contains", "gt", "lt", "empty", "n
 function detectTemplatePlaceholders(canvas: CanvasData): string[] {
   const out = new Set<string>();
   for (const obj of canvas.objects) {
-    const text = obj.type === "text" ? obj.text : obj.type === "barcode" ? obj.data : "";
+    const text =
+      obj.type === "text"
+        ? obj.text
+        : obj.type === "barcode"
+          ? obj.data
+          : obj.type === "table"
+            ? obj.cells.flat().join("\n")
+            : "";
     let m: RegExpExecArray | null;
     PLACEHOLDER_RE.lastIndex = 0;
     while ((m = PLACEHOLDER_RE.exec(text)) !== null) {

@@ -2,6 +2,7 @@ import Konva from "konva";
 import { useEffect, useLayoutEffect, useRef, useState } from "react";
 import { Layer, Rect, Stage, Transformer } from "react-konva";
 import { BarcodeObject } from "./objects/BarcodeObject";
+import { TableObject } from "./objects/TableObject";
 import { ImageObject } from "./objects/ImageObject";
 import { LineObject } from "./objects/LineObject";
 import { RectObject } from "./objects/RectObject";
@@ -287,6 +288,20 @@ export function Canvas() {
               if (o.type === "barcode") {
                 return (
                   <BarcodeObject
+                    key={o.id}
+                    object={o}
+                    scale={scale}
+                    draggable={!o.locked}
+                    onSelect={(e) => onObjectSelect(o.id, e)}
+                    onChange={(patch) => updateObject(o.id, patch)}
+                    onDragStart={onDragStart}
+                    onDragMoved={onDragMoved}
+                  />
+                );
+              }
+              if (o.type === "table") {
+                return (
+                  <TableObject
                     key={o.id}
                     object={o}
                     scale={scale}

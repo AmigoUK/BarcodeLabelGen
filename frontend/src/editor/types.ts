@@ -78,7 +78,32 @@ export type BarcodeObject = EditorObjectBase & {
   height: number; // mm
 };
 
-export type EditorObject = TextObject | RectObject | LineObject | ImageObject | BarcodeObject;
+export type TableObject = EditorObjectBase & {
+  type: "table";
+  width: number; // mm — total (equals sum(colWidths) when present)
+  height: number; // mm — total; rows split it equally
+  rows: number;
+  cols: number;
+  /** rows × cols cell texts; {{placeholders}} and {{date+x}} allowed */
+  cells: string[][];
+  /** mm per column; omitted/invalid → equal split of width */
+  colWidths?: number[];
+  /** bold first row */
+  headerRow?: boolean;
+  fontSize: number; // mm
+  fontFamily: string;
+  fill: string; // text colour
+  stroke: string; // grid colour
+  strokeWidth: number; // mm
+};
+
+export type EditorObject =
+  | TextObject
+  | RectObject
+  | LineObject
+  | ImageObject
+  | BarcodeObject
+  | TableObject;
 
 export type CanvasData = {
   version: 1;

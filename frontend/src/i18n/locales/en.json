@@ -233,7 +233,15 @@
     "generatingPdf": "Generating…",
     "pdfFailed": "PDF error",
     "generateSeries": "Generate series",
-    "saveFirstHint": "Save the template before generating a series"
+    "saveFirstHint": "Save the template before generating a series",
+    "table": "Table",
+    "tableRows": "Rows",
+    "tableCols": "Columns",
+    "tableCells": "Cells",
+    "tableColWidths": "Column widths (mm)",
+    "tableHeaderRow": "Bold header (first row)",
+    "tableSampleHeaderA": "Property",
+    "tableSampleHeaderB": "Value"
   },
   "series": {
     "title": "Generate series",

@@ -11,6 +11,7 @@ import type {
   ImageObject,
   LineObject,
   RectObject,
+  TableObject,
   TextObject,
 } from "./types";
 
@@ -114,6 +115,9 @@ export function RightPanel() {
           )}
           {selected.type === "barcode" && (
             <BarcodeProps obj={selected} update={(p) => updateObject(selected.id, p)} />
+          )}
+          {selected.type === "table" && (
+            <TableProps obj={selected} update={(p) => updateObject(selected.id, p)} />
           )}
 
           <div className="pt-3">
@@ -481,6 +485,162 @@ function BarcodeProps({
           min={5}
           value={obj.height}
           onChange={(height) => update({ height })}
+        />
+      </div>
+    </div>
+  );
+}
+
+/** Pad/truncate the 2D cells array to rows × cols, preserving content. */
+function resizeCells(cells: string[][], rows: number, cols: number): string[][] {
+  return Array.from({ length: rows }, (_, r) =>
+    Array.from({ length: cols }, (_, c) => cells[r]?.[c] ?? ""),
+  );
+}
+
+function TableProps({
+  obj,
+  update,
+}: {
+  obj: TableObject;
+  update: (p: Partial<TableObject>) => void;
+}) {
+  const { t } = useTranslation();
+  const colWidths =
+    obj.colWidths && obj.colWidths.length === obj.cols
+      ? obj.colWidths
+      : Array.from({ length: obj.cols }, () => obj.width / obj.cols);
+
+  const setGrid = (rows: number, cols: number) => {
+    rows = Math.max(1, Math.min(20, Math.round(rows)));
+    cols = Math.max(1, Math.min(8, Math.round(cols)));
+    const nextWidths = Array.from(
+      { length: cols },
+      (_, c) => colWidths[c] ?? obj.width / obj.cols,
+    );
+    update({
+      rows,
+      cols,
+      cells: resizeCells(obj.cells, rows, cols),
+      colWidths: nextWidths,
+      width: nextWidths.reduce((a, b) => a + b, 0),
+    });
+  };
+
+  const setColWidth = (index: number, value: number) => {
+    const next = colWidths.map((w, i) => (i === index ? Math.max(1, value) : w));
+    update({ colWidths: next, width: next.reduce((a, b) => a + b, 0) });
+  };
+
+  return (
+    <div className="space-y-3 border-t border-slate-800 pt-3">
+      <div className="grid grid-cols-2 gap-2">
+        <NumberInput
+          label={t("editor.tableRows")}
+          step={1}
+          min={1}
+          value={obj.rows}
+          onChange={(rows) => setGrid(rows, obj.cols)}
+        />
+        <NumberInput
+          label={t("editor.tableCols")}
+          step={1}
+          min={1}
+          value={obj.cols}
+          onChange={(cols) => setGrid(obj.rows, cols)}
+        />
+      </div>
+
+      <div className="space-y-1">
+        <p className="text-sm font-medium text-slate-200">{t("editor.tableCells")}</p>
+        <div className="space-y-1 overflow-x-auto">
+          {obj.cells.slice(0, obj.rows).map((row, r) => (
+            <div key={r} className="flex gap-1">
+              {row.slice(0, obj.cols).map((cell, c) => (
+                <input
+                  key={c}
+                  value={cell}
+                  onChange={(e) => {
+                    const cells = obj.cells.map((rr) => [...rr]);
+                    cells[r][c] = e.target.value;
+                    update({ cells });
+                  }}
+                  className={[
+                    "w-full min-w-0 rounded border border-slate-700 bg-slate-900 px-1.5 py-1 text-xs text-slate-100",
+                    obj.headerRow && r === 0 ? "font-bold" : "",
+                  ].join(" ")}
+                />
+              ))}
+            </div>
+          ))}
+        </div>
+        <PlaceholderChips
+          value={obj.cells.flat().join("\n")}
+          label={t("editor.dynamicFields")}
+        />
+      </div>
+
+      <div className="space-y-1">
+        <p className="text-sm font-medium text-slate-200">{t("editor.tableColWidths")}</p>
+        <div className="flex gap-1">
+          {colWidths.map((w, i) => (
+            <input
+              key={i}
+              type="number"
+              step={0.5}
+              min={1}
+              value={Math.round(w * 100) / 100}
+              onChange={(e) => {
+                const n = Number(e.target.value);
+                if (!Number.isNaN(n)) setColWidth(i, n);
+              }}
+              className="w-full min-w-0 rounded border border-slate-700 bg-slate-900 px-1.5 py-1 text-xs text-slate-100"
+            />
+          ))}
+        </div>
+      </div>
+
+      <label className="flex cursor-pointer items-center gap-2 text-sm text-slate-200">
+        <input
+          type="checkbox"
+          checked={obj.headerRow ?? false}
+          onChange={(e) => update({ headerRow: e.target.checked })}
+          className="h-4 w-4 rounded border-slate-700 bg-slate-900 text-indigo-600"
+        />
+        {t("editor.tableHeaderRow")}
+      </label>
+
+      <div className="grid grid-cols-2 gap-2">
+        <NumberInput
+          label={t("editor.heightMm")}
+          step={0.5}
+          min={2}
+          value={obj.height}
+          onChange={(height) => update({ height })}
+        />
+        <NumberInput
+          label={t("editor.fontSizeMm")}
+          step={0.25}
+          min={1}
+          value={obj.fontSize}
+          onChange={(fontSize) => update({ fontSize })}
+        />
+        <ColorInput
+          label={t("editor.fill")}
+          value={obj.fill}
+          onChange={(fill) => update({ fill })}
+        />
+        <ColorInput
+          label={t("editor.stroke")}
+          value={obj.stroke}
+          onChange={(stroke) => update({ stroke })}
+        />
+        <NumberInput
+          label={t("editor.strokeMm")}
+          step={0.05}
+          min={0}
+          value={obj.strokeWidth}
+          onChange={(strokeWidth) => update({ strokeWidth })}
         />
       </div>
     </div>

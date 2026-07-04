@@ -37,6 +37,7 @@ export function getBoundsMm(obj: EditorObject): BoundsMm {
     case "rect":
     case "image":
     case "barcode":
+    case "table":
       return { x: obj.x, y: obj.y, w: obj.width, h: obj.height };
     case "text": {
       // Block mode: width AND height set → use them directly.

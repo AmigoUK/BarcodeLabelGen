@@ -129,6 +129,37 @@ export function LeftPanel() {
       <Button
         variant="secondary"
         className="w-full justify-start"
+        onClick={() =>
+          addObject({
+            id: newObjectId(),
+            type: "table",
+            x: Math.max(2, centerX - 20),
+            y: Math.max(2, centerY - 12),
+            width: 40,
+            height: 24,
+            rows: 3,
+            cols: 2,
+            cells: [
+              [t("editor.tableSampleHeaderA"), t("editor.tableSampleHeaderB")],
+              ["", ""],
+              ["", ""],
+            ],
+            colWidths: [20, 20],
+            headerRow: true,
+            fontSize: 3,
+            fontFamily: "Inter, sans-serif",
+            fill: "#0f172a",
+            stroke: "#0f172a",
+            strokeWidth: 0.25,
+          })
+        }
+      >
+        ▦ &nbsp; {t("editor.table")}
+      </Button>
+
+      <Button
+        variant="secondary"
+        className="w-full justify-start"
         onClick={() => fileRef.current?.click()}
         disabled={upload.isPending}
       >
