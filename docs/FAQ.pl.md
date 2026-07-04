@@ -35,6 +35,12 @@ To **placeholder**. Przy generowaniu serii zostanie podmieniony wartością z od
 ### Co znaczy zielony chip pod polem tekstowym?
 Zielony chip oznacza **placeholder daty** (np. `{{date+14d}}`) i od razu pokazuje obliczoną wartość. Fioletowe chipy to zwykłe kolumny z arkusza. Szczegóły składni dat: przewodnik, sekcja 7.
 
+### Jak dodać tabelę?
+Lewy panel → **▦ Tabela**. Treść komórek, liczbę wierszy/kolumn i szerokości kolumn edytujesz w prawym panelu. W komórkach działają placeholdery `{{kolumna}}` i daty `{{date+x}}` — przy generowaniu serii kolumny podmieniają się jak w zwykłym tekście.
+
+### Polskie znaki w PDF wychodziły jako kwadraciki — czy to naprawione?
+Tak (od v0.13.0). PDF osadza teraz fonty z pełnym zestawem polskich znaków (ż, ł, ć, ę, ą, ź, ń, ś). Jeśli widzisz kwadraciki, upewnij się, że działasz na wersji ≥0.13.0 (`/api/health`).
+
 ### Jak wstawić logo, które jest na każdej etykiecie?
 Lewy panel → **🖼 Obraz** → wybierz plik PNG/JPG/SVG. Logo będzie się drukować na każdej etykiecie.
 

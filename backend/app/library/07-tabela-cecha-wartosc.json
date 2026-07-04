@@ -1,0 +1,74 @@
+{
+  "$schema": "blg-template/v1",
+  "exportedAt": "2026-07-04T12:00:00Z",
+  "exportedBy": "BarcodeLabelGen starters",
+  "template": {
+    "name": "Tabela cecha–wartość (76×51)",
+    "description": "Etykieta z tabelą 4×2: cechy i wartości z arkusza (waga, partia, termin). Podmień {{...}} na swoje kolumny.",
+    "width_mm": 76.2,
+    "height_mm": 50.8,
+    "format_hint": {
+      "name": "Zebra 3×2\"",
+      "width_mm": 76.2,
+      "height_mm": 50.8
+    }
+  },
+  "canvas_data": {
+    "version": 1,
+    "stage": {
+      "width_mm": 76.2,
+      "height_mm": 50.8
+    },
+    "objects": [
+      {
+        "id": "title",
+        "type": "text",
+        "x": 4,
+        "y": 3,
+        "text": "{{nazwa}}",
+        "fontSize": 4.5,
+        "fontFamily": "Inter, sans-serif",
+        "fill": "#0f172a"
+      },
+      {
+        "id": "tbl",
+        "type": "table",
+        "x": 4,
+        "y": 11,
+        "width": 68,
+        "height": 34,
+        "rows": 4,
+        "cols": 2,
+        "colWidths": [
+          28,
+          40
+        ],
+        "headerRow": true,
+        "cells": [
+          [
+            "Cecha",
+            "Wartość"
+          ],
+          [
+            "Waga",
+            "{{waga}}"
+          ],
+          [
+            "Partia",
+            "{{partia}}"
+          ],
+          [
+            "Zużyć do",
+            "{{date+30d}}"
+          ]
+        ],
+        "fontSize": 3,
+        "fontFamily": "Inter, sans-serif",
+        "fill": "#0f172a",
+        "stroke": "#0f172a",
+        "strokeWidth": 0.3
+      }
+    ]
+  },
+  "assets": []
+}

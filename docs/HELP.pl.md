@@ -128,6 +128,12 @@ Wszystkie poniższe są w **lewym panelu**, sekcja *Dodaj*.
 **Kiedy:** Każdy katalog produktów z kodem.
 **Jak:** Klik **▤ Kod kreskowy**, w prawym panelu wybierz typ (EAN-13, Code128 itd.) i wpisz dane. Możesz wpisać `{{sku}}` żeby wartość pobrać z arkusza.
 
+### ▦ — Tabela
+
+**Co robi:** Siatka wierszy×kolumn z tekstem w komórkach — do etykiet typu cecha–wartość, wartości odżywcze, mini-lista pozycji.
+**Jak:** Klik **▦ Tabela**. W prawym panelu ustaw liczbę wierszy/kolumn, wpisz treść komórek (możesz używać `{{kolumna}}` i `{{date+x}}` — pod siatką pojawiają się chipy), ustaw szerokości kolumn w mm, font i ramkę. Zaznacz **Pogrubiony nagłówek**, aby wyróżnić pierwszy wiersz.
+**Druk:** tabela renderuje się natywnie w PDF i jest emitowana jako natywny ZPL (ramka `^GB` + tekst komórek). Uwaga: obrót tabeli nie jest wspierany w ZPL (eksportuje się bez obrotu).
+
 ### 🖼 — Obraz
 
 **Co robi:** Wgrywa PNG/JPG/SVG i wstawia na canvas. Drukuje się w PDF.

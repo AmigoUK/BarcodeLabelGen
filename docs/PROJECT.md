@@ -44,7 +44,7 @@ Pracownicy biurowi nie mają obecnie narzędzia, które pozwoliłoby im samodzie
 | F4 | Edytor canvas: tekst (font/size/bold/italic/align/color), prostokąty, linie, obrazy (upload PNG/JPG/SVG) | P0 |
 | F5 | Edytor: kody kreskowe EAN-13, EAN-14, EAN-128, GTIN, Code 128, QR — z **automatyczną kontrolą sumy kontrolnej** i walidacją | P0 |
 | F6 | Edytor: pola dynamiczne `{{nazwa_kolumny}}` z podpowiedziami i podświetleniem | P0 |
-| F7 | Edytor: tabele (siatka komórek z konfiguracją wierszy/kolumn, możliwość bindowania komórek do pól dynamicznych) | P1 |
+| F7 | Edytor: tabele (siatka komórek z konfiguracją wierszy/kolumn, możliwość bindowania komórek do pól dynamicznych) — **zrealizowane w v0.13.0**; spec: `docs/superpowers/specs/2026-07-04-editor-tables-design.md` | P1 |
 | F8 | Format etykiety: predefiniowane rozmiary (A4, A5, A6, Zebra: 4×6", 4×4", 3×2", 2×1", custom mm) | P0 |
 | F9 | Save/load szablonu (autosave co 30s, manual save) | P0 |
 | F10 | Upload XLS/XLSX/CSV (max 10MB, 1000 wierszy) | P0 |

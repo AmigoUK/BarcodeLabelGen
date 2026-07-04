@@ -119,6 +119,17 @@ Testy oznaczone 🔴 są **blokujące** dla decyzji o prod; 🟡 — ważne, ale
   *Oczekiwane:* sensowne etykiety bez poprawek technicznych.
   Wynik: ..................................................
 
+## G. Tabele i polskie znaki (v0.13.0)
+
+- [ ] 🟡 **G1. Tabela na realnej drukarce.** Dodaj tabelę cecha–wartość z `{{...}}`,
+  wygeneruj serię z arkusza, wydrukuj. *Oczekiwane:* siatka i teksty jak na canvasie,
+  kolumny podmienione z arkusza.
+  Wynik: ..................................................
+- [ ] 🔴 **G2. Polskie znaki w druku.** Wydrukuj etykietę z „zażółć gęślą jaźń ŻŁĆĘĄŹŃŚ"
+  na realnej drukarce (PDF i przez konektor). *Oczekiwane:* wszystkie znaki poprawne,
+  zero kwadracików.
+  Wynik: ..................................................
+
 ---
 
 ## Decyzja

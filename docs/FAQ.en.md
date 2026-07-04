@@ -35,6 +35,12 @@ It's a **placeholder**. When you generate a series, it'll be replaced with the v
 ### What does the green chip under a text field mean?
 A green chip marks a **date placeholder** (e.g. `{{date+14d}}`) and immediately shows the calculated value. Purple chips are regular spreadsheet columns. For the date syntax details, see the guide, section 7.
 
+### How do I add a table?
+Left panel → **▦ Table**. Edit the cell contents, the number of rows/columns and the column widths in the right panel. Placeholders work inside cells — `{{column}}` and dates `{{date+x}}` — and when you generate a series the columns are substituted just like in regular text.
+
+### Polish characters in the PDF used to come out as little boxes — is that fixed?
+Yes (since v0.13.0). The PDF now embeds fonts with the full Polish character set (ż, ł, ć, ę, ą, ź, ń, ś). If you still see boxes, make sure you're running version ≥0.13.0 (`/api/health`).
+
 ### How do I insert a logo that appears on every label?
 Left panel → **🖼 Image** → pick a PNG/JPG/SVG. The logo will print on every generated label.
 

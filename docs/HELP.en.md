@@ -128,6 +128,12 @@ Everything below lives in the **left panel**, *Add* section.
 **When to use:** Any product catalog with codes.
 **How:** Click **▤ Barcode**, in the right panel pick the type (EAN-13, Code128, etc.) and enter the data. You can use `{{sku}}` to pull the value from a spreadsheet column.
 
+### ▦ — Table
+
+**What it does:** A rows×columns grid with text in each cell — for property–value labels, nutrition facts, a mini list of items.
+**How:** Click **▦ Table**. In the right panel set the number of rows/columns, type the cell contents (you can use `{{column}}` and `{{date+x}}` — chips appear below the grid), set the column widths in mm, the font and the border. Tick **Bold header** to emphasise the first row.
+**Printing:** the table renders natively in the PDF and is emitted as native ZPL (`^GB` frame + cell text). Note: table rotation is not supported in ZPL (it exports without rotation).
+
 ### 🖼 — Image
 
 **What it does:** Uploads a PNG/JPG/SVG and places it on the canvas. Prints in the PDF.

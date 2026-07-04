@@ -9,6 +9,26 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 _Nothing yet._
 
+## [0.13.0] — 2026-07-04
+
+### Added
+- **Tables in the editor (F7).** New ▦ Table object: a rows×cols grid
+  with per-cell text (supporting `{{column}}` and `{{date+x}}`),
+  editable column widths, a bold-header toggle, font and border. Renders
+  natively to PDF and emits native ZPL (`^GB` grid + delegated cell
+  text; rotation warns and emits unrotated). Cell placeholders take part
+  in series substitution, date evaluation and wizard column mapping.
+  A "Property–value table" starter joins the Library (7 total). Spec:
+  `docs/superpowers/specs/2026-07-04-editor-tables-design.md`.
+
+### Fixed
+- **Polish glyphs in PDF no longer render as tofu boxes.** ReportLab's
+  base14 Type1 fonts are WinAnsi-only, so ż/ł/ć/ę/ą/ź/ń/ś printed as
+  black squares in every PDF — a blocker for a Polish label app. The
+  renderer now embeds metric-compatible Liberation Sans/Serif/Mono
+  (same family mapping, full Latin Extended-A); `fonts-liberation` is
+  installed in the runtime image. Found while verifying F7.
+
 ## [0.12.1] — 2026-07-04
 
 ### Security
@@ -261,7 +281,8 @@ _Nothing yet._
   label formats, dataset upload (CSV/XLSX/SQLite) with `{{column}}`
   mail-merge, and PDF single-label + batch generation via ReportLab.
 
-[Unreleased]: https://github.com/AmigoUK/BarcodeLabelGen/compare/v0.12.1...HEAD
+[Unreleased]: https://github.com/AmigoUK/BarcodeLabelGen/compare/v0.13.0...HEAD
+[0.13.0]: https://github.com/AmigoUK/BarcodeLabelGen/releases/tag/v0.13.0
 [0.12.1]: https://github.com/AmigoUK/BarcodeLabelGen/releases/tag/v0.12.1
 [0.12.0]: https://github.com/AmigoUK/BarcodeLabelGen/releases/tag/v0.12.0
 [0.11.0]: https://github.com/AmigoUK/BarcodeLabelGen/releases/tag/v0.11.0
