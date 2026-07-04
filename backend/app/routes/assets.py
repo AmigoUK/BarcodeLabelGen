@@ -53,7 +53,9 @@ def serve_image(asset_id: int) -> ResponseReturnValue:
     if not file_path.is_file():
         return jsonify({"error": "asset_file_missing"}), 410
 
-    return send_file(file_path, mimetype=asset.mime_type, conditional=True)
+    from app.api_helpers import harden_image_response
+
+    return harden_image_response(send_file(file_path, mimetype=asset.mime_type, conditional=True))
 
 
 @assets_bp.get("/assets/images")

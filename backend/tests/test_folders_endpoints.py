@@ -270,3 +270,33 @@ def test_featured_image_unset(
     )
     client.put(f"/api/templates/{tid}", json={"featured_asset_id": None}, headers=csrf.headers())
     assert client.get(f"/api/templates/{tid}/featured-image").status_code == 404
+
+
+def test_image_endpoints_neutralize_svg_scripts(
+    app: Flask, client: FlaskClient, csrf: CsrfHelper, tmp_path, monkeypatch
+) -> None:
+    """Stored-XSS hardening: user-supplied SVG may embed <script>; both
+    image-serving endpoints must answer with a sandboxing CSP + nosniff."""
+    import io
+
+    monkeypatch.setenv("ASSETS_DIR", str(tmp_path))
+    fmt_id = _seed_format_and_login(app, client, csrf)
+    tid = _mk_template(client, csrf, fmt_id, "SVG XSS")
+    evil = b'<svg xmlns="http://www.w3.org/2000/svg"><script>alert(1)</script></svg>'
+    up = client.post(
+        "/api/assets/images",
+        data={"file": (io.BytesIO(evil), "evil.svg", "image/svg+xml")},
+        headers=csrf.headers(),
+        content_type="multipart/form-data",
+    )
+    assert up.status_code == 201
+    asset_id = up.get_json().get("id") or up.get_json().get("asset", {}).get("id")
+    client.put(
+        f"/api/templates/{tid}", json={"featured_asset_id": asset_id}, headers=csrf.headers()
+    )
+
+    for url in (f"/api/assets/images/{asset_id}", f"/api/templates/{tid}/featured-image"):
+        resp = client.get(url)
+        assert resp.status_code == 200, url
+        assert resp.headers["Content-Security-Policy"] == "default-src 'none'; sandbox", url
+        assert resp.headers["X-Content-Type-Options"] == "nosniff", url

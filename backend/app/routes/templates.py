@@ -95,7 +95,9 @@ def featured_image(template_id: int) -> ResponseReturnValue:
     path = assets_svc.assets_dir() / asset.storage_filename
     if not path.is_file():
         return jsonify({"error": "no_featured_image"}), 404
-    return send_file(path, mimetype=asset.mime_type, max_age=300)
+    from app.api_helpers import harden_image_response
+
+    return harden_image_response(send_file(path, mimetype=asset.mime_type, max_age=300))
 
 
 @templates_bp.post("/templates/<int:template_id>/clone")
