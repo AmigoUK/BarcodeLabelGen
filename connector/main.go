@@ -15,17 +15,23 @@ import (
 	"fmt"
 	"log"
 	"net/http"
-	"os"
 	"os/signal"
+	"runtime"
 	"syscall"
 	"time"
 )
 
+// defaultConfigPath is the per-OS system location a service (LaunchDaemon /
+// systemd / Windows service) reads when -config isn't given.
 func defaultConfigPath() string {
-	if os.PathSeparator == '\\' { // Windows
+	switch runtime.GOOS {
+	case "windows":
 		return `C:\ProgramData\blg-connector\config.yaml`
+	case "darwin":
+		return "/Library/Application Support/blg-connector/config.yaml"
+	default: // linux, *bsd, …
+		return "/etc/blg-connector/config.yaml"
 	}
-	return "/etc/blg-connector/config.yaml"
 }
 
 func main() {

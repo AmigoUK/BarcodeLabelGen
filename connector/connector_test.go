@@ -9,6 +9,7 @@ import (
 	"net/http/httptest"
 	"os"
 	"path/filepath"
+	"runtime"
 	"strings"
 	"testing"
 	"time"
@@ -406,5 +407,26 @@ func TestLocalAPIPrintRejectsNonZPL(t *testing.T) {
 		strings.NewReader(`{"printer":"spool","zpl":"<!doctype html>"}`))
 	if resp.StatusCode != http.StatusUnprocessableEntity {
 		t.Errorf("non-ZPL print: HTTP %d, want 422", resp.StatusCode)
+	}
+}
+
+func TestDefaultConfigPathPerOS(t *testing.T) {
+	p := defaultConfigPath()
+	if p == "" || !strings.Contains(p, "blg-connector") {
+		t.Fatalf("implausible default config path: %q", p)
+	}
+	switch runtime.GOOS {
+	case "windows":
+		if !strings.Contains(p, "ProgramData") {
+			t.Errorf("windows path missing ProgramData: %q", p)
+		}
+	case "darwin":
+		if !strings.Contains(p, "Application Support") {
+			t.Errorf("darwin path missing Application Support: %q", p)
+		}
+	default:
+		if !strings.HasPrefix(p, "/etc/") {
+			t.Errorf("unix path not under /etc: %q", p)
+		}
 	}
 }

@@ -37,14 +37,22 @@ a zadania z kolejki (przycisk **Drukuj** w edytorze) trafią na drukarkę.
 
 ## Budowanie
 
+Czyste Go (bez cgo), więc jedna komenda buduje na dowolny system:
+
 ```
 cd connector
-go build -trimpath -ldflags="-s -w" -o blg-connector .
-GOOS=windows GOARCH=amd64 go build -trimpath -ldflags="-s -w" -o blg-connector.exe .
-GOOS=linux GOARCH=arm64 go build -o blg-connector-pi .   # Raspberry Pi
+go build -trimpath -ldflags="-s -w" -o blg-connector .                          # bieżący OS
+GOOS=windows GOARCH=amd64 go build -trimpath -ldflags="-s -w" -o blg-connector-windows-amd64.exe .
+GOOS=darwin  GOARCH=amd64 go build -trimpath -ldflags="-s -w" -o blg-connector-macos-intel .
+GOOS=darwin  GOARCH=arm64 go build -trimpath -ldflags="-s -w" -o blg-connector-macos-apple .
+GOOS=linux   GOARCH=amd64 go build -trimpath -ldflags="-s -w" -o blg-connector-linux-amd64 .
+GOOS=linux   GOARCH=arm64 go build -trimpath -ldflags="-s -w" -o blg-connector-linux-arm64 .   # Raspberry Pi 4/5
+GOOS=linux   GOARCH=arm   go build -trimpath -ldflags="-s -w" -o blg-connector-linux-arm .     # Raspberry Pi 2/3
 ```
 
-Gotowe binarki: sekcja Assets przy każdym wydaniu na GitHubie.
+Albo od razu wszystkie: `./build-all.sh`. Gotowe binarki: sekcja Assets przy
+każdym wydaniu na GitHubie (Windows, macOS Intel/Apple Silicon, Linux
+amd64/arm64/arm).
 
 ## Jako usługa
 
@@ -63,10 +71,36 @@ Restart=on-failure
 WantedBy=multi-user.target
 ```
 
+**macOS (launchd)** — skopiuj binarkę do `/usr/local/bin/blg-connector`, config
+do `/Library/Application Support/blg-connector/config.yaml` (domyślna ścieżka),
+a plik `/Library/LaunchDaemons/uk.attv.blg-connector.plist`:
+
+```xml
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN"
+  "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0"><dict>
+  <key>Label</key><string>uk.attv.blg-connector</string>
+  <key>ProgramArguments</key>
+  <array><string>/usr/local/bin/blg-connector</string></array>
+  <key>RunAtLoad</key><true/>
+  <key>KeepAlive</key><true/>
+</dict></plist>
+```
+
+Załaduj: `sudo launchctl load /Library/LaunchDaemons/uk.attv.blg-connector.plist`.
+Pierwszy start Apple Silicon może wymagać zdjęcia kwarantanny:
+`xattr -d com.apple.quarantine /usr/local/bin/blg-connector`.
+
 **Windows** — najprościej przez [NSSM](https://nssm.cc/) albo Harmonogram zadań
 (uruchom przy starcie, `C:\ProgramData\blg-connector\config.yaml` to domyślna
 ścieżka konfiguracji, więc wystarczy `blg-connector.exe` bez argumentów).
 Natywna usługa Windows + tray: planowane.
+
+> **Druk RAW TCP 9100 działa identycznie na Windows, macOS i Linux** — konfiguracja
+> drukarek w `config.yaml` jest ta sama. Wirtualna drukarka (przechwytywanie) ma
+> na razie instrukcję tylko dla Windows; odpowiednik przez CUPS na macOS/Linux to
+> pozycja backlogu F35.
 
 ## Wirtualna drukarka (przechwytywanie ZPL z innych aplikacji)
 

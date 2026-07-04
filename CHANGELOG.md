@@ -9,6 +9,26 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 _Nothing yet._
 
+## [0.17.0] — 2026-07-04
+
+### Added
+- **Desktop connector for macOS and Linux (F34).** `blg-connector` is pure
+  Go with no cgo, so it already cross-compiled everywhere; this release
+  makes it a first-class desktop agent on all three OSes. Every GitHub
+  release now ships prebuilt binaries for Windows, macOS (Intel + Apple
+  Silicon) and Linux (amd64/arm64/arm, incl. Raspberry Pi), produced by
+  the new `connector/build-all.sh`. RAW TCP 9100 printing and the loopback
+  API are byte-for-byte identical across platforms.
+- **Per-OS default config path.** `defaultConfigPath()` now resolves the
+  system config location by `runtime.GOOS`: `C:\ProgramData\…` on Windows,
+  `/Library/Application Support/blg-connector/config.yaml` on macOS,
+  `/etc/blg-connector/config.yaml` on Linux/BSD — so a service can run
+  without an explicit `-config` flag on any platform.
+- **launchd setup guide (macOS).** The connector README gains a
+  `uk.attv.blg-connector.plist` LaunchDaemon example plus the Apple Silicon
+  quarantine-removal note, alongside the existing systemd and Windows
+  instructions.
+
 ## [0.16.0] — 2026-07-04
 
 ### Added
@@ -324,7 +344,8 @@ _Nothing yet._
   label formats, dataset upload (CSV/XLSX/SQLite) with `{{column}}`
   mail-merge, and PDF single-label + batch generation via ReportLab.
 
-[Unreleased]: https://github.com/AmigoUK/BarcodeLabelGen/compare/v0.16.0...HEAD
+[Unreleased]: https://github.com/AmigoUK/BarcodeLabelGen/compare/v0.17.0...HEAD
+[0.17.0]: https://github.com/AmigoUK/BarcodeLabelGen/releases/tag/v0.17.0
 [0.16.0]: https://github.com/AmigoUK/BarcodeLabelGen/releases/tag/v0.16.0
 [0.15.0]: https://github.com/AmigoUK/BarcodeLabelGen/releases/tag/v0.15.0
 [0.14.0]: https://github.com/AmigoUK/BarcodeLabelGen/releases/tag/v0.14.0
