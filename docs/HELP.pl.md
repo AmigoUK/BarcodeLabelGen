@@ -12,6 +12,8 @@ Krótki przewodnik po programie. Czytaj sekcjami, w kolejności, albo skacz od r
 2. Wpisz email i hasło, które dał ci administrator.
 3. Przy pierwszym logowaniu program poprosi cię o ustawienie własnego hasła (min. 10 znaków). To jednorazowe — kolejne logowania od razu pokazują panel.
 
+> 📷 **[SCREENSHOT: Ekran logowania]** — *kadr: formularz Email + Hasło z przyciskiem „Zaloguj" i przełącznikiem języka PL/EN w prawym górnym rogu.*
+
 ### Pulpit
 
 Po zalogowaniu trafiasz na **Pulpit**. To tylko ekran powitalny — żeby zacząć pracę kliknij **Szablony** w lewym menu.
@@ -34,19 +36,25 @@ Po zalogowaniu trafiasz na **Pulpit**. To tylko ekran powitalny — żeby zaczą
 | Pozycja | Co tu znajdziesz |
 |---|---|
 | **Pulpit** | Ekran startowy. |
-| **Szablony** | Lista twoich szablonów + przycisk *Nowy szablon*. |
-| **Importy danych** | Wgrane pliki CSV/Excel/SQLite z poprzednich generowań serii. |
+| **Szablony** | Lista twoich szablonów + przyciski *Nowy szablon* i *Importuj*. |
+| **Pomoc** | Ten przewodnik + FAQ, bez wychodzenia z programu. |
 | **Administracja → Użytkownicy** | (tylko admin) zarządzanie kontami. |
+
+W nagłówku po prawej: twój email, przełącznik języka **PL/EN** i przycisk **Wyloguj**.
+
+> 📷 **[SCREENSHOT: Lista szablonów]** — *kadr: strona Szablony z kilkoma kafelkami, polem wyszukiwania oraz przyciskami „Importuj" i „Nowy szablon" w prawym górnym rogu.*
 
 ### Edytor — układ ekranu
 
 Po otwarciu szablonu widzisz:
 
-- **Toolbar (góra)** — Zapisz, Cofnij/Ponów, autozapis, **Pobierz PDF**, **Generuj serię**.
+- **Toolbar (góra)** — Zapisz, Cofnij/Ponów, autozapis, **Generuj serię**, **⬇ Eksportuj** (plik szablonu), **📐 rozmiar etykiety**, **⤓ Importuj ZPL**, **⤒ ZPL** (eksport), **Pobierz PDF**.
 - **Lewy panel (Dodaj)** — przyciski wstawiania obiektów na etykietę.
 - **Canvas (środek)** — twoja etykieta w skali 1:1 (mm).
 - **Pasek wyrównania (nad canvasem)** — wyrównywanie i kolejność warstw.
 - **Prawy panel (Właściwości)** — ustawienia zaznaczonego obiektu.
+
+> 📷 **[SCREENSHOT: Edytor — widok ogólny]** — *kadr: cały edytor z otwartym szablonem; podpisane strzałkami: toolbar, panel Dodaj, canvas, pasek wyrównania, panel Właściwości.*
 
 ### Pasek wyrównania — co która grupa robi
 
@@ -157,6 +165,15 @@ Edytor sam zapisuje co kilka sekund. Status w toolbarze:
 
 Możesz też ręcznie kliknąć **Zapisz**.
 
+### Zmiana rozmiaru etykiety
+
+Rozmiar ustawiony przy tworzeniu szablonu **można zmienić w każdej chwili**: w toolbarze kliknij przycisk **📐 {szerokość}×{wysokość}**.
+
+- Wpisz nową szerokość i wysokość w mm (1–1000), albo kliknij jeden z gotowych presetów (40×100, 50×30, 100×150, 105×148, 210×297).
+- Obiekty **nie są przeskalowywane** — zachowują pozycje w mm. Po zmniejszeniu etykiety elementy poza krawędzią po prostu przesuwasz z powrotem.
+
+> 📷 **[SCREENSHOT: Okno „Rozmiar etykiety"]** — *kadr: modal z polami Szerokość/Wysokość i rzędem presetów-chipów; kursor nad przyciskiem „Zastosuj".*
+
 ---
 
 ## 5. Pobieranie PDF — pojedyncza etykieta
@@ -164,6 +181,8 @@ Możesz też ręcznie kliknąć **Zapisz**.
 W toolbarze edytora kliknij **Pobierz PDF**. Renderowanie jest synchroniczne (kilka sekund), plik PDF zaczyna się ściągać.
 
 Jeśli któryś tekst nie zmieścił się w bloku, zobaczysz chip **N ostrzeżeń** — najedź żeby zobaczyć szczegóły.
+
+Placeholdery kolumn (`{{name}}`) w pojedynczym PDF zostają jako tekst — dane podmienia dopiero generowanie serii. **Placeholdery daty** (`{{date+14d}}`, patrz sekcja 7) są natomiast obliczane także tutaj.
 
 ---
 
@@ -178,6 +197,8 @@ Wstaw w Text lub Barcode placeholder w postaci `{{nazwa_kolumny}}`, np.:
 - Barcode data: `{{sku}}`
 
 Każde wystąpienie zostanie podmienione wartością z odpowiedniej kolumny.
+
+> 📷 **[SCREENSHOT: Wykryte pola dynamiczne]** — *kadr: prawy panel Właściwości z polem tekstowym zawierającym `{{name}}` i `{{date+14d}}`; poniżej dwa chipy — fioletowy `{{name}}` i zielony `{{date+14d}} → 18.07.2026`.*
 
 ### Krok 1 — Wgraj dane
 
@@ -217,6 +238,8 @@ Program wykrywa wszystkie placeholdery `{{...}}` z szablonu. Jeśli nazwa placeh
 
 Możesz odsiać wiersze przed generowaniem, np. *price > 10* albo *category contains "tea"*. Klik **Sprawdź filtr** pokazuje ile wierszy się załapie. Pomiń ten krok jeśli chcesz wszystkie.
 
+> 📷 **[SCREENSHOT: Kreator serii — mapowanie]** — *kadr: krok 2 kreatora z listą placeholderów po lewej i selectami kolumn po prawej; przy `{{date}}` widoczna zielona podpowiedź „Opcjonalne — bez mapowania użyta zostanie dzisiejsza data".*
+
 ### Krok 4 — Generuj PDF
 
 Klik **Generuj PDF**. Powstaje zadanie w tle, pasek pokazuje postęp. Po zakończeniu PDF ściąga się automatycznie.
@@ -225,15 +248,75 @@ Jeśli któreś etykiety mają teksty nie mieszczące się w blokach, zobaczysz 
 
 ---
 
-## 7. Importy danych
+## 7. Placeholdery daty — `{{date+…}}`
 
-Lewe menu → **Importy danych** — lista wszystkich plików, które kiedykolwiek wgrałeś (CSV/Excel/SQLite). Możesz je usuwać żeby zwolnić miejsce. Pliki są prywatne — każdy widzi tylko swoje.
+Oprócz kolumn z arkusza możesz wstawiać **daty liczone automatycznie w momencie generowania** — idealne do terminów przydatności („zużyć do") i dat produkcji. Działają wszędzie: w pojedynczym PDF, w serii i w eksporcie ZPL.
+
+### Składnia
+
+| Wpisujesz | Dostajesz (przy generowaniu 04.07.2026) |
+|---|---|
+| `{{date}}` | 04.07.2026 (dzisiejsza data) |
+| `{{date+14d}}` | 18.07.2026 (+14 dni) |
+| `{{date-7d}}` | 27.06.2026 (−7 dni) |
+| `{{date+3m}}` | 04.10.2026 (+3 miesiące) |
+| `{{date+1y}}` | 04.07.2027 (+1 rok) |
+| `{{date+14d:DD/MM/YY}}` | 18/07/26 (własny format) |
+| `{{date+3m:YYYY-MM-DD}}` | 2026-10-04 |
+
+- Jednostki przesunięcia: **d** = dni, **m** = miesiące, **y** = lata; działa `+` i `-`.
+- Format (opcjonalnie, po dwukropku) składasz z klocków **DD**, **MM**, **YY**, **YYYY** — separatory (kropki, ukośniki, myślniki, spacje) przechodzą bez zmian. Bez formatu dostajesz `DD.MM.YYYY`.
+- Koniec miesiąca jest bezpieczny: 31 stycznia + 1 miesiąc = 28/29 lutego (nie „31 lutego").
+
+### Skąd wiesz, że zadziała?
+
+Po wpisaniu placeholdera w prawym panelu pojawia się **zielony chip z podglądem obliczonej daty** (fioletowe chipy to zwykłe kolumny z arkusza). Najedź na chip — tooltip przypomina, że finalna wartość liczy się przy generowaniu.
+
+> 📷 **[SCREENSHOT: Zielony chip daty]** — *kadr: zbliżenie na prawy panel; pole Treść z `{{date+14d}}` i zielony chip `{{date+14d}} → 18.07.2026` pod spodem.*
+
+### Dobrze wiedzieć
+
+- **Kolumna o nazwie `date`** w arkuszu ma pierwszeństwo dla gołego `{{date}}` — formy z przesunięciem (`{{date+14d}}`) zawsze liczą się automatycznie.
+- Data liczy się **w momencie generowania PDF/ZPL**, według czasu serwera — nie w momencie zapisania szablonu.
+- W kreatorze serii pola datowe **nie wymagają mapowania** na kolumnę.
+
+---
+
+## 7a. ZPL — drukarki etykiet Zebra
+
+**ZPL** to język drukarek etykiet (Zebra i zgodne). Program potrafi w obie strony: zaimportować istniejącą etykietę ZPL do edytora i wyeksportować twój projekt jako ZPL.
+
+### Import ZPL
+
+Toolbar → **⤓ Importuj ZPL**.
+
+1. Wklej kod ZPL (np. z innego systemu albo od dostawcy etykiet).
+2. Wybierz **DPI drukarki** — jeśli nie wiesz, zostaw **Wykryj automatycznie** (program porówna wymiary z kodu z rozmiarem twojej etykiety).
+3. Klik **Sprawdź** — zobaczysz liczbę rozpoznanych obiektów i wykryte DPI; jeśli etykieta z kodu jest większa niż twoja, dostaniesz podpowiedź.
+4. Klik **Importuj** — obiekty lądują na canvasie. **Uwaga:** import zastępuje obecną zawartość etykiety.
+
+Zmienne drukarkowe w pojedynczych klamrach (np. `{NAZWA}`) przechodzą bez zmian, a polecenia, których edytor nie modeluje, są zachowywane i wracają przy eksporcie.
+
+> 📷 **[SCREENSHOT: Okno importu ZPL]** — *kadr: modal z wklejonym kodem ZPL, selektem DPI ustawionym na „Wykryj automatycznie" i wynikiem analizy „12 obiektów · 203 dpi".*
+
+### Eksport ZPL
+
+Toolbar → **⤒ ZPL**. Dwa tryby:
+
+- **Szablon (zmienne)** — jeden kod ZPL z twojego projektu; placeholdery kolumn `{{...}}` zostają w kodzie (podmienisz je we własnym systemie), a **placeholdery daty są od razu obliczone**. Przyciski **Kopiuj** i **Pobierz .zpl**.
+- **Wsad (dataset)** — wybierz wgrany wcześniej plik danych, a program wygeneruje jeden plik `.zpl` z etykietą dla każdego wiersza (podmienione i kolumny, i daty).
+
+Wybierz DPI zgodne z twoją drukarką (203 lub 300).
+
+> 📷 **[SCREENSHOT: Okno eksportu ZPL]** — *kadr: modal w trybie „Szablon (zmienne)" z podglądem wygenerowanego kodu i przyciskami Kopiuj / Pobierz .zpl.*
 
 ---
 
 ## 8. Administracja (tylko admin)
 
 Lewe menu → **Administracja → Użytkownicy**.
+
+> 📷 **[SCREENSHOT: Panel użytkowników]** — *kadr: tabela użytkowników z kolumnami Email / Rola / Aktywne / Ostatnie logowanie i przyciskiem „Utwórz konto" u góry.*
 
 ### Tworzenie użytkownika
 

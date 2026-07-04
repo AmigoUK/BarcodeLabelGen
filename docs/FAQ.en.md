@@ -16,7 +16,7 @@ The administrator gave you a temporary password. Every first login forces you to
 Left menu → **Templates** → **New template** button in the top-right of the list.
 
 ### Can I change the label size after I created the template?
-Not in this version. The format is fixed at template creation. If you need a different size, create a new template.
+Yes. In the editor, click the **📐 {width}×{height}** button in the toolbar, type new dimensions in mm or pick a preset, and click **Apply**. Objects keep their positions in mm (they are not rescaled).
 
 ### How do I save a template?
 The editor saves on its own (autosave every few seconds — see the toolbar status). You can also press **Ctrl/Cmd + S** manually.
@@ -31,6 +31,9 @@ The editor saves on its own (autosave every few seconds — see the toolbar stat
 
 ### What does `{{column_name}}` mean in a text field?
 It's a **placeholder**. When you generate a series, it'll be replaced with the value from the matching column in your spreadsheet/database. Works in Text **and** in the Barcode object's *Data* field.
+
+### What does the green chip under a text field mean?
+A green chip marks a **date placeholder** (e.g. `{{date+14d}}`) and immediately shows the calculated value. Purple chips are regular spreadsheet columns. For the date syntax details, see the guide, section 7.
 
 ### How do I insert a logo that appears on every label?
 Left panel → **🖼 Image** → pick a PNG/JPG/SVG. The logo will print on every generated label.
@@ -83,6 +86,54 @@ That means the placeholder didn't get mapped. In Step 2 (Map), every placeholder
 
 ### Can I include only some of the rows?
 Yes — Step 3 (Filter). Pick a column, an operator (equals / contains / greater than / etc.) and a value. Click **Test filter** to see how many rows match.
+
+---
+
+## Date placeholders
+
+### How do I insert a best-before date of "today + 30 days"?
+In a text field (or in barcode data), type `{{date+30d}}`. When the PDF/ZPL is generated, the app substitutes the date 30 days from today, e.g. `03.08.2026`.
+
+### Which offsets can I use?
+`d` = days, `m` = months, `y` = years, with plus or minus: `{{date+14d}}`, `{{date-7d}}`, `{{date+3m}}`, `{{date+1y}}`. A bare `{{date}}` is today's date.
+
+### How do I change the date format?
+Add a format after a colon, built from the DD/MM/YY/YYYY blocks: `{{date+14d:DD/MM/YY}}` → `18/07/26`, `{{date:YYYY-MM-DD}}` → `2026-07-04`. Without a format you get `DD.MM.YYYY`.
+
+### When exactly is the date calculated?
+At **generation time** (PDF or ZPL), using the server's date — not when you write the template. The green chip in the editor is only a preview for today.
+
+### What if I add 1 month to 31 January?
+You get 28 (or 29) February — the app never produces dates that don't exist.
+
+### My spreadsheet has a column called `date`. Which one wins?
+For a bare `{{date}}`, the **spreadsheet column** wins (as before). Forms with an offset or format (`{{date+14d}}`, `{{date:YYYY-MM-DD}}`) are always calculated automatically.
+
+### Why doesn't the `{{date}}` field require mapping in the series wizard?
+Because when unmapped, the app substitutes today's date. You only map it if you want to take dates from a spreadsheet column.
+
+---
+
+## ZPL / Zebra printers
+
+### What is ZPL and why should I care?
+ZPL is the language of label printers (Zebra and compatibles). If you print on such a printer, or receive ready-made ZPL labels from another system, the app can **import them into the editor** and **export your design as ZPL**.
+
+### How do I import a ZPL label?
+Editor → toolbar → **⤓ Import ZPL** → paste the code → **Analyze** → **Import**. Careful: the import replaces the current canvas content.
+
+### I don't know the DPI of the printer the code came from.
+Leave the **Auto-detect** option in the import dialog — the app compares the dimensions in the code (`^PW`/`^LL`) with your label size and picks 203 or 300 dpi.
+
+### What happens to variables like `{NAZWA}` in single braces?
+They pass through untouched in both directions (import and export) — those are your system's printer variables. Double braces `{{...}}` are this app's placeholders.
+
+### What's the difference between the "Template (variables)" and "Batch (dataset)" export?
+- **Template** — one ZPL code; column placeholders stay in the code, dates are calculated right away. Made for pasting into your own system.
+- **Batch** — you pick an uploaded data file and get one `.zpl` with a label for every row (everything substituted).
+
+### Can I print directly to a Zebra printer from the app?
+Not yet — today you export a `.zpl` and send it to the printer with your own tool. Direct printing through a local connector is planned (backlog F25–F27).
 
 ---
 
@@ -185,7 +236,7 @@ The CSRF token has expired (usually after a long idle period). Press F5 and sign
 The template was probably deleted, or you don't have access. Go back to **Templates** and check the list.
 
 ### I downloaded a PDF and got `pdf_render_failed`.
-Something went wrong server-side (usually invalid data in an object). Check that you don't have `{{...}}` placeholders in a single-label preview (placeholders only get substituted during series generation; in a single PDF they stay as literal text).
+Something went wrong server-side (usually invalid data in an object). Check that you don't have a column placeholder `{{...}}` in a single label (columns only get substituted during series generation; in a single PDF they stay as literal text; date placeholders are calculated everywhere).
 
 ### I generated a series and saw `no_rows: filter matched no rows`
 The filter in Step 3 didn't catch any rows. Go back and loosen it or disable it.
@@ -202,7 +253,10 @@ After PDF generation you'll see **N warnings**. Two options:
 2. Enable **Auto-fit font** in the right panel and set a sensible minimum size.
 
 ### The app is in Polish but I want English.
-The language switcher is in the top-right corner (or in the user menu).
+The **PL/EN** language switcher is in the top-right corner of the header (also on the login page).
+
+### The label came out with yesterday's/tomorrow's date instead of today's.
+The date is calculated using the **server's** clock. If the skew keeps happening, ask your administrator to check the server's timezone (the `TZ` variable in the configuration).
 
 ---
 

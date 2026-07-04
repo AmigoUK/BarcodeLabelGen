@@ -12,6 +12,8 @@ A short guide to the app. Read top-to-bottom for a complete tour, or jump straig
 2. Enter the email and password your administrator gave you.
 3. On your first login, the app will ask you to set your own password (minimum 10 characters). This happens once — afterwards you go straight to the dashboard.
 
+> 📷 **[SCREENSHOT: Login screen]** — *frame: the Email + Password form with the "Log in" button and the PL/EN language switcher in the top-right corner.*
+
 ### The dashboard
 
 After signing in you land on the **Dashboard**. It's just a welcome screen — to start working, click **Templates** in the left menu.
@@ -34,19 +36,25 @@ After signing in you land on the **Dashboard**. It's just a welcome screen — t
 | Item | What's there |
 |---|---|
 | **Dashboard** | Welcome screen. |
-| **Templates** | Your templates list + the *New template* button. |
-| **Data imports** | All the CSV/Excel/SQLite files you've ever uploaded for series generation. |
+| **Templates** | Your templates list + the *New template* and *Import* buttons. |
+| **Help** | This guide + the FAQ, without leaving the app. |
 | **Administration → Users** | (admin only) account management. |
+
+In the header, on the right: your email, the **PL/EN** language switcher and the **Log out** button.
+
+> 📷 **[SCREENSHOT: Templates list]** — *frame: the Templates page with a few tiles, the search field, and the "Import" and "New template" buttons in the top-right corner.*
 
 ### The editor — screen layout
 
 When you open a template you'll see:
 
-- **Toolbar (top)** — Save, Undo/Redo, autosave indicator, **Download PDF**, **Generate Series**.
+- **Toolbar (top)** — Save, Undo/Redo, autosave indicator, **Generate series**, **⬇ Export** (template file), **📐 label size**, **⤓ Import ZPL**, **⤒ ZPL** (export), **Download PDF**.
 - **Left panel (Add)** — buttons for inserting objects onto the label.
 - **Canvas (center)** — your label at 1:1 scale (millimetres).
 - **Alignment bar (above canvas)** — alignment and z-order controls.
 - **Right panel (Properties)** — settings for the selected object.
+
+> 📷 **[SCREENSHOT: The editor — overview]** — *frame: the whole editor with a template open; arrows labelling the toolbar, the Add panel, the canvas, the alignment bar and the Properties panel.*
 
 ### Alignment bar — what each group does
 
@@ -157,6 +165,15 @@ The editor saves every few seconds on its own. Status sits in the toolbar:
 
 You can also click **Save** manually.
 
+### Changing the label size
+
+The size you picked when creating the template **can be changed at any time**: click the **📐 {width}×{height}** button in the toolbar.
+
+- Type a new width and height in mm (1–1000), or click one of the ready-made presets (40×100, 50×30, 100×150, 105×148, 210×297).
+- Objects are **not rescaled** — they keep their positions in mm. If you shrink the label, just drag any elements that ended up past the edge back in.
+
+> 📷 **[SCREENSHOT: The "Label size" dialog]** — *frame: the modal with the Width/Height fields and the row of preset chips; cursor hovering the "Apply" button.*
+
 ---
 
 ## 5. Downloading a PDF — single label
@@ -164,6 +181,8 @@ You can also click **Save** manually.
 Click **Download PDF** in the editor toolbar. Rendering is synchronous (a few seconds), then the PDF downloads automatically.
 
 If any text didn't fit its block, you'll see an **N warnings** chip — hover it for details.
+
+Column placeholders (`{{name}}`) stay as literal text in a single PDF — data only gets substituted during series generation. **Date placeholders** (`{{date+14d}}`, see section 7), on the other hand, are calculated here too.
 
 ---
 
@@ -178,6 +197,8 @@ In a Text or Barcode object, insert a placeholder shaped like `{{column_name}}`,
 - Barcode data: `{{sku}}`
 
 Each occurrence will be replaced with the value from the matching column.
+
+> 📷 **[SCREENSHOT: Detected dynamic fields]** — *frame: the right Properties panel with a text field containing `{{name}}` and `{{date+14d}}`; below it two chips — a purple `{{name}}` and a green `{{date+14d}} → 18.07.2026`.*
 
 ### Step 1 — Upload data
 
@@ -217,6 +238,8 @@ The app detects every `{{...}}` placeholder in the template. If the placeholder 
 
 Drop rows before generating, e.g. *price > 10* or *category contains "tea"*. Click **Test filter** to see how many rows match. Skip this step to keep all rows.
 
+> 📷 **[SCREENSHOT: Series wizard — mapping]** — *frame: step 2 of the wizard with the placeholder list on the left and column selects on the right; next to `{{date}}` a green hint reading "Optional — today's date is used when unmapped".*
+
 ### Step 4 — Generate PDF
 
 Click **Generate PDF**. A background job starts; a progress bar updates live. When it's done, the PDF downloads automatically.
@@ -225,15 +248,75 @@ If any labels had text overflowing their blocks, you'll see a warning list (whic
 
 ---
 
-## 7. Data imports
+## 7. Date placeholders — `{{date+…}}`
 
-Left menu → **Data imports** — every file you've ever uploaded (CSV/Excel/SQLite). You can delete them to free space. Files are private — each user sees only their own.
+Besides spreadsheet columns you can insert **dates calculated automatically at generation time** — perfect for best-before ("use by") and production dates. They work everywhere: in a single PDF, in a series and in the ZPL export.
+
+### Syntax
+
+| You type | You get (when generating on 04.07.2026) |
+|---|---|
+| `{{date}}` | 04.07.2026 (today's date) |
+| `{{date+14d}}` | 18.07.2026 (+14 days) |
+| `{{date-7d}}` | 27.06.2026 (−7 days) |
+| `{{date+3m}}` | 04.10.2026 (+3 months) |
+| `{{date+1y}}` | 04.07.2027 (+1 year) |
+| `{{date+14d:DD/MM/YY}}` | 18/07/26 (custom format) |
+| `{{date+3m:YYYY-MM-DD}}` | 2026-10-04 |
+
+- Offset units: **d** = days, **m** = months, **y** = years; both `+` and `-` work.
+- The format (optional, after the colon) is built from the **DD**, **MM**, **YY**, **YYYY** building blocks — separators (dots, slashes, dashes, spaces) pass through unchanged. Without a format you get `DD.MM.YYYY`.
+- Month ends are safe: 31 January + 1 month = 28/29 February (never "31 February").
+
+### How do you know it will work?
+
+Once you type the placeholder, a **green chip previewing the calculated date** appears in the right panel (purple chips are regular spreadsheet columns). Hover the chip — a tooltip reminds you that the final value is calculated at generation time.
+
+> 📷 **[SCREENSHOT: Green date chip]** — *frame: close-up of the right panel; the Content field with `{{date+14d}}` and the green chip `{{date+14d}} → 18.07.2026` underneath.*
+
+### Good to know
+
+- A **column named `date`** in your spreadsheet wins for a bare `{{date}}` — forms with an offset (`{{date+14d}}`) are always calculated automatically.
+- The date is calculated **at PDF/ZPL generation time**, using the server clock — not when you save the template.
+- In the series wizard, date fields **don't need to be mapped** to a column.
+
+---
+
+## 7a. ZPL — Zebra label printers
+
+**ZPL** is the language of label printers (Zebra and compatibles). The app works in both directions: it can import an existing ZPL label into the editor and export your design as ZPL.
+
+### Importing ZPL
+
+Toolbar → **⤓ Import ZPL**.
+
+1. Paste the ZPL code (e.g. from another system or from your label supplier).
+2. Pick the **Printer DPI** — if you don't know it, leave **Auto-detect** (the app compares the dimensions in the code with your label size).
+3. Click **Analyze** — you'll see the number of recognised objects and the detected DPI; if the label in the code is bigger than yours, you get a hint.
+4. Click **Import** — the objects land on the canvas. **Careful:** the import replaces the current label content.
+
+Printer variables in single braces (e.g. `{NAZWA}`) pass through untouched, and commands the editor doesn't model are preserved and come back on export.
+
+> 📷 **[SCREENSHOT: ZPL import dialog]** — *frame: the modal with ZPL code pasted in, the DPI select set to "Auto-detect" and the analysis result "12 objects · 203 dpi".*
+
+### Exporting ZPL
+
+Toolbar → **⤒ ZPL**. Two modes:
+
+- **Template (variables)** — one ZPL code built from your design; column placeholders `{{...}}` stay in the code (you substitute them in your own system), while **date placeholders are calculated right away**. **Copy** and **Download .zpl** buttons.
+- **Batch (dataset)** — pick a previously uploaded data file and the app generates one `.zpl` file with a label for every row (columns and dates both substituted).
+
+Pick the DPI that matches your printer (203 or 300).
+
+> 📷 **[SCREENSHOT: ZPL export dialog]** — *frame: the modal in "Template (variables)" mode with a preview of the generated code and the Copy / Download .zpl buttons.*
 
 ---
 
 ## 8. Administration (admin only)
 
 Left menu → **Administration → Users**.
+
+> 📷 **[SCREENSHOT: Users panel]** — *frame: the users table with the Email / Role / Active / Last login columns and the "Create account" button at the top.*
 
 ### Creating a user
 

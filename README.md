@@ -19,6 +19,7 @@
 - **Series generation** — upload a CSV, Excel, or **SQLite** file, map placeholders to columns (or write a custom SELECT), optionally filter rows, get a single PDF with one label per row. Up to 1,000 labels per batch.
 - **ZPL / ZPL II round-trip** — paste an existing ZPL label, adjust element positions on the canvas, and export native ZPL back out (copy to clipboard or download `.zpl`) for use in external software. Single-brace `{VARIABLES}`, `^PQ{NoLabel}` quantity, resident fonts (`E:ARIxxx.TTF`) and native QR are preserved 1:1; a batch mode fills `{{column}}` values from a dataset. DPI is auto-detected from `^PW`/`^LL`.
 - **Editable label size** — resize a template (width × height in mm, with presets) at any time from the editor; undoable and persisted, so a label never has to be recreated just to change its dimensions.
+- **Date placeholders** — `{{date+14d}}`, `{{date+3m:YYYY-MM-DD}}` compute best-before / production dates at generation time (PDF and ZPL alike), with a live preview chip in the editor and month-end-safe arithmetic.
 - **Template import / export** — every template is a single self-contained `.blg-template.json` (size, objects, embedded images). Cross-instance portable; partial import lets you skip objects + override the size.
 - **Multilingual UI + in-app docs** — Polish + English from day one, with HELP + FAQ rendered inside the app.
 - **Roles** — admin / editor / viewer; admin manages users + temporary password resets.

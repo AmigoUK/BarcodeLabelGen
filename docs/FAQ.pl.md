@@ -16,7 +16,7 @@ Administrator dał ci hasło tymczasowe. Pierwsze logowanie zawsze wymusza zmian
 Lewe menu → **Szablony** → przycisk **Nowy szablon** w prawym górnym rogu listy.
 
 ### Czy mogę zmienić rozmiar etykiety po utworzeniu szablonu?
-Nie w tej wersji. Format ustawiasz raz przy tworzeniu szablonu. Jeśli musisz zmienić rozmiar — utwórz nowy szablon.
+Tak. W edytorze kliknij w toolbarze przycisk **📐 {szerokość}×{wysokość}**, wpisz nowe wymiary w mm albo wybierz preset i kliknij **Zastosuj**. Obiekty zachowują pozycje w mm (nie są przeskalowywane).
 
 ### Jak zapisać szablon?
 Edytor zapisuje sam (autozapis co kilka sekund — status widać w toolbarze). Możesz też ręcznie **Ctrl/Cmd + S**.
@@ -31,6 +31,9 @@ Edytor zapisuje sam (autozapis co kilka sekund — status widać w toolbarze). M
 
 ### Co znaczy `{{nazwa_kolumny}}` w polu tekstowym?
 To **placeholder**. Przy generowaniu serii zostanie podmieniony wartością z odpowiedniej kolumny w arkuszu/bazie. Działa w polu Text **i** w polu *Dane* obiektu Barcode.
+
+### Co znaczy zielony chip pod polem tekstowym?
+Zielony chip oznacza **placeholder daty** (np. `{{date+14d}}`) i od razu pokazuje obliczoną wartość. Fioletowe chipy to zwykłe kolumny z arkusza. Szczegóły składni dat: przewodnik, sekcja 7.
 
 ### Jak wstawić logo, które jest na każdej etykiecie?
 Lewy panel → **🖼 Obraz** → wybierz plik PNG/JPG/SVG. Logo będzie się drukować na każdej etykiecie.
@@ -83,6 +86,54 @@ To znaczy że placeholder się nie zmapował. W Kroku 2 (Mapowanie) musisz dla k
 
 ### Czy mogę odsiać tylko niektóre wiersze?
 Tak — Krok 3 (Filtr). Wybierz kolumnę, operator (równe / zawiera / większe niż / itd.) i wartość. Klik **Sprawdź filtr** żeby zobaczyć ile wierszy się załapie.
+
+---
+
+## Placeholdery daty
+
+### Jak wstawić datę przydatności „dziś + 30 dni"?
+W polu tekstowym (albo w danych kodu kreskowego) wpisz `{{date+30d}}`. Przy generowaniu PDF/ZPL program podstawi datę o 30 dni późniejszą od dzisiejszej, np. `03.08.2026`.
+
+### Jakie przesunięcia mogę używać?
+`d` = dni, `m` = miesiące, `y` = lata, z plusem lub minusem: `{{date+14d}}`, `{{date-7d}}`, `{{date+3m}}`, `{{date+1y}}`. Samo `{{date}}` to dzisiejsza data.
+
+### Jak zmienić format daty?
+Dodaj format po dwukropku, z klocków DD/MM/YY/YYYY: `{{date+14d:DD/MM/YY}}` → `18/07/26`, `{{date:YYYY-MM-DD}}` → `2026-07-04`. Bez formatu dostajesz `DD.MM.YYYY`.
+
+### Kiedy dokładnie liczy się data?
+W momencie **generowania** (PDF lub ZPL), według daty serwera — nie w momencie pisania szablonu. Zielony chip w edytorze to tylko podgląd na dziś.
+
+### Co jeśli 31 stycznia dodam 1 miesiąc?
+Dostaniesz 28 (lub 29) lutego — program nie tworzy nieistniejących dat.
+
+### Mam w arkuszu kolumnę o nazwie `date`. Co wygra?
+Dla gołego `{{date}}` wygrywa **kolumna z arkusza** (jak dotychczas). Formy z przesunięciem lub formatem (`{{date+14d}}`, `{{date:YYYY-MM-DD}}`) zawsze liczą się automatycznie.
+
+### Czemu w kreatorze serii pole `{{date}}` nie wymaga mapowania?
+Bo bez mapowania program podstawi dzisiejszą datę. Mapujesz tylko jeśli chcesz brać daty z kolumny arkusza.
+
+---
+
+## ZPL / drukarki Zebra
+
+### Co to jest ZPL i po co mi to?
+ZPL to język drukarek etykiet (Zebra i zgodne). Jeśli drukujesz na takiej drukarce albo dostajesz gotowe etykiety w ZPL z innego systemu, program potrafi je **importować do edytora** i **eksportować twój projekt jako ZPL**.
+
+### Jak zaimportować etykietę ZPL?
+Edytor → toolbar → **⤓ Importuj ZPL** → wklej kod → **Sprawdź** → **Importuj**. Uwaga: import zastępuje obecną zawartość canvasu.
+
+### Nie znam DPI drukarki, z której pochodzi kod.
+Zostaw w oknie importu opcję **Wykryj automatycznie** — program porówna wymiary z kodu (`^PW`/`^LL`) z rozmiarem twojej etykiety i dobierze 203 lub 300 dpi.
+
+### Co się dzieje ze zmiennymi typu `{NAZWA}` w pojedynczych klamrach?
+Przechodzą nietknięte w obie strony (import i eksport) — to zmienne drukarkowe twojego systemu. Podwójne klamry `{{...}}` to placeholdery tego programu.
+
+### Czym różni się eksport „Szablon (zmienne)" od „Wsad (dataset)"?
+- **Szablon** — jeden kod ZPL; placeholdery kolumn zostają w kodzie, daty są od razu obliczone. Do wklejenia we własny system.
+- **Wsad** — wybierasz wgrany plik danych i dostajesz jeden `.zpl` z etykietą na każdy wiersz (wszystko podmienione).
+
+### Czy mogę drukować bezpośrednio na drukarkę Zebra z programu?
+Jeszcze nie — dziś eksportujesz `.zpl` i wysyłasz go do drukarki własnym narzędziem. Bezpośredni druk przez lokalny konektor jest w planach (backlog F25–F27).
 
 ---
 
@@ -185,7 +236,7 @@ Token CSRF wygasł (zwykle po długiej nieaktywności). Odśwież F5 i zaloguj s
 Szablon mógł zostać usunięty, albo nie masz do niego dostępu. Wróć na **Szablony** i sprawdź listę.
 
 ### Pobieram PDF i dostaję błąd "pdf_render_failed"
-Coś poszło nie tak po stronie serwera (zwykle nieprawidłowe dane w obiekcie). Sprawdź czy nie masz placeholdera `{{...}}` w pojedynczym podglądzie pojedynczej etykiety (placeholdery działają tylko w generowaniu serii, w pojedynczym PDF zostają jako tekst).
+Coś poszło nie tak po stronie serwera (zwykle nieprawidłowe dane w obiekcie). Sprawdź czy nie masz placeholdera kolumny `{{...}}` w pojedynczej etykiecie (kolumny działają tylko w generowaniu serii, w pojedynczym PDF zostają jako tekst; placeholdery daty liczą się wszędzie).
 
 ### Generuję serię i widzę `no_rows: filter matched no rows`
 Filtr w Kroku 3 nie złapał żadnego wiersza. Wróć i poluzuj filtr lub go wyłącz.
@@ -202,7 +253,10 @@ Po wygenerowaniu PDF zobaczysz **N ostrzeżeń**. Dwie opcje:
 2. Włącz **Auto-skalowanie** w prawym panelu i ustaw min. font.
 
 ### Strona programu jest po angielsku, a chcę po polsku.
-Przełącznik języka jest w prawym górnym rogu (lub w menu użytkownika).
+Przełącznik języka **PL/EN** jest w prawym górnym rogu nagłówka (także na stronie logowania).
+
+### Na etykiecie wyszła data wczorajsza/jutrzejsza zamiast dzisiejszej.
+Data liczy się według zegara **serwera**. Jeśli rozjazd się powtarza, poproś administratora o sprawdzenie strefy czasowej serwera (zmienna `TZ` w konfiguracji).
 
 ---
 
