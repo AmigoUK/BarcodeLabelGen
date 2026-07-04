@@ -25,6 +25,7 @@ from app.routes.folders import folders_bp
 from app.routes.library import library_bp
 from app.routes.generate import generate_bp, jobs_bp
 from app.routes.health import health_bp
+from app.routes.history import history_bp
 from app.routes.me import me_bp
 from app.routes.print_jobs import print_jobs_bp
 from app.routes.templates import templates_bp
@@ -103,6 +104,7 @@ def create_app(
     app.register_blueprint(captures_bp, url_prefix="/api")
     app.register_blueprint(folders_bp, url_prefix="/api")
     app.register_blueprint(library_bp, url_prefix="/api")
+    app.register_blueprint(history_bp, url_prefix="/api")
 
     # CLI
     register_cli(app)

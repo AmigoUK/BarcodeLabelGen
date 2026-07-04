@@ -182,6 +182,18 @@ def generate_endpoint() -> ResponseReturnValue:
         )
 
     output_filename = f"{job_id}_{_safe_filename(tpl.name)}.zpl"
+    from app.services import generated_files as gf_svc
+
+    gf_svc.record(
+        session,
+        owner_id=current_user.id,
+        template_id=tpl.id,
+        template_name=tpl.name,
+        kind="zpl",
+        mode="series",
+        storage_filename=output_filename,
+        row_count=len(projected),
+    )
     jobs_svc.run_in_thread(cfg.redis_url, job_id, runner=_runner, output_filename=output_filename)
     return jsonify({"job_id": job_id, "total": len(projected)}), 202
 

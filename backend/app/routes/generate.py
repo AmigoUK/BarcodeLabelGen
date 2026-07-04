@@ -133,6 +133,25 @@ def generate_pdf() -> ResponseReturnValue:
         except PdfRenderError as exc:
             return jsonify({"error": "pdf_render_failed", "detail": str(exc)}), 500
 
+        # F18: persist a copy to history (alongside the inline download).
+        import uuid
+
+        from app.services import generated_files as gf_svc
+        from app.services.jobs import pdfs_dir
+
+        storage_name = f"{uuid.uuid4().hex}_{_safe_filename(tpl.name)}.pdf"
+        pdfs_dir().mkdir(parents=True, exist_ok=True)
+        (pdfs_dir() / storage_name).write_bytes(pdf_bytes)
+        gf_svc.record(
+            session,
+            owner_id=current_user.id,
+            template_id=tpl.id,
+            template_name=tpl.name,
+            kind="pdf",
+            mode="single",
+            storage_filename=storage_name,
+        )
+
         filename = f"{_safe_filename(tpl.name)}.pdf"
         response = Response(pdf_bytes, mimetype="application/pdf")
         response.headers["Content-Disposition"] = f'attachment; filename="{filename}"'
@@ -192,6 +211,21 @@ def generate_pdf() -> ResponseReturnValue:
         )
 
     output_filename = f"{job_id}_{_safe_filename(template_name)}.pdf"
+    # F18: history entry created up-front (the filename is known); the thread
+    # writes the bytes. list_for_user hides entries until the file exists, so
+    # an in-flight or failed job never shows in history.
+    from app.services import generated_files as gf_svc
+
+    gf_svc.record(
+        session,
+        owner_id=current_user.id,
+        template_id=template_id,
+        template_name=template_name,
+        kind="pdf",
+        mode="series",
+        storage_filename=output_filename,
+        row_count=len(projected),
+    )
     jobs_svc.run_in_thread(cfg.redis_url, job_id, runner=_runner, output_filename=output_filename)
 
     return jsonify({"job_id": job_id, "total": len(projected)}), 202
