@@ -71,6 +71,9 @@ Pracownicy biurowi nie mają obecnie narzędzia, które pozwoliłoby im samodzie
 | F31 | Struktura folderów/katalogów szablonów + biblioteka gotowych projektów + udostępnianie innym użytkownikom (konsoliduje F15/F16) — **zrealizowane w v0.11.0**; spec: `docs/superpowers/specs/2026-07-04-folders-library-sharing-design.md` | P1 |
 | F32 | Kolorowe tagi dla folderów: kolor przypisany do folderu (kropka/obwódka na pasku folderów i na kafelkach szablonów) i/lub kolorowe tagi na szablonach — **zrealizowane w v0.12.0** (kolor folderu; osobne tagi nie weszły w zakres) | P2 |
 | F33 | Grafika wyróżniająca (featured image) szablonu: upload własnego obrazka podglądowego pokazywanego na kafelku listy Szablonów i w Bibliotece (krok w stronę miniatur odłożonych w F31) — **zrealizowane w v0.12.0** | P2 |
+| F34 | Konektor desktop macOS + Linux: binarki (Intel/ARM/Pi), ścieżka configu na macOS, uruchomienie jako usługa (launchd/systemd) — czyste Go, kompiluje się bez zmian; plan: `docs/superpowers/specs/2026-07-04-connector-cross-platform-plan.md` | P1 |
+| F35 | Konektor: wirtualna drukarka na macOS/Linux (CUPS raw backend → nasłuch JetDirect agenta), odpowiednik windowsowego przechwytywania | P2 |
+| F36 | Konektor Android: osobna aplikacja mobilna (polling kolejki + druk ZPL po TCP 9100 do drukarki w WiFi); bez fast-path/wirtualnej drukarki — wymaga własnej sesji brainstormingu | P2 |
 
 ### 2.3 User Stories (wybrane kluczowe)
 
