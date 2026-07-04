@@ -69,6 +69,8 @@ Pracownicy biurowi nie mają obecnie narzędzia, które pozwoliłoby im samodzie
 | F29 | Walidacja ZPL na wejściu (kolejka druku, przechwyty, import): sanity-check `^XA…^XZ`, limity rozmiaru, odrzucanie nie-ZPL (np. omyłkowo wysłanych stron błędów HTML) z czytelnym komunikatem — **zrealizowane w v0.9.0** | P1 |
 | F30 | Lista manualnych testów UAT (checklista dla właściciela: sprzęt, Windows, realna drukarka) — warunek decyzji o wdrożeniu na prod; checklist: `docs/UAT.md` | P0 |
 | F31 | Struktura folderów/katalogów szablonów + biblioteka gotowych projektów + udostępnianie innym użytkownikom (konsoliduje F15/F16) — **zrealizowane w v0.11.0**; spec: `docs/superpowers/specs/2026-07-04-folders-library-sharing-design.md` | P1 |
+| F32 | Kolorowe tagi dla folderów: kolor przypisany do folderu (kropka/obwódka na pasku folderów i na kafelkach szablonów) i/lub kolorowe tagi na szablonach — zakres do doprecyzowania przy implementacji | P2 |
+| F33 | Grafika wyróżniająca (featured image) szablonu: upload własnego obrazka podglądowego pokazywanego na kafelku listy Szablonów i w Bibliotece (krok w stronę miniatur odłożonych w F31) | P2 |
 
 ### 2.3 User Stories (wybrane kluczowe)
 
