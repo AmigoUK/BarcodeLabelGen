@@ -141,6 +141,15 @@ Agent na tym komputerze nie zgłosił się od ponad minuty — sprawdź, czy `bl
 ### Zadanie druku skończyło się błędem „printer unreachable".
 Agent nie mógł połączyć się z drukarką po TCP (port 9100). Sprawdź IP drukarki w `config.yaml` agenta i czy drukarka jest włączona; potem wyślij zadanie ponownie.
 
+### Jak przenieść etykietę ze starego programu (ERP/Word) do edytora?
+Skonfiguruj **wirtualną drukarkę** konektora (sekcja `capture` w `config.yaml` + drukarka ZDesigner na porcie TCP/IP `127.0.0.1:9101` w Windows — krok po kroku w `connector/README.md`). Wydrukuj etykietę ze starego programu na tę drukarkę, a pojawi się w **Urządzenia → Inbox**, skąd otworzysz ją w edytorze.
+
+### Przechwycona etykieta nie ma loga/grafiki w edytorze.
+Bitmapy ze sterownika (`^GF`) przechodzą jako nieedytowalny passthrough — wydrukują się poprawnie, ale edytor pokazuje tylko teksty, kody i kształty, które potrafi zamodelować. Grafika w trybie binarnym (`^GFB`) nie jest wspierana — zostaw w sterowniku tryb ASCII/hex.
+
+### Coś wydrukowałem na wirtualną drukarkę i nic nie doszło.
+Sprawdź log agenta. Najczęstsze powody: zadanie nie zawierało `^XA` (sterownik nie generuje ZPL — użyj ZDesigner), zadanie przekroczyło 2 MB, albo serwer był niedostępny — wtedy zadanie czeka w lokalnym spoolu agenta i zostanie wysłane automatycznie do 30 s po powrocie łączności.
+
 ---
 
 ## Generowanie serii (SQLite)

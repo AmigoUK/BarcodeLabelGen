@@ -9,6 +9,28 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 _Nothing yet._
 
+## [0.8.0] — 2026-07-04
+
+### Added
+- **Connector phase D (F27): virtual printer + captures Inbox.** The
+  agent's optional `capture` section opens a JetDirect-style listener —
+  point a Windows printer (ZDesigner driver, Standard TCP/IP port →
+  `127.0.0.1:9101`) at it and anything other applications print lands
+  in the web app. Jobs spool locally (private 0700 dir, offline retries
+  every 30 s) and upload to `POST /api/agent/captures` (base64; `^XA`
+  sanity gate — the F29 minimum — keeps PCL/HTML noise out; 200 most
+  recent kept per device). The **Inbox** on the Devices page lists
+  captures with one-click **Open in editor** (ZPL parsed with DPI
+  auto-detect, template created at the captured label size), copy-ZPL
+  and delete. New table `captures` (alembic `0008`). User guide + FAQ
+  updated (PL/EN), Windows setup walkthrough in `connector/README.md`.
+
+### Fixed
+- Security-review hardening of the capture spool: user-scoped default
+  location (not the world-writable system temp), 0700/0600 permissions,
+  and the uploader skips symlinks/non-regular files so a local attacker
+  can't exfiltrate files through the agent's device token.
+
 ## [0.7.0] — 2026-07-04
 
 ### Added
@@ -160,7 +182,8 @@ _Nothing yet._
   label formats, dataset upload (CSV/XLSX/SQLite) with `{{column}}`
   mail-merge, and PDF single-label + batch generation via ReportLab.
 
-[Unreleased]: https://github.com/AmigoUK/BarcodeLabelGen/compare/v0.7.0...HEAD
+[Unreleased]: https://github.com/AmigoUK/BarcodeLabelGen/compare/v0.8.0...HEAD
+[0.8.0]: https://github.com/AmigoUK/BarcodeLabelGen/releases/tag/v0.8.0
 [0.7.0]: https://github.com/AmigoUK/BarcodeLabelGen/releases/tag/v0.7.0
 [0.6.0]: https://github.com/AmigoUK/BarcodeLabelGen/releases/tag/v0.6.0
 [0.5.1]: https://github.com/AmigoUK/BarcodeLabelGen/releases/tag/v0.5.1

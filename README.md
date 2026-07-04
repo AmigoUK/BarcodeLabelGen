@@ -21,6 +21,7 @@
 - **Editable label size** — resize a template (width × height in mm, with presets) at any time from the editor; undoable and persisted, so a label never has to be recreated just to change its dimensions.
 - **Date placeholders** — `{{date+14d}}`, `{{date+3m:YYYY-MM-DD}}` compute best-before / production dates at generation time (PDF and ZPL alike), with a live preview chip in the editor and month-end-safe arithmetic.
 - **Direct printing via the local connector** — a single-binary Go agent ([`connector/`](connector/README.md)) polls the server's print queue with a per-device Bearer token and forwards ZPL to label printers over RAW TCP 9100 (Zebra / JetDirect compatible). Register devices on the Devices page, then hit 🖨 Print in the editor; job status (queued → printing → done/error) reports back live.
+- **Virtual printer capture** — the same agent can pose as a network printer (JetDirect listener): anything another application prints to it (via the ZDesigner driver on Windows) lands in the web app's **Inbox**, one click away from becoming an editable template — the escape hatch from legacy label software.
 - **Template import / export** — every template is a single self-contained `.blg-template.json` (size, objects, embedded images). Cross-instance portable; partial import lets you skip objects + override the size.
 - **Multilingual UI + in-app docs** — Polish + English from day one, with HELP + FAQ rendered inside the app.
 - **Roles** — admin / editor / viewer; admin manages users + temporary password resets.

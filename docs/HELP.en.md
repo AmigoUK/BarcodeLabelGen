@@ -338,6 +338,16 @@ Instead of downloading a `.zpl` file, you can print **straight from the editor**
 
 Date placeholders are calculated at print time; column placeholders stay in the code (this prints a single label, not a series).
 
+### Virtual printer — capture labels from other programs
+
+The connector can also work **the other way round**: it pretends to be a network printer, and anything other applications (an ERP, Word, a legacy warehouse program) print to it lands in the **Inbox** on the **Devices** page.
+
+1. In the agent's `config.yaml`, enable the `capture` section (step-by-step instructions, including the Windows printer setup: `connector/README.md`).
+2. Print something from any application to that virtual printer.
+3. **Devices → Inbox** → **Open in editor** — the label becomes a regular template: size detected from the code, texts and barcodes editable.
+
+From the Inbox you can also copy the raw ZPL code or delete an entry. The app keeps at most the 200 most recent captures per device.
+
 ---
 
 ## 8. Administration (admin only)

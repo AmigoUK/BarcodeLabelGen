@@ -141,6 +141,15 @@ The agent on that computer hasn't checked in for over a minute — make sure `bl
 ### A print job failed with a "printer unreachable" error.
 The agent couldn't connect to the printer over TCP (port 9100). Check the printer's IP in the agent's `config.yaml` and make sure the printer is switched on; then submit the job again.
 
+### How do I move a label from an old program (ERP/Word) into the editor?
+Set up the connector's **virtual printer** (the `capture` section in `config.yaml` plus a ZDesigner printer on a "Standard TCP/IP" port pointed at `127.0.0.1:9101` in Windows — step by step in `connector/README.md`). Print the label from the old program to that printer and it will appear in **Devices → Inbox**, from where you can open it in the editor.
+
+### A captured label has no logo/graphics in the editor.
+Driver bitmaps (`^GF`) come through as a non-editable passthrough — they will print correctly, but the editor only shows the texts, barcodes and shapes it can model. Binary-mode graphics (`^GFB`) are not supported — leave the driver in ASCII/hex mode.
+
+### I printed something to the virtual printer and nothing arrived.
+Check the agent's log. The most common causes: the job contained no `^XA` (the driver isn't producing ZPL — use ZDesigner), the job exceeded 2 MB, or the server was unreachable — in that case the job waits in the agent's local spool and is sent automatically within about 30 s of connectivity coming back.
+
 ---
 
 ## Series generation (SQLite)

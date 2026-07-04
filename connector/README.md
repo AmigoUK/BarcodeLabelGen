@@ -21,6 +21,9 @@ printers:
     port: 9100                  # opcjonalne (domyślnie 9100)
   - name: Test                  # drukarka symulowana: zapisuje .zpl do katalogu
     host: file:///var/spool/blg
+capture:                        # opcjonalne — wirtualna drukarka (przechwytywanie)
+  listen: 127.0.0.1:9101        # nasłuch JetDirect; puste/brak = wyłączone
+  # spool_dir: <katalog>        # domyślnie katalog cache użytkownika (0700)
 ```
 
 3. Uruchom:
@@ -64,6 +67,30 @@ WantedBy=multi-user.target
 (uruchom przy starcie, `C:\ProgramData\blg-connector\config.yaml` to domyślna
 ścieżka konfiguracji, więc wystarczy `blg-connector.exe` bez argumentów).
 Natywna usługa Windows + tray: planowane.
+
+## Wirtualna drukarka (przechwytywanie ZPL z innych aplikacji)
+
+Z sekcją `capture` agent nasłuchuje jak drukarka sieciowa (protokół
+JetDirect/RAW). Każde odebrane zadanie (jedno połączenie = jedno zadanie)
+trafia do **Inboxa** w aplikacji (strona *Urządzenia*), skąd otworzysz je
+w edytorze jako edytowalny szablon.
+
+**Konfiguracja na Windows (bez pisania sterownika):**
+
+1. Zainstaluj darmowy sterownik **ZDesigner** (ze strony Zebry) — to on
+   generuje ZPL.
+2. *Ustawienia → Drukarki → Dodaj drukarkę → ręcznie*: nowy port
+   **Standard TCP/IP**, adres `127.0.0.1`, port `9101`, protokół **RAW**,
+   **wyłącz SNMP**.
+3. Jako sterownik wybierz ZDesigner (dowolny model o rozmiarze twoich
+   etykiet). Nazwij drukarkę np. „BarcodeLabelGen (przechwytywanie)".
+4. Drukuj na nią z dowolnej aplikacji — zadanie pojawi się w Inboxie.
+
+Ograniczenia: przechwycone zadanie musi zawierać `^XA` (nie-ZPL jest
+odrzucany); grafika trybu binarnego (`^GFB`) nie jest wspierana — zostaw
+w sterowniku domyślny tryb ASCII/hex (`^GFA`); bitmapy przechodzą jako
+passthrough (drukują się, ale nie są edytowalne w edytorze). Nieudane
+uploady czekają w lokalnym spoolu i są ponawiane co 30 s.
 
 ## Lokalne API (szybka ścieżka przeglądarki)
 

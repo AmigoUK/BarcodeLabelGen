@@ -338,6 +338,16 @@ Zamiast pobierać plik `.zpl`, możesz drukować **prosto z edytora** przyciskie
 
 Placeholdery daty są obliczane w momencie druku; placeholdery kolumn zostają w kodzie (druk pojedynczej etykiety, nie serii).
 
+### Wirtualna drukarka — przejmij etykiety z innych programów
+
+Konektor potrafi też działać **w drugą stronę**: udaje drukarkę sieciową, a wszystko, co inne aplikacje (ERP, Word, stary program magazynowy) na nią wydrukują, trafia do **Inboxa** na stronie **Urządzenia**.
+
+1. W `config.yaml` agenta włącz sekcję `capture` (instrukcja krok po kroku, razem z konfiguracją drukarki w Windows: `connector/README.md`).
+2. Wydrukuj coś z dowolnej aplikacji na tę wirtualną drukarkę.
+3. **Urządzenia → Inbox** → **Otwórz w edytorze** — etykieta staje się normalnym szablonem: rozmiar wykryty z kodu, teksty i kody kreskowe edytowalne.
+
+Z Inboxa możesz też skopiować surowy kod ZPL albo usunąć wpis. Program przechowuje maksymalnie 200 ostatnich przechwyceń na urządzenie.
+
 ---
 
 ## 8. Administracja (tylko admin)

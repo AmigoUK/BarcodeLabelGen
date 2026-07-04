@@ -64,7 +64,7 @@ Pracownicy biurowi nie mają obecnie narzędzia, które pozwoliłoby im samodzie
 | F24 | Placeholdery dynamicznej daty `{{date±Nd/m/y:FORMAT}}` obliczane przy generowaniu (PDF/ZPL) | P0 |
 | F25 | Konektor lokalny (Go): print server — druk ZPL bezpośrednio na drukarki sieciowe (rozszerza F21) — **zrealizowane w v0.7.0** | P1 |
 | F26 | Konektor: kolejka wydruków po stronie serwera + tokeny urządzeń (druk zdalny przez polling agenta) — **zrealizowane w v0.6.0** | P1 |
-| F27 | Konektor: wirtualna drukarka Windows — przechwytywanie ZPL z innych aplikacji + „Inbox" w web appce (import do edytora) | P2 |
+| F27 | Konektor: wirtualna drukarka Windows — przechwytywanie ZPL z innych aplikacji + „Inbox" w web appce (import do edytora) — **zrealizowane w v0.8.0** | P2 |
 | F28 | Dokumentacja użytkownika: instrukcja + FAQ (PL/EN), placeholdery na screenshoty z opisami | P0 |
 | F29 | Walidacja ZPL na wejściu (kolejka druku, przechwyty, import): sanity-check `^XA…^XZ`, limity rozmiaru, odrzucanie nie-ZPL (np. omyłkowo wysłanych stron błędów HTML) z czytelnym komunikatem | P1 |
 
@@ -338,8 +338,8 @@ KONEKTOR (F26 zaimplementowane w v0.6.0; agent auth tokenem urządzenia Bearer, 
   GET    /api/agent/jobs              → polling agenta: claim oczekujących zadań (pending→sent)
   POST   /api/agent/jobs/:id/status   → done|error (raport agenta)
   POST   /api/agent/state             → heartbeat: wersja agenta + lista drukarek
-  POST   /api/agent/captures          (P2, planowane) → upload ZPL z wirtualnej drukarki
-  GET    /api/captures                (P2, planowane) → „Inbox" przechwyconych etykiet
+  POST   /api/agent/captures          → upload ZPL z wirtualnej drukarki (v0.8.0)
+  GET    /api/captures                → „Inbox"; GET/DELETE /api/captures/:id (v0.8.0)
 ```
 
 ### 7.2 Integracje zewnętrzne
