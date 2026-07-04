@@ -346,5 +346,15 @@
     "failed": "Printing failed.",
     "deviceOfflineHint": "This device is offline — the job will wait in the queue until the agent connects.",
     "noDevices": "You don't have a connector device yet. Add one on the page:"
+  },
+  "captures": {
+    "title": "Inbox — captured labels",
+    "intro": "Labels printed from other applications to the connector's virtual printer land here. Open one in the editor (elements become editable), copy the ZPL, or delete it.",
+    "empty": "No captured labels yet. Configure the virtual printer in the agent's config.yaml (capture section) and print something from any application.",
+    "capturedAt": "Captured",
+    "size": "Size",
+    "openInEditor": "Open in editor",
+    "confirmDelete": "Delete this captured label?",
+    "templateName": "Captured: {{device}} {{date}}"
   }
 }

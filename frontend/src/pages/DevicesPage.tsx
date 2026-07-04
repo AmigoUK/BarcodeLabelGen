@@ -6,12 +6,16 @@
 
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
+import { useNavigate } from "react-router-dom";
 import { Button } from "../components/ui/Button";
 import { Input } from "../components/ui/Input";
 import { Modal } from "../components/ui/Modal";
+import { fetchCaptureZpl, useCaptures, useDeleteCapture } from "../hooks/useCaptures";
 import { useCreateDevice, useDeleteDevice, useDevices } from "../hooks/useDevices";
+import { useCreateTemplate, useLabelFormats } from "../hooks/useTemplates";
+import { useParseZpl } from "../hooks/useZpl";
 import { ApiError } from "../lib/api";
-import type { Device } from "../lib/types";
+import type { Capture, Device } from "../lib/types";
 
 const ONLINE_WINDOW_MS = 60_000;
 
@@ -109,7 +113,131 @@ export function DevicesPage() {
       )}
 
       <CreateDeviceModal open={showCreate} onClose={() => setShowCreate(false)} />
+
+      <CapturesInbox devices={devices ?? []} />
     </div>
+  );
+}
+
+function formatBytes(n: number): string {
+  if (n < 1024) return `${n} B`;
+  if (n < 1024 * 1024) return `${(n / 1024).toFixed(1)} kB`;
+  return `${(n / 1024 / 1024).toFixed(1)} MB`;
+}
+
+function CapturesInbox({ devices }: { devices: Device[] }) {
+  const { t } = useTranslation();
+  const navigate = useNavigate();
+  const { data: captures } = useCaptures();
+  const deleteCapture = useDeleteCapture();
+  const parseZpl = useParseZpl();
+  const createTemplate = useCreateTemplate();
+  const { data: formats } = useLabelFormats();
+  const [busyId, setBusyId] = useState<number | null>(null);
+  const [copiedId, setCopiedId] = useState<number | null>(null);
+  const [error, setError] = useState<string | null>(null);
+
+  const deviceName = (id: number) => devices.find((d) => d.id === id)?.name ?? `#${id}`;
+
+  const openInEditor = async (capture: Capture) => {
+    const customFormat = formats?.find((f) => f.kind === "custom");
+    if (!customFormat) return;
+    setBusyId(capture.id);
+    setError(null);
+    try {
+      const zpl = await fetchCaptureZpl(capture.id);
+      const parsed = await parseZpl.mutateAsync({ zpl, dpi: "auto" });
+      const stage = parsed.canvas_data.stage;
+      const created = await createTemplate.mutateAsync({
+        name: t("captures.templateName", {
+          device: deviceName(capture.device_id),
+          date: new Date(capture.created_at).toLocaleString(),
+        }),
+        format_id: customFormat.id,
+        width_mm: stage.width_mm,
+        height_mm: stage.height_mm,
+        canvas_data: parsed.canvas_data,
+      });
+      navigate(`/templates/${created.id}/edit`);
+    } catch (err) {
+      setError(err instanceof Error ? err.message : t("auth.errors.generic"));
+    } finally {
+      setBusyId(null);
+    }
+  };
+
+  const copyZpl = async (capture: Capture) => {
+    const zpl = await fetchCaptureZpl(capture.id);
+    await navigator.clipboard.writeText(zpl);
+    setCopiedId(capture.id);
+    setTimeout(() => setCopiedId(null), 2000);
+  };
+
+  return (
+    <section className="space-y-3 pt-4">
+      <h2 className="text-lg font-semibold">{t("captures.title")}</h2>
+      <p className="max-w-3xl text-sm text-slate-400">{t("captures.intro")}</p>
+
+      {captures && captures.length === 0 && (
+        <p className="rounded-lg border border-dashed border-slate-700 p-6 text-center text-sm text-slate-400">
+          {t("captures.empty")}
+        </p>
+      )}
+
+      {error && (
+        <div className="rounded-md border border-rose-900 bg-rose-950/50 px-3 py-2 text-sm text-rose-300">
+          {error}
+        </div>
+      )}
+
+      {captures && captures.length > 0 && (
+        <div className="overflow-hidden rounded-lg border border-slate-800">
+          <table className="w-full text-sm">
+            <thead className="bg-slate-900 text-left text-xs uppercase tracking-wider text-slate-400">
+              <tr>
+                <th className="px-4 py-3">{t("captures.capturedAt")}</th>
+                <th className="px-4 py-3">{t("devices.name")}</th>
+                <th className="px-4 py-3">{t("captures.size")}</th>
+                <th className="px-4 py-3"></th>
+              </tr>
+            </thead>
+            <tbody className="divide-y divide-slate-800 bg-slate-900/30">
+              {captures.map((c) => (
+                <tr key={c.id}>
+                  <td className="px-4 py-3 text-xs text-slate-300">
+                    {new Date(c.created_at).toLocaleString()}
+                  </td>
+                  <td className="px-4 py-3">{deviceName(c.device_id)}</td>
+                  <td className="px-4 py-3 text-xs text-slate-400">{formatBytes(c.size_bytes)}</td>
+                  <td className="space-x-2 px-4 py-3 text-right">
+                    <Button
+                      variant="secondary"
+                      disabled={busyId !== null}
+                      onClick={() => void openInEditor(c)}
+                    >
+                      {busyId === c.id ? t("common.loading") : t("captures.openInEditor")}
+                    </Button>
+                    <Button variant="ghost" onClick={() => void copyZpl(c)}>
+                      {copiedId === c.id ? t("zpl.copied") : t("zpl.copy")}
+                    </Button>
+                    <Button
+                      variant="ghost"
+                      onClick={() => {
+                        if (window.confirm(t("captures.confirmDelete"))) {
+                          deleteCapture.mutate(c.id);
+                        }
+                      }}
+                    >
+                      {t("common.delete")}
+                    </Button>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      )}
+    </section>
   );
 }
 

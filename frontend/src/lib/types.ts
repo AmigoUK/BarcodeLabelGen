@@ -49,3 +49,10 @@ export type PrintJob = {
   sent_at: string | null;
   finished_at: string | null;
 };
+
+export type Capture = {
+  id: number;
+  device_id: number;
+  size_bytes: number;
+  created_at: string;
+};

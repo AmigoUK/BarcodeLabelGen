@@ -346,5 +346,15 @@
     "failed": "Druk nie powiódł się.",
     "deviceOfflineHint": "To urządzenie jest offline — zadanie poczeka w kolejce, aż agent się połączy.",
     "noDevices": "Nie masz jeszcze żadnego urządzenia konektora. Dodaj je na stronie:"
+  },
+  "captures": {
+    "title": "Inbox — przechwycone etykiety",
+    "intro": "Etykiety wydrukowane z innych aplikacji na wirtualną drukarkę konektora trafiają tutaj. Możesz je otworzyć w edytorze (elementy staną się edytowalne), skopiować kod ZPL albo usunąć.",
+    "empty": "Brak przechwyconych etykiet. Skonfiguruj wirtualną drukarkę w config.yaml agenta (sekcja capture) i wydrukuj coś z dowolnej aplikacji.",
+    "capturedAt": "Przechwycono",
+    "size": "Rozmiar",
+    "openInEditor": "Otwórz w edytorze",
+    "confirmDelete": "Usunąć przechwyconą etykietę?",
+    "templateName": "Przechwycone: {{device}} {{date}}"
   }
 }

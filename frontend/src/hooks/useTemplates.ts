@@ -67,6 +67,8 @@ type CreateTemplateInput = {
    * missing field. */
   width_mm?: number;
   height_mm?: number;
+  /** Initial canvas — used when creating a template from captured ZPL. */
+  canvas_data?: CanvasData;
 };
 
 export function useCreateTemplate() {
