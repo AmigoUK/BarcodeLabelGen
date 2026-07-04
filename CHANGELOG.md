@@ -9,6 +9,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 _Nothing yet._
 
+## [0.12.1] — 2026-07-04
+
+### Security
+- Neutralized stored XSS via user-uploaded SVG: both image-serving
+  endpoints (`/api/assets/images/:id`, `/api/templates/:id/featured-image`)
+  now respond with `Content-Security-Policy: default-src 'none'; sandbox`
+  and `X-Content-Type-Options: nosniff`, blocking script execution on
+  direct navigation while leaving `<img>` thumbnails untouched.
+
 ## [0.12.0] — 2026-07-04
 
 ### Added
@@ -252,7 +261,8 @@ _Nothing yet._
   label formats, dataset upload (CSV/XLSX/SQLite) with `{{column}}`
   mail-merge, and PDF single-label + batch generation via ReportLab.
 
-[Unreleased]: https://github.com/AmigoUK/BarcodeLabelGen/compare/v0.12.0...HEAD
+[Unreleased]: https://github.com/AmigoUK/BarcodeLabelGen/compare/v0.12.1...HEAD
+[0.12.1]: https://github.com/AmigoUK/BarcodeLabelGen/releases/tag/v0.12.1
 [0.12.0]: https://github.com/AmigoUK/BarcodeLabelGen/releases/tag/v0.12.0
 [0.11.0]: https://github.com/AmigoUK/BarcodeLabelGen/releases/tag/v0.11.0
 [0.10.0]: https://github.com/AmigoUK/BarcodeLabelGen/releases/tag/v0.10.0
