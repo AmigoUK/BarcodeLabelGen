@@ -9,6 +9,31 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 _Nothing yet._
 
+## [0.11.0] — 2026-07-04
+
+### Added
+- **Template folders, the Library and sharing (F31, consolidating
+  F15/F16).** Flat private folders organize the Templates page (rail
+  with counts, All / No folder filters; deleting a folder strands its
+  templates back to "No folder"; alembic 0009). A per-card
+  ⚙ settings dialog moves templates between folders and shares them
+  into the new **Library** page, which lists six bundled ready-made
+  starters (product EAN-13 with dates, shipping address, shelf price,
+  best-before, warehouse QR, inventory sticker — plain
+  `.blg-template.json` files under `backend/app/library/`) alongside
+  user-shared templates. "Use" always clones into your own templates
+  (image assets copied across owners, sha256-deduped) and opens the
+  editor. API: `/api/folders` CRUD, `scope=mine|library` +
+  `folder_id` filters on the template list, `POST
+  /api/templates/:id/clone`, `GET/POST /api/library/starters`.
+
+### Changed
+- **BREAKING (API):** `GET /api/templates` now returns only the
+  caller's own templates by default; other users' shared templates
+  moved to `?scope=library` (previously they were mixed into the main
+  list). The UI reflects this: the Templates page is yours, the
+  Library is everyone's.
+
 ## [0.10.0] — 2026-07-04
 
 ### Added
@@ -213,7 +238,8 @@ _Nothing yet._
   label formats, dataset upload (CSV/XLSX/SQLite) with `{{column}}`
   mail-merge, and PDF single-label + batch generation via ReportLab.
 
-[Unreleased]: https://github.com/AmigoUK/BarcodeLabelGen/compare/v0.10.0...HEAD
+[Unreleased]: https://github.com/AmigoUK/BarcodeLabelGen/compare/v0.11.0...HEAD
+[0.11.0]: https://github.com/AmigoUK/BarcodeLabelGen/releases/tag/v0.11.0
 [0.10.0]: https://github.com/AmigoUK/BarcodeLabelGen/releases/tag/v0.10.0
 [0.9.0]: https://github.com/AmigoUK/BarcodeLabelGen/releases/tag/v0.9.0
 [0.8.0]: https://github.com/AmigoUK/BarcodeLabelGen/releases/tag/v0.8.0
