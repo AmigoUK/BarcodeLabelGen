@@ -9,6 +9,25 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 _Nothing yet._
 
+## [0.14.0] — 2026-07-04
+
+### Added
+- **Template version history (F17).** A manual save (Save button /
+  Ctrl+S) now records a snapshot; autosave keeps overwriting the live
+  canvas without adding a version, so history stays free of 30-second
+  noise. New 🕘 History toolbar button lists versions (number, note,
+  time, author) and restores any of them — the restore itself becomes a
+  new "restored from vN" version, so it's reversible. Retention: last 30
+  per template. `PUT /api/templates/:id` gains `snapshot:bool`; new
+  `GET .../versions`, `GET .../versions/:n`,
+  `POST .../versions/:n/restore` (owner-only). Table `template_versions`
+  (alembic 0011).
+
+### Changed
+- `Template.version` now increments only on a manual save (previously
+  every canvas write, including autosave). The number equals the count
+  of deliberate saves.
+
 ## [0.13.0] — 2026-07-04
 
 ### Added
@@ -281,7 +300,8 @@ _Nothing yet._
   label formats, dataset upload (CSV/XLSX/SQLite) with `{{column}}`
   mail-merge, and PDF single-label + batch generation via ReportLab.
 
-[Unreleased]: https://github.com/AmigoUK/BarcodeLabelGen/compare/v0.13.0...HEAD
+[Unreleased]: https://github.com/AmigoUK/BarcodeLabelGen/compare/v0.14.0...HEAD
+[0.14.0]: https://github.com/AmigoUK/BarcodeLabelGen/releases/tag/v0.14.0
 [0.13.0]: https://github.com/AmigoUK/BarcodeLabelGen/releases/tag/v0.13.0
 [0.12.1]: https://github.com/AmigoUK/BarcodeLabelGen/releases/tag/v0.12.1
 [0.12.0]: https://github.com/AmigoUK/BarcodeLabelGen/releases/tag/v0.12.0

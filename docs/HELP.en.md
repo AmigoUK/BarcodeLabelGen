@@ -205,6 +205,10 @@ The editor saves every few seconds on its own. Status sits in the toolbar:
 
 You can also click **Save** manually.
 
+### Version history
+
+Every **manual** save (the **Save** button or **Ctrl+S**) creates a template version. Autosave overwrites the current state and does **not** clutter the history. The **🕘 History** toolbar button lists the versions (number, date, author) — click **Restore** to go back to the one you want. Restoring saves the current state as a new version ("restored from vN"), so it is reversible. The app keeps the last 30 versions per template.
+
 ### Changing the label size
 
 The size you picked when creating the template **can be changed at any time**: click the **📐 {width}×{height}** button in the toolbar.

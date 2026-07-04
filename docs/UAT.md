@@ -130,6 +130,14 @@ Testy oznaczone 🔴 są **blokujące** dla decyzji o prod; 🟡 — ważne, ale
   zero kwadracików.
   Wynik: ..................................................
 
+## H. Wersjonowanie (v0.14.0)
+
+- [ ] 🟡 **H1. Historia i przywracanie.** W edytorze zrób 2–3 ręczne zapisy (Ctrl+S)
+  z różnymi zmianami, otwórz **🕘 Historia**, przywróć starszą wersję. *Oczekiwane:*
+  canvas wraca do wybranego stanu; autozapis (poczekaj ~30 s bez klikania Zapisz)
+  nie dorzuca wersji do listy.
+  Wynik: ..................................................
+
 ---
 
 ## Decyzja

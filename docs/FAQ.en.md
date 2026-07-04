@@ -18,6 +18,9 @@ Left menu → **Templates** → **New template** button in the top-right of the 
 ### Can I change the label size after I created the template?
 Yes. In the editor, click the **📐 {width}×{height}** button in the toolbar, type new dimensions in mm or pick a preset, and click **Apply**. Objects keep their positions in mm (they are not rescaled).
 
+### Can I go back to an earlier version of a template?
+Yes — **🕘 History** in the editor. Every manual save (Save/Ctrl+S) creates a version; click **Restore** next to the one you want. Autosave does not create a version, so the list stays short and readable (we keep the last 30).
+
 ### How do I save a template?
 The editor saves on its own (autosave every few seconds — see the toolbar status). You can also press **Ctrl/Cmd + S** manually.
 

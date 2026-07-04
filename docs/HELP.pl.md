@@ -205,6 +205,10 @@ Edytor sam zapisuje co kilka sekund. Status w toolbarze:
 
 Możesz też ręcznie kliknąć **Zapisz**.
 
+### Historia wersji
+
+Każde **ręczne** zapisanie (przycisk **Zapisz** lub **Ctrl+S**) tworzy wersję szablonu. Autozapis nadpisuje bieżący stan i **nie** zaśmieca historii. Przycisk **🕘 Historia** w toolbarze pokazuje listę wersji (numer, data, autor) — kliknij **Przywróć**, aby wrócić do wybranej. Przywrócenie zapisuje bieżący stan jako nową wersję („restored from vN"), więc jest odwracalne. Program trzyma 30 ostatnich wersji na szablon.
+
 ### Zmiana rozmiaru etykiety
 
 Rozmiar ustawiony przy tworzeniu szablonu **można zmienić w każdej chwili**: w toolbarze kliknij przycisk **📐 {szerokość}×{wysokość}**.

@@ -18,6 +18,9 @@ Lewe menu → **Szablony** → przycisk **Nowy szablon** w prawym górnym rogu l
 ### Czy mogę zmienić rozmiar etykiety po utworzeniu szablonu?
 Tak. W edytorze kliknij w toolbarze przycisk **📐 {szerokość}×{wysokość}**, wpisz nowe wymiary w mm albo wybierz preset i kliknij **Zastosuj**. Obiekty zachowują pozycje w mm (nie są przeskalowywane).
 
+### Czy mogę cofnąć się do wcześniejszej wersji szablonu?
+Tak — **🕘 Historia** w edytorze. Każdy ręczny zapis (Zapisz/Ctrl+S) tworzy wersję; kliknij **Przywróć** przy wybranej. Autozapis nie tworzy wersji, więc lista jest krótka i czytelna (trzymamy 30 ostatnich).
+
 ### Jak zapisać szablon?
 Edytor zapisuje sam (autozapis co kilka sekund — status widać w toolbarze). Możesz też ręcznie **Ctrl/Cmd + S**.
 
