@@ -88,7 +88,8 @@
     "help": "Pomoc",
     "admin": "Administracja",
     "users": "Użytkownicy",
-    "devices": "Urządzenia"
+    "devices": "Urządzenia",
+    "library": "Biblioteka"
   },
   "help": {
     "title": "Pomoc",
@@ -140,7 +141,13 @@
     "importDupCreateNew": "Utwórz nową kopię",
     "importWarnings": "Ostrzeżenia",
     "importSubmit": "Importuj",
-    "importErrorBadFile": "Nie udało się odczytać pliku — czy to plik .blg-template.json?"
+    "importErrorBadFile": "Nie udało się odczytać pliku — czy to plik .blg-template.json?",
+    "settings": "Ustawienia",
+    "settingsTooltip": "Folder i udostępnianie",
+    "settingsTitle": "Ustawienia szablonu",
+    "shareToggle": "Udostępnij w Bibliotece",
+    "shareHint": "Wszyscy zalogowani zobaczą szablon w Bibliotece i będą mogli go sklonować („Użyj\"). Edytować możesz tylko Ty.",
+    "sharedBadge": "Udostępniony w Bibliotece"
   },
   "editor": {
     "add": "Dodaj",
@@ -359,5 +366,28 @@
     "openInEditor": "Otwórz w edytorze",
     "confirmDelete": "Usunąć przechwyconą etykietę?",
     "templateName": "Przechwycone: {{device}} {{date}}"
+  },
+  "folders": {
+    "title": "Foldery",
+    "all": "Wszystkie",
+    "unfiled": "Bez folderu",
+    "new": "Nowy folder",
+    "namePlaceholder": "Nazwa folderu",
+    "rename": "Zmień nazwę",
+    "renamePrompt": "Nowa nazwa folderu:",
+    "confirmDelete": "Usunąć folder „{{name}}\"? Szablony w nim zostaną (trafią do „Bez folderu\").",
+    "moveTo": "Folder",
+    "errors": {
+      "nameTaken": "Masz już folder o tej nazwie."
+    }
+  },
+  "library": {
+    "title": "Biblioteka",
+    "intro": "Gotowe projekty na start i szablony udostępnione przez innych użytkowników. „Użyj\" tworzy Twoją własną kopię i otwiera ją w edytorze.",
+    "starters": "Gotowe projekty",
+    "fromUsers": "Od użytkowników",
+    "use": "Użyj",
+    "yourTemplate": "Twój szablon",
+    "emptyShared": "Nikt jeszcze niczego nie udostępnił. Udostępnij swój szablon: Szablony → ⚙ na kafelku → „Udostępnij w Bibliotece\"."
   }
 }

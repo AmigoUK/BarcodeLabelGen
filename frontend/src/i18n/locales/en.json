@@ -88,7 +88,8 @@
     "help": "Help",
     "admin": "Administration",
     "users": "Users",
-    "devices": "Devices"
+    "devices": "Devices",
+    "library": "Library"
   },
   "help": {
     "title": "Help",
@@ -140,7 +141,13 @@
     "importDupCreateNew": "Create new copy",
     "importWarnings": "Warnings",
     "importSubmit": "Import",
-    "importErrorBadFile": "Couldn't read the file — is it a .blg-template.json export?"
+    "importErrorBadFile": "Couldn't read the file — is it a .blg-template.json export?",
+    "settings": "Settings",
+    "settingsTooltip": "Folder & sharing",
+    "settingsTitle": "Template settings",
+    "shareToggle": "Share in the Library",
+    "shareHint": "Everyone signed in will see this template in the Library and can clone it (\"Use\"). Only you can edit it.",
+    "sharedBadge": "Shared in the Library"
   },
   "editor": {
     "add": "Add",
@@ -359,5 +366,28 @@
     "openInEditor": "Open in editor",
     "confirmDelete": "Delete this captured label?",
     "templateName": "Captured: {{device}} {{date}}"
+  },
+  "folders": {
+    "title": "Folders",
+    "all": "All",
+    "unfiled": "No folder",
+    "new": "New folder",
+    "namePlaceholder": "Folder name",
+    "rename": "Rename",
+    "renamePrompt": "New folder name:",
+    "confirmDelete": "Delete folder \"{{name}}\"? Its templates stay (moved to \"No folder\").",
+    "moveTo": "Folder",
+    "errors": {
+      "nameTaken": "You already have a folder with this name."
+    }
+  },
+  "library": {
+    "title": "Library",
+    "intro": "Ready-made starter projects and templates shared by other users. \"Use\" creates your own copy and opens it in the editor.",
+    "starters": "Ready-made projects",
+    "fromUsers": "From users",
+    "use": "Use",
+    "yourTemplate": "Your template",
+    "emptyShared": "Nothing shared yet. Share yours: Templates → ⚙ on a card → \"Share in the Library\"."
   }
 }

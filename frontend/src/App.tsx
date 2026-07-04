@@ -5,6 +5,7 @@ import { AppLayout } from "./layouts/AppLayout";
 import { ChangePasswordPage } from "./pages/ChangePasswordPage";
 import { DashboardPage } from "./pages/DashboardPage";
 import { DevicesPage } from "./pages/DevicesPage";
+import { LibraryPage } from "./pages/LibraryPage";
 import { LoginPage } from "./pages/LoginPage";
 import { TemplatesPage } from "./pages/TemplatesPage";
 import { UsersPage } from "./pages/admin/UsersPage";
@@ -75,6 +76,16 @@ export function App() {
                 <Suspense fallback={<PageFallback />}>
                   <HelpPage />
                 </Suspense>
+              </AppLayout>
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/library"
+          element={
+            <ProtectedRoute>
+              <AppLayout>
+                <LibraryPage />
               </AppLayout>
             </ProtectedRoute>
           }

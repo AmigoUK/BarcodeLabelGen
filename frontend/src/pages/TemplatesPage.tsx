@@ -7,19 +7,31 @@ import { Input } from "../components/ui/Input";
 import { Modal } from "../components/ui/Modal";
 import { Select } from "../components/ui/Select";
 import {
+  type TemplateSummary,
   exportTemplateToFile,
   useCreateTemplate,
   useDeleteTemplate,
   useLabelFormats,
   useTemplates,
+  useUpdateTemplate,
 } from "../hooks/useTemplates";
+import {
+  useCreateFolder,
+  useDeleteFolder,
+  useFolders,
+  useRenameFolder,
+} from "../hooks/useFolders";
+
+type FolderFilter = "all" | "none" | number;
 
 export function TemplatesPage() {
   const { t } = useTranslation();
-  const templates = useTemplates();
+  const [folderFilter, setFolderFilter] = useState<FolderFilter>("all");
+  const templates = useTemplates(folderFilter === "all" ? undefined : folderFilter);
   const del = useDeleteTemplate();
   const [showCreate, setShowCreate] = useState(false);
   const [showImport, setShowImport] = useState(false);
+  const [settingsFor, setSettingsFor] = useState<TemplateSummary | null>(null);
   const [query, setQuery] = useState("");
 
   const filtered = templates.data
@@ -29,7 +41,10 @@ export function TemplatesPage() {
     : [];
 
   return (
-    <div className="space-y-6">
+    <div className="flex gap-6">
+      <FolderRail active={folderFilter} onSelect={setFolderFilter} />
+
+      <div className="min-w-0 flex-1 space-y-6">
       <header className="flex flex-wrap items-center justify-between gap-3">
         <h1 className="text-2xl font-bold">{t("nav.templates")}</h1>
         <div className="flex items-center gap-2">
@@ -71,7 +86,14 @@ export function TemplatesPage() {
               href={`/templates/${tpl.id}/edit`}
               className="group rounded-lg border border-slate-800 bg-slate-900/50 p-4 transition-colors hover:border-indigo-600"
             >
-              <h3 className="mb-1 truncate font-semibold text-slate-100">{tpl.name}</h3>
+              <h3 className="mb-1 truncate font-semibold text-slate-100">
+                {tpl.is_shared && (
+                  <span className="mr-1" title={t("templates.sharedBadge")}>
+                    📚
+                  </span>
+                )}
+                {tpl.name}
+              </h3>
               <p className="text-xs text-slate-500">
                 {tpl.width_mm} × {tpl.height_mm} mm
               </p>
@@ -82,6 +104,18 @@ export function TemplatesPage() {
                 <span>v{tpl.version}</span>
                 <span>{new Date(tpl.updated_at).toLocaleDateString()}</span>
                 <div className="flex items-center gap-1 opacity-0 group-hover:opacity-100">
+                  <button
+                    type="button"
+                    onClick={(e) => {
+                      e.preventDefault();
+                      setSettingsFor(tpl);
+                    }}
+                    className="rounded px-1.5 py-0.5 text-slate-400 hover:bg-slate-800 hover:text-slate-100"
+                    aria-label={t("templates.settings")}
+                    title={t("templates.settingsTooltip")}
+                  >
+                    ⚙
+                  </button>
                   <button
                     type="button"
                     onClick={(e) => {
@@ -119,7 +153,198 @@ export function TemplatesPage() {
 
       {showCreate && <NewTemplateModal onClose={() => setShowCreate(false)} />}
       {showImport && <ImportTemplateModal onClose={() => setShowImport(false)} />}
+      {settingsFor && (
+        <TemplateSettingsModal template={settingsFor} onClose={() => setSettingsFor(null)} />
+      )}
+      </div>
     </div>
+  );
+}
+
+function FolderRail({
+  active,
+  onSelect,
+}: {
+  active: FolderFilter;
+  onSelect: (f: FolderFilter) => void;
+}) {
+  const { t } = useTranslation();
+  const folders = useFolders();
+  const createFolder = useCreateFolder();
+  const renameFolder = useRenameFolder();
+  const deleteFolder = useDeleteFolder();
+  const [newName, setNewName] = useState("");
+  const [adding, setAdding] = useState(false);
+
+  const item = (key: FolderFilter, label: string, count?: number | null) => (
+    <button
+      type="button"
+      onClick={() => onSelect(key)}
+      className={[
+        "group/f flex w-full items-center justify-between rounded px-2 py-1.5 text-left text-sm",
+        active === key ? "bg-indigo-600 text-white" : "text-slate-300 hover:bg-slate-800",
+      ].join(" ")}
+    >
+      <span className="truncate">📁 {label}</span>
+      <span className="flex items-center gap-1">
+        {typeof key === "number" && (
+          <span className="hidden gap-0.5 group-hover/f:flex">
+            <span
+              role="button"
+              tabIndex={0}
+              title={t("folders.rename")}
+              className="rounded px-1 hover:bg-slate-700"
+              onClick={(e) => {
+                e.stopPropagation();
+                const name = window.prompt(t("folders.renamePrompt"), label);
+                if (name?.trim()) renameFolder.mutate({ id: key, name: name.trim() });
+              }}
+            >
+              ✎
+            </span>
+            <span
+              role="button"
+              tabIndex={0}
+              title={t("common.delete")}
+              className="rounded px-1 text-rose-400 hover:bg-rose-950/60"
+              onClick={(e) => {
+                e.stopPropagation();
+                if (window.confirm(t("folders.confirmDelete", { name: label }))) {
+                  deleteFolder.mutate(key);
+                  if (active === key) onSelect("all");
+                }
+              }}
+            >
+              ✕
+            </span>
+          </span>
+        )}
+        {count != null && <span className="text-xs opacity-70">{count}</span>}
+      </span>
+    </button>
+  );
+
+  return (
+    <aside className="w-52 shrink-0 space-y-1">
+      <h2 className="px-2 pb-1 text-xs font-semibold uppercase tracking-wider text-slate-500">
+        {t("folders.title")}
+      </h2>
+      {item("all", t("folders.all"))}
+      {folders.data?.map((f) => item(f.id, f.name, f.template_count))}
+      {item("none", t("folders.unfiled"))}
+      {adding ? (
+        <form
+          className="flex gap-1 px-1 pt-1"
+          onSubmit={(e) => {
+            e.preventDefault();
+            if (!newName.trim()) return;
+            createFolder.mutate(newName.trim(), {
+              onSuccess: () => {
+                setNewName("");
+                setAdding(false);
+              },
+            });
+          }}
+        >
+          <input
+            autoFocus
+            value={newName}
+            onChange={(e) => setNewName(e.target.value)}
+            onKeyDown={(e) => e.key === "Escape" && setAdding(false)}
+            placeholder={t("folders.namePlaceholder")}
+            className="w-full rounded border border-slate-700 bg-slate-900 px-2 py-1 text-sm text-slate-100"
+          />
+          <Button type="submit" className="!px-2 !py-1 text-xs">
+            ✓
+          </Button>
+        </form>
+      ) : (
+        <button
+          type="button"
+          onClick={() => setAdding(true)}
+          className="w-full rounded px-2 py-1.5 text-left text-sm text-indigo-400 hover:bg-slate-800"
+        >
+          + {t("folders.new")}
+        </button>
+      )}
+      {createFolder.error && (
+        <p className="px-2 text-xs text-rose-400">{t("folders.errors.nameTaken")}</p>
+      )}
+    </aside>
+  );
+}
+
+function TemplateSettingsModal({
+  template,
+  onClose,
+}: {
+  template: TemplateSummary;
+  onClose: () => void;
+}) {
+  const { t } = useTranslation();
+  const folders = useFolders();
+  const update = useUpdateTemplate();
+  const [folderId, setFolderId] = useState<number | "">(template.folder_id ?? "");
+  const [shared, setShared] = useState(template.is_shared);
+
+  return (
+    <Modal
+      open
+      onClose={onClose}
+      title={`${t("templates.settingsTitle")} — ${template.name}`}
+      footer={
+        <>
+          <Button variant="secondary" onClick={onClose}>
+            {t("common.cancel")}
+          </Button>
+          <Button
+            disabled={update.isPending}
+            onClick={() =>
+              update.mutate(
+                {
+                  id: template.id,
+                  patch: {
+                    folder_id: folderId === "" ? null : folderId,
+                    is_shared: shared,
+                  },
+                },
+                { onSuccess: onClose },
+              )
+            }
+          >
+            {t("common.save")}
+          </Button>
+        </>
+      }
+    >
+      <div className="space-y-4">
+        <Select
+          label={t("folders.moveTo")}
+          value={folderId}
+          onChange={(e) => setFolderId(e.target.value === "" ? "" : Number(e.target.value))}
+        >
+          <option value="">— {t("folders.unfiled")} —</option>
+          {folders.data?.map((f) => (
+            <option key={f.id} value={f.id}>
+              {f.name}
+            </option>
+          ))}
+        </Select>
+        <label className="flex cursor-pointer items-start gap-2 text-sm text-slate-200">
+          <input
+            type="checkbox"
+            checked={shared}
+            onChange={(e) => setShared(e.target.checked)}
+            className="mt-0.5 h-4 w-4 rounded border-slate-700 bg-slate-900 text-indigo-600"
+          />
+          <span>
+            📚 {t("templates.shareToggle")}
+            <span className="block text-xs text-slate-500">{t("templates.shareHint")}</span>
+          </span>
+        </label>
+        {update.error && <p className="text-sm text-rose-400">{t("auth.errors.generic")}</p>}
+      </div>
+    </Modal>
   );
 }
 

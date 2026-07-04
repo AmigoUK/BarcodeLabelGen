@@ -23,6 +23,9 @@ export type TemplateSummary = {
   height_mm: number;
   is_shared: boolean;
   version: number;
+  folder_id: number | null;
+  /** Present only in library listings — who shared this template. */
+  owner_email: string | null;
   created_at: string;
   updated_at: string;
 };
@@ -42,10 +45,62 @@ export function useLabelFormats() {
   });
 }
 
-export function useTemplates() {
+/** Own templates; `folder` narrows to one folder id or "none" (unfiled). */
+export function useTemplates(folder?: number | "none") {
+  const param = folder !== undefined ? `?folder_id=${folder}` : "";
   return useQuery({
-    queryKey: TEMPLATES_KEY,
-    queryFn: () => api<{ templates: TemplateSummary[] }>("/api/templates").then((r) => r.templates),
+    queryKey: [...TEMPLATES_KEY, folder ?? "all"],
+    queryFn: () =>
+      api<{ templates: TemplateSummary[] }>(`/api/templates${param}`).then((r) => r.templates),
+  });
+}
+
+/** Everything shared into the library (all owners, annotated with email). */
+export function useLibraryTemplates() {
+  return useQuery({
+    queryKey: [...TEMPLATES_KEY, "library"],
+    queryFn: () =>
+      api<{ templates: TemplateSummary[] }>("/api/templates?scope=library").then(
+        (r) => r.templates,
+      ),
+  });
+}
+
+export function useCloneTemplate() {
+  const qc = useQueryClient();
+  return useMutation({
+    mutationFn: (id: number) =>
+      api<TemplateDetail>(`/api/templates/${id}/clone`, { method: "POST" }),
+    onSuccess: () => {
+      void qc.invalidateQueries({ queryKey: TEMPLATES_KEY });
+    },
+  });
+}
+
+export type Starter = {
+  slug: string;
+  name: string;
+  description: string | null;
+  width_mm: number;
+  height_mm: number;
+};
+
+export function useStarters() {
+  return useQuery({
+    queryKey: ["library", "starters"],
+    queryFn: () => api<{ starters: Starter[] }>("/api/library/starters").then((r) => r.starters),
+    staleTime: 5 * 60_000,
+  });
+}
+
+export function useUseStarter() {
+  const qc = useQueryClient();
+  return useMutation({
+    mutationFn: (slug: string) =>
+      api<TemplateDetail>(`/api/library/starters/${slug}/use`, { method: "POST" }),
+    onSuccess: () => {
+      void qc.invalidateQueries({ queryKey: TEMPLATES_KEY });
+    },
   });
 }
 
@@ -94,6 +149,7 @@ type UpdateTemplateInput = {
     is_shared: boolean;
     width_mm: number;
     height_mm: number;
+    folder_id: number | null;
   }>;
 };
 
