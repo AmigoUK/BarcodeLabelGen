@@ -43,7 +43,8 @@
     "dataset": "Dataset",
     "datasetPick": "Choose a dataset…",
     "generateBatch": "Generate .zpl",
-    "generating": "Generating…"
+    "generating": "Generating…",
+    "invalidZpl": "This doesn't look like ZPL. A label must contain ^XA at the start and ^XZ at the end — check that you didn't paste e.g. an HTML page or a PDF file."
   },
   "labelSize": {
     "title": "Label size",

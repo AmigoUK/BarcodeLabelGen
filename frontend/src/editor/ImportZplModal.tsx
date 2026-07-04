@@ -4,6 +4,7 @@ import { Button } from "../components/ui/Button";
 import { Modal } from "../components/ui/Modal";
 import { Select } from "../components/ui/Select";
 import { type ZplParseResult, useParseZpl } from "../hooks/useZpl";
+import { ApiError } from "../lib/api";
 import type { CanvasData } from "./types";
 
 type Props = {
@@ -89,9 +90,11 @@ export function ImportZplModal({ open, onClose, currentStage, onImported }: Prop
   };
 
   const error = parse.error
-    ? parse.error instanceof Error
-      ? parse.error.message
-      : String(parse.error)
+    ? parse.error instanceof ApiError && parse.error.code === "invalid_zpl"
+      ? t("zpl.invalidZpl")
+      : parse.error instanceof Error
+        ? parse.error.message
+        : String(parse.error)
     : null;
 
   // Overflow hint: content clearly larger than the label suggests the wrong

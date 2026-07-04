@@ -43,7 +43,8 @@
     "dataset": "Dataset",
     "datasetPick": "Wybierz dataset…",
     "generateBatch": "Generuj .zpl",
-    "generating": "Generowanie…"
+    "generating": "Generowanie…",
+    "invalidZpl": "To nie wygląda na kod ZPL. Etykieta musi zawierać ^XA na początku i ^XZ na końcu — sprawdź, czy nie wklejono np. strony HTML albo pliku PDF."
   },
   "labelSize": {
     "title": "Rozmiar etykiety",

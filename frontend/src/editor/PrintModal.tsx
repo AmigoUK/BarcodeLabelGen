@@ -11,6 +11,7 @@ import { Input } from "../components/ui/Input";
 import { Modal } from "../components/ui/Modal";
 import { Select } from "../components/ui/Select";
 import { useDevices } from "../hooks/useDevices";
+import { ApiError } from "../lib/api";
 import { useCreatePrintJob, usePrintJobs } from "../hooks/usePrintJobs";
 import { useGenerateZpl } from "../hooks/useZpl";
 import type { Device } from "../lib/types";
@@ -86,7 +87,11 @@ export function PrintModal({ open, onClose, canvas }: Props) {
       });
       setWatchedJobId(job.id);
     } catch (err) {
-      setSubmitError(err instanceof Error ? err.message : t("auth.errors.generic"));
+      if (err instanceof ApiError && err.code === "invalid_zpl") {
+        setSubmitError(t("zpl.invalidZpl"));
+      } else {
+        setSubmitError(err instanceof Error ? err.message : t("auth.errors.generic"));
+      }
     }
   };
 
