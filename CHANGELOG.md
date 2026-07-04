@@ -9,6 +9,29 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 _Nothing yet._
 
+## [0.5.0] — 2026-07-04
+
+### Added
+- **Dynamic date placeholders** (`{{date}}`, `{{date+14d}}`, `{{date-7d}}`,
+  `{{date+3m}}`, `{{date+1y}}`, optional format suffix like
+  `{{date+14d:DD/MM/YY}}`; default `DD.MM.YYYY`). Computed at generation time
+  on all output paths — single-label PDF, batch PDF, template ZPL export and
+  batch ZPL. Month/year arithmetic clamps to month end (Jan 31 + 1m →
+  Feb 28/29). A dataset column literally named `date` still wins for the
+  plain `{{date}}` form; offset/format forms always compute. The editor
+  inspector shows date placeholders as a green chip with a live preview, and
+  the series wizard no longer requires mapping them to a column. Backend
+  container now pins `TZ` (default `Europe/London`) so "today" matches the
+  users' clock.
+- **User guide + FAQ refresh (PL/EN).** In-app help now covers the ZPL
+  round-trip, editable label size, DPI auto-detection and date placeholders;
+  described screenshot placeholders were added for later capture; the
+  never-shipped "Data imports" section was removed.
+- **Backlog + design spec** for the local connector (`blg-connector`, Go):
+  direct ZPL printing to network printers, server-side print queue with
+  device tokens, and a Windows virtual-printer capture flow (F24–F28 in
+  `docs/PROJECT.md`, spec in `docs/superpowers/specs/`).
+
 ## [0.4.1] — 2026-07-02
 
 ### Changed
@@ -84,7 +107,8 @@ _Nothing yet._
   label formats, dataset upload (CSV/XLSX/SQLite) with `{{column}}`
   mail-merge, and PDF single-label + batch generation via ReportLab.
 
-[Unreleased]: https://github.com/AmigoUK/BarcodeLabelGen/compare/v0.4.1...HEAD
+[Unreleased]: https://github.com/AmigoUK/BarcodeLabelGen/compare/v0.5.0...HEAD
+[0.5.0]: https://github.com/AmigoUK/BarcodeLabelGen/releases/tag/v0.5.0
 [0.4.1]: https://github.com/AmigoUK/BarcodeLabelGen/releases/tag/v0.4.1
 [0.4.0]: https://github.com/AmigoUK/BarcodeLabelGen/releases/tag/v0.4.0
 [0.3.0]: https://github.com/AmigoUK/BarcodeLabelGen/releases/tag/v0.3.0

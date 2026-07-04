@@ -3,6 +3,8 @@
 from __future__ import annotations
 
 import logging
+from importlib.metadata import PackageNotFoundError
+from importlib.metadata import version as pkg_version
 
 import psycopg
 import redis
@@ -13,6 +15,11 @@ from app.config import Config
 log = logging.getLogger(__name__)
 
 health_bp = Blueprint("health", __name__)
+
+try:
+    _VERSION = pkg_version("barcodelabelgen-backend")
+except PackageNotFoundError:  # editable/dev checkout without installed metadata
+    _VERSION = "dev"
 
 
 def _check_db(database_url: str) -> tuple[bool, str | None]:
@@ -48,7 +55,7 @@ def health() -> tuple[Response, int]:
     payload = {
         "status": "ok" if (db_ok and redis_ok) else "degraded",
         "service": "barcodelabelgen-backend",
-        "version": "0.1.0",
+        "version": _VERSION,
         "checks": {
             "database": {"ok": db_ok, "error": db_err},
             "redis": {"ok": redis_ok, "error": redis_err},

@@ -8,7 +8,8 @@ def test_health_returns_json_with_expected_keys(client: FlaskClient) -> None:
     body = response.get_json()
 
     assert body["service"] == "barcodelabelgen-backend"
-    assert body["version"] == "0.1.0"
+    # Version comes from installed package metadata ("dev" in a bare checkout)
+    assert body["version"]
     assert "checks" in body
     assert "database" in body["checks"]
     assert "redis" in body["checks"]
