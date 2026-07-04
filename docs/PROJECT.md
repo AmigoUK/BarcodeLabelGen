@@ -61,6 +61,11 @@ Pracownicy biurowi nie mają obecnie narzędzia, które pozwoliłoby im samodzie
 | F21 | Integracja Zebra Browser Print (bezpośredni druk ZPL) | P1 |
 | F22 | Integracja Toshiba (TSPL przez agenta lub Browser Print) | P2 |
 | F23 | Dodatkowe języki UI (DE, ES, FR — tłumaczenie społecznościowe) | P2 |
+| F24 | Placeholdery dynamicznej daty `{{date±Nd/m/y:FORMAT}}` obliczane przy generowaniu (PDF/ZPL) | P0 |
+| F25 | Konektor lokalny (Go): print server — druk ZPL bezpośrednio na drukarki sieciowe (rozszerza F21) | P1 |
+| F26 | Konektor: kolejka wydruków po stronie serwera + tokeny urządzeń (druk zdalny przez polling agenta) | P1 |
+| F27 | Konektor: wirtualna drukarka Windows — przechwytywanie ZPL z innych aplikacji + „Inbox" w web appce (import do edytora) | P2 |
+| F28 | Dokumentacja użytkownika: instrukcja + FAQ (PL/EN), placeholdery na screenshoty z opisami | P0 |
 
 ### 2.3 User Stories (wybrane kluczowe)
 
@@ -322,12 +327,20 @@ META
   GET    /api/me                      → profil zalogowanego
   GET    /api/health
   GET    /api/docs                    → Swagger UI
+
+KONEKTOR (planowane, F25–F27 — auth tokenem urządzenia, poza sesją/CSRF)
+  POST   /api/print-jobs              (P1) → { template/zpl, printer, copies } → { job_id }
+  GET    /api/agent/jobs              (P1) → polling agenta: oczekujące zadania druku
+  POST   /api/agent/jobs/:id/status   (P1) → done|error (raport agenta)
+  POST   /api/agent/captures          (P2) → upload ZPL przechwyconego przez wirtualną drukarkę
+  GET    /api/captures                (P2) → „Inbox" przechwyconych etykiet (import do edytora)
 ```
 
 ### 7.2 Integracje zewnętrzne
 - **Brak na MVP**
 - **P1**: Zebra Browser Print (JS SDK osadzony w SPA, komunikacja przez `localhost:9100` z lokalnym serwisem Zebra)
 - **P2**: Toshiba — przez Browser Print kompatybilny lub własny lekki agent (out of MVP scope)
+- **P1/P2**: własny konektor `blg-connector` (Go) — hybryda: lokalny HTTP `127.0.0.1:9110` (szybki druk z przeglądarki) + wychodzący polling do API (kolejka, upload przechwyconego ZPL); wirtualna drukarka Windows przez nasłuch JetDirect na `127.0.0.1:9101` + sterownik ZDesigner na porcie Standard TCP/IP. Szczegóły: `docs/superpowers/specs/2026-07-04-date-placeholders-and-connector-design.md`
 
 ---
 
