@@ -88,6 +88,8 @@ def render_template_pdf(
                 _draw_image(c, obj, page_h_pt, resolve_asset)
             elif kind == "barcode":
                 _draw_barcode(c, obj, page_h_pt)
+            elif kind == "table":
+                _draw_table(c, obj, page_h_pt, warnings=warnings)
             else:
                 # Unknown object types are skipped silently rather than crash
                 # the whole render. Future schema additions stay backwards
@@ -323,6 +325,116 @@ def _draw_text(
         else:
             c.drawString(x_pt, line_y, line)
 
+    c.restoreState()
+
+
+_TABLE_PAD_MM = 0.8
+
+
+def table_col_edges(obj: dict[str, Any]) -> list[float]:
+    """Cumulative column x-offsets in mm (0 … width). Uses `colWidths` when
+    present and plausible, else splits `width` equally."""
+    cols = max(1, int(obj.get("cols") or 1))
+    width = float(obj.get("width") or 0)
+    raw = obj.get("colWidths")
+    widths: list[float]
+    if isinstance(raw, list) and len(raw) == cols and all(
+        isinstance(v, int | float) and v > 0 for v in raw
+    ):
+        widths = [float(v) for v in raw]
+    else:
+        widths = [width / cols] * cols
+    edges = [0.0]
+    for w in widths:
+        edges.append(edges[-1] + w)
+    return edges
+
+
+def _draw_table(
+    c: rl_canvas.Canvas,
+    obj: dict[str, Any],
+    page_h_pt: float,
+    *,
+    warnings: list[dict[str, Any]] | None = None,
+) -> None:
+    rows = int(obj.get("rows") or 0)
+    cols = int(obj.get("cols") or 0)
+    w_mm = float(obj.get("width") or 0)
+    h_mm = float(obj.get("height") or 0)
+    if rows <= 0 or cols <= 0 or w_mm <= 0 or h_mm <= 0:
+        return
+    cells = obj.get("cells") or []
+    x_mm = float(obj.get("x") or 0)
+    y_mm = float(obj.get("y") or 0)
+    rotation = float(obj.get("rotation") or 0)
+    stroke = _hex_to_rgb(obj.get("stroke")) or HexColor("#000000")
+    stroke_w_mm = float(obj.get("strokeWidth") or 0.2)
+    fill = _hex_to_rgb(obj.get("fill")) or HexColor("#000000")
+    font_size_mm = float(obj.get("fontSize") or 3)
+    header = bool(obj.get("headerRow"))
+    row_h_mm = h_mm / rows
+    edges = table_col_edges(obj)
+
+    c.saveState()
+    x_pt = x_mm * mm
+    top_pt = page_h_pt - y_mm * mm
+    if rotation:
+        # One rotation around the table's top-left for the whole composite.
+        c.translate(x_pt, top_pt)
+        c.rotate(-rotation)
+        c.translate(-x_pt, -top_pt)
+
+    # Grid: outer box + inner separators.
+    c.setStrokeColor(stroke)
+    c.setLineWidth(stroke_w_mm * mm)
+    c.rect(x_pt, top_pt - h_mm * mm, w_mm * mm, h_mm * mm, stroke=1, fill=0)
+    for col in range(1, cols):
+        cx = x_pt + edges[col] * mm
+        c.line(cx, top_pt - h_mm * mm, cx, top_pt)
+    for r in range(1, rows):
+        cy = top_pt - r * row_h_mm * mm
+        c.line(x_pt, cy, x_pt + w_mm * mm, cy)
+
+    # Cell texts — wrapped to the column width, clipped to the row height.
+    c.setFillColor(fill)
+    font_size_pt = font_size_mm * mm
+    truncated = False
+    for r in range(rows):
+        row_cells = cells[r] if r < len(cells) else []
+        is_header = header and r == 0
+        font = _resolve_font(
+            {**obj, "fontWeight": "bold" if is_header else obj.get("fontWeight")}
+        )
+        for col in range(cols):
+            text = str(row_cells[col]) if col < len(row_cells) and row_cells[col] else ""
+            if not text:
+                continue
+            cell_w_pt = (edges[col + 1] - edges[col] - 2 * _TABLE_PAD_MM) * mm
+            cell_h_pt = (row_h_mm - 2 * _TABLE_PAD_MM) * mm
+            if cell_w_pt <= 0 or cell_h_pt <= 0:
+                continue
+            lines = _wrap_lines(text, font, font_size_pt, cell_w_pt)
+            max_lines = max(1, int(cell_h_pt // (font_size_pt * _LINE_HEIGHT_FACTOR)))
+            if len(lines) > max_lines or any(
+                stringWidth(line, font, font_size_pt) > cell_w_pt for line in lines
+            ):
+                truncated = True
+            lines = lines[:max_lines]
+            cell_x_pt = x_pt + (edges[col] + _TABLE_PAD_MM) * mm
+            baseline = (
+                top_pt - (r * row_h_mm + _TABLE_PAD_MM) * mm - font_size_pt * _ASCENT_RATIO
+            )
+            c.setFont(font, font_size_pt)
+            for i, line in enumerate(lines):
+                c.drawString(cell_x_pt, baseline - i * font_size_pt * _LINE_HEIGHT_FACTOR, line)
+
+    if truncated and warnings is not None:
+        warnings.append(
+            {
+                "object_id": str(obj.get("id") or ""),
+                "message": "some table cells didn't fit and were truncated",
+            }
+        )
     c.restoreState()
 
 

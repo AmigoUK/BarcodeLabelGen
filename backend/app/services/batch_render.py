@@ -24,6 +24,7 @@ from app.services.pdf_renderer import (
     _draw_image,
     _draw_line,
     _draw_rect,
+    _draw_table,
     _draw_text,
 )
 from app.services.placeholders import evaluate_date_key, is_plain_date_key
@@ -61,6 +62,14 @@ def substitute_object(obj: dict[str, Any], row: dict[str, Any]) -> dict[str, Any
         out["text"] = substitute_string(out["text"], row)
     elif kind == "barcode" and isinstance(out.get("data"), str):
         out["data"] = substitute_string(out["data"], row)
+    elif kind == "table" and isinstance(out.get("cells"), list):
+        # Fresh 2D copy — callers don't always deepcopy (zpl/batch passes
+        # the template's object straight in).
+        out["cells"] = [
+            [substitute_string(cell, row) if isinstance(cell, str) else cell for cell in r]
+            for r in out["cells"]
+            if isinstance(r, list)
+        ]
     return out
 
 
@@ -121,6 +130,8 @@ def render_batch_pdf(
                     _draw_image(c, substituted, page_h_pt, resolve_asset)
                 elif kind == "barcode":
                     _draw_barcode(c, substituted, page_h_pt)
+                elif kind == "table":
+                    _draw_table(c, substituted, page_h_pt, warnings=row_warnings)
             except Exception:  # noqa: BLE001, S112 — per-object resilience
                 continue
 

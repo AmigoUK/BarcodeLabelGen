@@ -208,6 +208,8 @@ def _object_summary(obj: dict[str, Any]) -> ObjectSummary:
         label = "Rectangle"
     elif kind == "line":
         label = "Line"
+    elif kind == "table":
+        label = f"Table {obj.get('rows', '?')}×{obj.get('cols', '?')}"
     else:
         label = kind
     has_dynamic = _has_placeholder(obj)
@@ -221,6 +223,13 @@ def _has_placeholder(obj: dict[str, Any]) -> bool:
         v = obj.get(field)
         if isinstance(v, str) and _PLACEHOLDER_MARKER in v:
             return True
+    cells = obj.get("cells")
+    if isinstance(cells, list):
+        for row in cells:
+            if isinstance(row, list) and any(
+                isinstance(c, str) and _PLACEHOLDER_MARKER in c for c in row
+            ):
+                return True
     return False
 
 

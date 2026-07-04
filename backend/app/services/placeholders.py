@@ -81,6 +81,17 @@ def substitute_dates_in_canvas(canvas_data: dict, *, today: date | None = None) 
                 obj["text"] = substitute_date_string(obj["text"], today=today)
             elif kind == "barcode" and isinstance(obj.get("data"), str):
                 obj["data"] = substitute_date_string(obj["data"], today=today)
+            elif kind == "table" and isinstance(obj.get("cells"), list):
+                obj["cells"] = [
+                    [
+                        substitute_date_string(cell, today=today)
+                        if isinstance(cell, str)
+                        else cell
+                        for cell in r
+                    ]
+                    for r in obj["cells"]
+                    if isinstance(r, list)
+                ]
         new_objects.append(obj)
     out["objects"] = new_objects
     return out

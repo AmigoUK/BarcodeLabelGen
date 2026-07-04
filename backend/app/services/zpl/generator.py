@@ -92,6 +92,8 @@ def _emit_object(
         return _emit_rect(obj, dpmm)
     if kind == "line":
         return _emit_line(obj, dpmm)
+    if kind == "table":
+        return _emit_table(obj, dpmm, warnings)
     if kind == "image":
         if warnings is not None:
             warnings.append(
@@ -204,6 +206,74 @@ def _emit_rect(obj: dict[str, Any], dpmm: int) -> str:
     if obj.get("fill") and not obj.get("stroke"):
         t = min(w, h)
     return f"{fo}^GB{w},{h},{t},B,0^FS"
+
+
+_TABLE_PAD_MM = 0.8
+
+
+def _emit_table(
+    obj: dict[str, Any], dpmm: int, warnings: list[dict[str, Any]] | None
+) -> str:
+    """Native table: the grid becomes ^GB boxes (thin ones act as lines) and
+    every cell delegates to _emit_text as a synthetic text object, so fonts,
+    ^FB wrapping and escaping stay one code path."""
+    from app.services.pdf_renderer import table_col_edges
+
+    rows = int(obj.get("rows") or 0)
+    cols = int(obj.get("cols") or 0)
+    w_mm = float(obj.get("width") or 0)
+    h_mm = float(obj.get("height") or 0)
+    if rows <= 0 or cols <= 0 or w_mm <= 0 or h_mm <= 0:
+        return ""
+    if float(obj.get("rotation") or 0) and warnings is not None:
+        warnings.append(
+            {
+                "object_id": str(obj.get("id") or ""),
+                "message": "table rotation isn't supported in ZPL; emitted unrotated",
+            }
+        )
+
+    x_mm = float(obj.get("x") or 0)
+    y_mm = float(obj.get("y") or 0)
+    stroke_mm = float(obj.get("strokeWidth") or 0.2)
+    t = mm_to_dots(stroke_mm, dpmm) or 1
+    row_h_mm = h_mm / rows
+    edges = table_col_edges(obj)
+    cells = obj.get("cells") or []
+
+    parts: list[str] = []
+    x0 = mm_to_dots(x_mm, dpmm)
+    y0 = mm_to_dots(y_mm, dpmm)
+    w = mm_to_dots(w_mm, dpmm)
+    h = mm_to_dots(h_mm, dpmm)
+    parts.append(f"^FO{x0},{y0}^GB{w},{h},{t},B,0^FS")
+    for col in range(1, cols):
+        cx = mm_to_dots(x_mm + edges[col], dpmm)
+        parts.append(f"^FO{cx},{y0}^GB{t},{h},{t},B,0^FS")
+    for r in range(1, rows):
+        cy = mm_to_dots(y_mm + r * row_h_mm, dpmm)
+        parts.append(f"^FO{x0},{cy}^GB{w},{t},{t},B,0^FS")
+
+    header = bool(obj.get("headerRow"))
+    for r in range(rows):
+        row_cells = cells[r] if r < len(cells) else []
+        for col in range(cols):
+            text = str(row_cells[col]) if col < len(row_cells) and row_cells[col] else ""
+            if not text:
+                continue
+            synthetic = {
+                "id": f"{obj.get('id')}-r{r}c{col}",
+                "type": "text",
+                "x": x_mm + edges[col] + _TABLE_PAD_MM,
+                "y": y_mm + r * row_h_mm + _TABLE_PAD_MM,
+                "text": text.replace("\n", " "),
+                "fontSize": obj.get("fontSize") or 3,
+                "fontFamily": obj.get("fontFamily"),
+                "fontWeight": "bold" if header and r == 0 else obj.get("fontWeight"),
+                "width": max(0.0, edges[col + 1] - edges[col] - 2 * _TABLE_PAD_MM),
+            }
+            parts.append(_emit_text(synthetic, dpmm))
+    return "\n".join(parts)
 
 
 def _emit_line(obj: dict[str, Any], dpmm: int) -> str:
