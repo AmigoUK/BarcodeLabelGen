@@ -89,6 +89,25 @@ Yes — Step 3 (Filter). Pick a column, an operator (equals / contains / greater
 
 ---
 
+## Folders and the Library
+
+### How do I organise templates into folders?
+**Templates** page → rail on the left → **New folder**. Then hover a template card → **⚙** → pick a folder → Save. Folders are private (everyone has their own) and single-level.
+
+### I deleted a folder — what happens to its templates?
+Nothing bad: they go back to "No folder".
+
+### How do I share a template with others?
+Card → **⚙** → **"Share in the Library"**. Others will see it in the **Library** and can clone it with the "Use" button — only the owner can edit it. Untick to withdraw it.
+
+### Does "Use" in the Library change the original?
+No — "Use" always creates your own independent copy (with a "(copy)" suffix). Images are copied into your file library.
+
+### Where do the "Ready-made projects" come from?
+They're starters built into the app (updated together with it). They contain `{{...}}` fields and `{{date+x}}` dates — after cloning, replace the sample values with your own.
+
+---
+
 ## Date placeholders
 
 ### How do I insert a best-before date of "today + 30 days"?

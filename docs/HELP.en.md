@@ -38,7 +38,9 @@ After signing in you land on the **Dashboard**. It's just a welcome screen — t
 | Item | What's there |
 |---|---|
 | **Dashboard** | Welcome screen. |
-| **Templates** | Your templates list + the *New template* and *Import* buttons. |
+| **Templates** | Your templates organised in folders + the *New template* and *Import* buttons. |
+| **Library** | Ready-made starter projects + templates shared by other users (section 2a). |
+| **Devices** | Print connectors and the Inbox of captured labels (section 7a). |
 | **Help** | This guide + the FAQ, without leaving the app. |
 | **Administration → Users** | (admin only) account management. |
 
@@ -70,6 +72,31 @@ When you open a template you'll see:
 - **Distribute** (3+ objects) — equal spacing horizontally/vertically.
 
 Hover any icon for a tooltip.
+
+---
+
+## 2a. Folders, the Library and sharing
+
+### Folders — keeping your own templates tidy
+
+On the **Templates** page there's a folder rail on the left: **All**, your folders (with counters) and **No folder**. Folders are **private** — every user has their own.
+
+- **New folder** — button at the bottom of the rail.
+- **Moving templates**: hover a template card → **⚙** → pick a folder → Save.
+- **Rename / delete** — the ✎ and ✕ icons next to a folder (on hover). Deleting a folder **does not delete the templates** — they go back to "No folder".
+
+### The Library — ready-made projects and templates from others
+
+The **Library** menu item has two sections:
+
+- **Ready-made projects** — built-in starters (product label with EAN and date, shipping address, shelf price, best-before date, warehouse label with QR, asset sticker).
+- **From users** — templates that others have shared (you can see the author).
+
+The **"Use"** button always creates **your own copy** and opens it in the editor — you can't break the original.
+
+### Sharing your own template
+
+Templates → hover a card → **⚙** → tick **"Share in the Library"**. From then on every logged-in user can see it in the Library and clone it; **only you can edit it**. A shared template shows a 📚 icon in the list. Untick to withdraw it from the Library.
 
 ---
 

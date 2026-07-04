@@ -52,8 +52,8 @@ Pracownicy biurowi nie mają obecnie narzędzia, które pozwoliłoby im samodzie
 | F12 | Filtrowanie wierszy przed generowaniem (po wartości kolumny) | P0 |
 | F13 | Generowanie PDF (single label / batch wielostronicowy) | P0 |
 | F14 | Multilanguage UI (PL, EN) — przełącznik per-user, zapamiętywany w profilu | P0 |
-| F15 | Katalogi szablonów + tagi + wyszukiwanie tekstowe | P0.5 |
-| F16 | Współdzielenie szablonów między użytkownikami / w zespole (read-only lub clone) | P1 |
+| F15 | Katalogi szablonów + tagi + wyszukiwanie tekstowe — **foldery + wyszukiwanie zrealizowane w v0.11.0 (F31); tagi porzucone na rzecz folderów** | P0.5 |
+| F16 | Współdzielenie szablonów między użytkownikami / w zespole (read-only lub clone) — **zrealizowane w v0.11.0 (F31): Biblioteka, read-only + klon** | P1 |
 | F17 | Wersjonowanie szablonów (każdy save = nowa wersja, możliwość przywrócenia) | P1 |
 | F18 | Historia wygenerowanych PDF (lista, ponowne pobranie do 30 dni) | P1 |
 | F19 | Export/import szablonów (JSON) | P1 |
@@ -68,7 +68,7 @@ Pracownicy biurowi nie mają obecnie narzędzia, które pozwoliłoby im samodzie
 | F28 | Dokumentacja użytkownika: instrukcja + FAQ (PL/EN), placeholdery na screenshoty z opisami | P0 |
 | F29 | Walidacja ZPL na wejściu (kolejka druku, przechwyty, import): sanity-check `^XA…^XZ`, limity rozmiaru, odrzucanie nie-ZPL (np. omyłkowo wysłanych stron błędów HTML) z czytelnym komunikatem — **zrealizowane w v0.9.0** | P1 |
 | F30 | Lista manualnych testów UAT (checklista dla właściciela: sprzęt, Windows, realna drukarka) — warunek decyzji o wdrożeniu na prod; checklist: `docs/UAT.md` | P0 |
-| F31 | Struktura folderów/katalogów szablonów + biblioteka gotowych projektów + udostępnianie innym użytkownikom (konsoliduje F15/F16) — **wymaga sesji brainstormingu przed implementacją** | P1 |
+| F31 | Struktura folderów/katalogów szablonów + biblioteka gotowych projektów + udostępnianie innym użytkownikom (konsoliduje F15/F16) — **zrealizowane w v0.11.0**; spec: `docs/superpowers/specs/2026-07-04-folders-library-sharing-design.md` | P1 |
 
 ### 2.3 User Stories (wybrane kluczowe)
 

@@ -105,6 +105,20 @@ Testy oznaczone 🔴 są **blokujące** dla decyzji o prod; 🟡 — ważne, ale
   powiększenie), bo pełny dysk wyłącza zapisy (patrz incydent z 4.07.2026).
   Wynik: ..................................................
 
+## F. Foldery i Biblioteka (v0.11.0)
+
+- [ ] 🟡 **F1. Foldery.** Utwórz 2 foldery, przenieś szablony (⚙ na kafelku),
+  przefiltruj, zmień nazwę folderu, usuń folder. *Oczekiwane:* szablony z
+  usuniętego folderu wracają do „Bez folderu".
+  Wynik: ..................................................
+- [ ] 🟡 **F2. Udostępnienie i klon.** Udostępnij szablon (⚙ → Biblioteka);
+  drugi użytkownik klika „Użyj" w Bibliotece. *Oczekiwane:* dostaje własną
+  edytowalną kopię (z obrazkami!), oryginał nietknięty.
+  Wynik: ..................................................
+- [ ] 🟡 **F3. Startery.** Użyj 2–3 gotowych projektów, wydrukuj/wygeneruj PDF.
+  *Oczekiwane:* sensowne etykiety bez poprawek technicznych.
+  Wynik: ..................................................
+
 ---
 
 ## Decyzja

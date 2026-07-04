@@ -89,6 +89,25 @@ Tak — Krok 3 (Filtr). Wybierz kolumnę, operator (równe / zawiera / większe 
 
 ---
 
+## Foldery i Biblioteka
+
+### Jak uporządkować szablony w foldery?
+Strona **Szablony** → pasek po lewej → **Nowy folder**. Potem najedź na kafelek szablonu → **⚙** → wybierz folder → Zapisz. Foldery są prywatne (każdy ma swoje) i jednopoziomowe.
+
+### Usunąłem folder — co z szablonami?
+Nic im nie jest: wracają do „Bez folderu".
+
+### Jak podzielić się szablonem z innymi?
+Kafelek → **⚙** → **„Udostępnij w Bibliotece"**. Inni zobaczą go w **Bibliotece** i sklonują przyciskiem „Użyj" — edytować może tylko właściciel. Odznacz, aby wycofać.
+
+### Czy „Użyj" w Bibliotece zmienia oryginał?
+Nie — „Użyj" zawsze tworzy Twoją niezależną kopię (z dopiskiem „(kopia)"). Obrazki są kopiowane do Twojej biblioteki plików.
+
+### Skąd się biorą „Gotowe projekty"?
+To startery wbudowane w aplikację (aktualizowane razem z nią). Zawierają pola `{{...}}` i daty `{{date+x}}` — po sklonowaniu podmień przykładowe wartości na swoje.
+
+---
+
 ## Placeholdery daty
 
 ### Jak wstawić datę przydatności „dziś + 30 dni"?

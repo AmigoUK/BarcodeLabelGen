@@ -38,7 +38,9 @@ Po zalogowaniu trafiasz na **Pulpit**. To tylko ekran powitalny — żeby zaczą
 | Pozycja | Co tu znajdziesz |
 |---|---|
 | **Pulpit** | Ekran startowy. |
-| **Szablony** | Lista twoich szablonów + przyciski *Nowy szablon* i *Importuj*. |
+| **Szablony** | Twoje szablony w folderach + przyciski *Nowy szablon* i *Importuj*. |
+| **Biblioteka** | Gotowe projekty na start + szablony udostępnione przez innych (sekcja 2a). |
+| **Urządzenia** | Konektory druku i Inbox przechwyconych etykiet (sekcja 7a). |
 | **Pomoc** | Ten przewodnik + FAQ, bez wychodzenia z programu. |
 | **Administracja → Użytkownicy** | (tylko admin) zarządzanie kontami. |
 
@@ -70,6 +72,31 @@ Po otwarciu szablonu widzisz:
 - **Rozłóż** (3+ obiektów) — równe odstępy w poziomie/pionie.
 
 Każda ikona ma podpowiedź (najedź myszką).
+
+---
+
+## 2a. Foldery, Biblioteka i udostępnianie
+
+### Foldery — porządek we własnych szablonach
+
+Na stronie **Szablony** po lewej masz pasek folderów: **Wszystkie**, Twoje foldery (z licznikami) i **Bez folderu**. Foldery są **prywatne** — każdy użytkownik ma swoje.
+
+- **Nowy folder** — przycisk na dole paska.
+- **Przenoszenie**: najedź na kafelek szablonu → **⚙** → wybierz folder → Zapisz.
+- **Zmiana nazwy / usunięcie** — ikony ✎ i ✕ przy folderze (po najechaniu). Usunięcie folderu **nie kasuje szablonów** — wracają do „Bez folderu".
+
+### Biblioteka — gotowe projekty i szablony od innych
+
+Pozycja **Biblioteka** w menu ma dwie sekcje:
+
+- **Gotowe projekty** — wbudowane startery (etykieta produktu z EAN i datą, adres wysyłki, cena półkowa, termin przydatności, etykieta magazynowa z QR, naklejka inwentarzowa).
+- **Od użytkowników** — szablony, które inni udostępnili (widać autora).
+
+Przycisk **„Użyj"** zawsze tworzy **Twoją własną kopię** i otwiera ją w edytorze — oryginału nie da się zepsuć.
+
+### Udostępnianie własnego szablonu
+
+Szablony → najedź na kafelek → **⚙** → zaznacz **„Udostępnij w Bibliotece"**. Od tej chwili wszyscy zalogowani widzą go w Bibliotece i mogą sklonować; **edytujesz tylko Ty**. Udostępniony szablon ma na liście ikonę 📚. Odznacz, aby wycofać z Biblioteki.
 
 ---
 
