@@ -9,6 +9,20 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 _Nothing yet._
 
+## [0.18.0] — 2026-07-04
+
+### Added
+- **CUPS virtual printer for macOS and Linux (F35).** Capture ZPL from
+  other applications on Unix by routing a CUPS raw queue to the connector's
+  capture listener. New `connector/install-capture-cups.sh` creates the
+  queue in one command (`socket://127.0.0.1:9101`, `-m raw`, idempotent,
+  no auto-sudo). The connector needs no code changes — its capture listener
+  was already cross-platform. Works for apps that already emit ZPL; generic
+  apps (Word, browsers) still need a Zebra driver (out of scope). README
+  gains a Windows / macOS+Linux split; the raw-queue path is verified on
+  Linux and documented-but-unverified on macOS (and newer CUPS warns that
+  raw queues are deprecated).
+
 ## [0.17.0] — 2026-07-04
 
 ### Added
@@ -344,7 +358,8 @@ _Nothing yet._
   label formats, dataset upload (CSV/XLSX/SQLite) with `{{column}}`
   mail-merge, and PDF single-label + batch generation via ReportLab.
 
-[Unreleased]: https://github.com/AmigoUK/BarcodeLabelGen/compare/v0.17.0...HEAD
+[Unreleased]: https://github.com/AmigoUK/BarcodeLabelGen/compare/v0.18.0...HEAD
+[0.18.0]: https://github.com/AmigoUK/BarcodeLabelGen/releases/tag/v0.18.0
 [0.17.0]: https://github.com/AmigoUK/BarcodeLabelGen/releases/tag/v0.17.0
 [0.16.0]: https://github.com/AmigoUK/BarcodeLabelGen/releases/tag/v0.16.0
 [0.15.0]: https://github.com/AmigoUK/BarcodeLabelGen/releases/tag/v0.15.0
