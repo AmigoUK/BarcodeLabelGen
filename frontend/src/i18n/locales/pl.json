@@ -86,7 +86,8 @@
     "imports": "Importy danych",
     "help": "Pomoc",
     "admin": "Administracja",
-    "users": "Użytkownicy"
+    "users": "Użytkownicy",
+    "devices": "Urządzenia"
   },
   "help": {
     "title": "Pomoc",
@@ -301,6 +302,31 @@
         "cannotDisableSelf": "Nie możesz dezaktywować własnego konta",
         "userNotFound": "Nie znaleziono użytkownika"
       }
+    }
+  },
+  "devices": {
+    "title": "Urządzenia (konektor druku)",
+    "intro": "Konektor blg-connector to mały program instalowany na komputerze w sieci lokalnej z drukarkami etykiet. Utwórz urządzenie, skopiuj token i wklej go do konfiguracji konektora — agent zacznie odpytywać serwer o zadania druku.",
+    "create": "Dodaj urządzenie",
+    "createTitle": "Nowe urządzenie",
+    "createHint": "Po utworzeniu dostaniesz token dostępu — pokażemy go tylko raz.",
+    "name": "Nazwa urządzenia",
+    "namePlaceholder": "np. Komputer w magazynie",
+    "status": "Status",
+    "online": "Online",
+    "offline": "Offline",
+    "printers": "Drukarki",
+    "lastSeen": "Ostatnio widziane",
+    "neverSeen": "Nigdy",
+    "agentVersion": "Wersja agenta",
+    "confirmDelete": "Usunąć urządzenie „{{name}}\"? Jego token przestanie działać.",
+    "tokenCreatedTitle": "Token urządzenia",
+    "tokenCreatedBody": "Skopiuj token i wklej do konfiguracji konektora. Ze względów bezpieczeństwa nie da się go wyświetlić ponownie — w razie zgubienia usuń urządzenie i utwórz nowe.",
+    "copyToken": "Kopiuj token",
+    "copied": "Skopiowano!",
+    "empty": "Brak urządzeń. Dodaj pierwsze, aby połączyć drukarki etykiet z aplikacją.",
+    "errors": {
+      "nameTaken": "Masz już urządzenie o tej nazwie."
     }
   }
 }

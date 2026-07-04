@@ -15,3 +15,23 @@ export type CreateUserResponse = {
   user: User;
   temporary_password: string;
 };
+
+export type DevicePrinter = {
+  name: string;
+  host: string;
+  port: number;
+};
+
+export type Device = {
+  id: number;
+  name: string;
+  agent_version: string | null;
+  printers: DevicePrinter[];
+  last_seen_at: string | null;
+  created_at: string;
+};
+
+export type CreateDeviceResponse = {
+  device: Device;
+  token: string;
+};

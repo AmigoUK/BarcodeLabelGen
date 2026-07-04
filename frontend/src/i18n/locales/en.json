@@ -86,7 +86,8 @@
     "imports": "Data imports",
     "help": "Help",
     "admin": "Administration",
-    "users": "Users"
+    "users": "Users",
+    "devices": "Devices"
   },
   "help": {
     "title": "Help",
@@ -301,6 +302,31 @@
         "cannotDisableSelf": "You can't disable your own account",
         "userNotFound": "User not found"
       }
+    }
+  },
+  "devices": {
+    "title": "Devices (print connector)",
+    "intro": "The blg-connector is a small program installed on a computer inside the local network with your label printers. Create a device, copy its token and paste it into the connector's configuration — the agent will start polling the server for print jobs.",
+    "create": "Add device",
+    "createTitle": "New device",
+    "createHint": "After creating you'll get an access token — shown only once.",
+    "name": "Device name",
+    "namePlaceholder": "e.g. Warehouse PC",
+    "status": "Status",
+    "online": "Online",
+    "offline": "Offline",
+    "printers": "Printers",
+    "lastSeen": "Last seen",
+    "neverSeen": "Never",
+    "agentVersion": "Agent version",
+    "confirmDelete": "Delete device \"{{name}}\"? Its token will stop working.",
+    "tokenCreatedTitle": "Device token",
+    "tokenCreatedBody": "Copy the token and paste it into the connector's configuration. For security it cannot be shown again — if you lose it, delete the device and create a new one.",
+    "copyToken": "Copy token",
+    "copied": "Copied!",
+    "empty": "No devices yet. Add one to connect your label printers to the app.",
+    "errors": {
+      "nameTaken": "You already have a device with this name."
     }
   }
 }
