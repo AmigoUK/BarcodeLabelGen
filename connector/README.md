@@ -1,0 +1,85 @@
+# blg-connector
+
+Lokalny agent druku dla BarcodeLabelGen. Odpytuje serwer o zadania ZPL
+i wysyła je do drukarek etykiet po RAW TCP 9100 (Zebra / zgodne z JetDirect).
+Jeden statyczny plik wykonywalny — Windows, Linux, Raspberry Pi.
+
+## Szybki start
+
+1. W aplikacji: **Urządzenia → Dodaj urządzenie** — skopiuj token (pokazany raz).
+2. Utwórz `config.yaml`:
+
+```yaml
+server_url: https://twoj-serwer.example:18003
+token: blg_xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+poll_interval_seconds: 3        # opcjonalne (domyślnie 3)
+heartbeat_interval_seconds: 60  # opcjonalne (domyślnie 60)
+listen: 127.0.0.1:9110          # opcjonalne — lokalne API dla przeglądarki
+printers:
+  - name: Zebra-1
+    host: 192.168.1.50          # IP drukarki w LAN
+    port: 9100                  # opcjonalne (domyślnie 9100)
+  - name: Test                  # drukarka symulowana: zapisuje .zpl do katalogu
+    host: file:///var/spool/blg
+```
+
+3. Uruchom:
+
+```
+blg-connector -config config.yaml
+```
+
+Urządzenie w aplikacji przejdzie na **Online**, pokaże listę drukarek,
+a zadania z kolejki (przycisk **Drukuj** w edytorze) trafią na drukarkę.
+
+## Budowanie
+
+```
+cd connector
+go build -trimpath -ldflags="-s -w" -o blg-connector .
+GOOS=windows GOARCH=amd64 go build -trimpath -ldflags="-s -w" -o blg-connector.exe .
+GOOS=linux GOARCH=arm64 go build -o blg-connector-pi .   # Raspberry Pi
+```
+
+Gotowe binarki: sekcja Assets przy każdym wydaniu na GitHubie.
+
+## Jako usługa
+
+**Linux (systemd)** — `/etc/systemd/system/blg-connector.service`:
+
+```ini
+[Unit]
+Description=BarcodeLabelGen print connector
+After=network-online.target
+
+[Service]
+ExecStart=/usr/local/bin/blg-connector -config /etc/blg-connector/config.yaml
+Restart=on-failure
+
+[Install]
+WantedBy=multi-user.target
+```
+
+**Windows** — najprościej przez [NSSM](https://nssm.cc/) albo Harmonogram zadań
+(uruchom przy starcie, `C:\ProgramData\blg-connector\config.yaml` to domyślna
+ścieżka konfiguracji, więc wystarczy `blg-connector.exe` bez argumentów).
+Natywna usługa Windows + tray: planowane.
+
+## Lokalne API (szybka ścieżka przeglądarki)
+
+Agent nasłuchuje na `127.0.0.1:9110` (tylko loopback):
+
+- `GET /status` — wersja, drukarki, czas ostatniego pollingu,
+- `GET /printers` — skonfigurowane drukarki,
+- `POST /print` `{"printer": "Zebra-1", "zpl": "^XA...^XZ", "copies": 1}` — druk
+  bez rundy przez serwer.
+
+CORS otwarty (serwer wiąże się wyłącznie z loopbackiem); preflight Chrome
+Private Network Access obsłużony (`Access-Control-Allow-Private-Network: true`).
+
+## Bezpieczeństwo
+
+- Token urządzenia (`blg_…`) trzymaj jak hasło — serwer przechowuje tylko jego
+  skrót SHA-256; zgubiony token = usuń urządzenie i utwórz nowe.
+- Agent nawiązuje wyłącznie połączenia wychodzące (HTTPS do serwera, TCP do
+  drukarek w LAN). Nie otwiera żadnego portu poza loopbackiem.
