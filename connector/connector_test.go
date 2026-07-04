@@ -339,3 +339,33 @@ func TestCapturerRetriesFromSpool(t *testing.T) {
 		t.Fatal("spooled capture was not uploaded")
 	}
 }
+
+func TestUploadFileSkipsSymlinks(t *testing.T) {
+	spool := t.TempDir()
+	secret := filepath.Join(t.TempDir(), "secret.txt")
+	_ = os.WriteFile(secret, []byte("^XA top secret ^XZ"), 0o600)
+	_ = os.Symlink(secret, filepath.Join(spool, "evil.zpl"))
+
+	uploaded := false
+	srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, _ *http.Request) {
+		uploaded = true
+		w.WriteHeader(http.StatusCreated)
+	}))
+	defer srv.Close()
+
+	cap := NewCapturer(CaptureConfig{SpoolDir: spool}, NewClient(srv.URL, "blg_t"))
+	cap.flushSpool()
+	if uploaded {
+		t.Fatal("symlinked file must not be uploaded")
+	}
+	if _, err := os.Lstat(filepath.Join(spool, "evil.zpl")); err != nil {
+		t.Fatal("symlink itself should not be removed")
+	}
+}
+
+func TestDefaultSpoolDirIsUserScoped(t *testing.T) {
+	dir := defaultSpoolDir()
+	if strings.HasPrefix(dir, os.TempDir()) && !strings.Contains(dir, "blg-connector-captures-") {
+		t.Errorf("default spool in shared temp without uid suffix: %s", dir)
+	}
+}

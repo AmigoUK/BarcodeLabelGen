@@ -94,7 +94,17 @@ func LoadConfig(path string) (*Config, error) {
 		cfg.HeartbeatIntervalSeconds = 60
 	}
 	if cfg.Capture.Listen != "" && cfg.Capture.SpoolDir == "" {
-		cfg.Capture.SpoolDir = filepath.Join(os.TempDir(), "blg-connector-captures")
+		cfg.Capture.SpoolDir = defaultSpoolDir()
 	}
 	return cfg, nil
+}
+
+// defaultSpoolDir lives under the user's cache dir, not the world-writable
+// system temp — captured jobs are private and the spool must not accept
+// files planted by other local users (they'd be uploaded with our token).
+func defaultSpoolDir() string {
+	if base, err := os.UserCacheDir(); err == nil {
+		return filepath.Join(base, "blg-connector", "captures")
+	}
+	return filepath.Join(os.TempDir(), fmt.Sprintf("blg-connector-captures-%d", os.Getuid()))
 }

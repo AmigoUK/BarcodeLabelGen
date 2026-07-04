@@ -34,8 +34,14 @@ func NewCapturer(cfg CaptureConfig, client *Client) *Capturer {
 }
 
 func (c *Capturer) Run(ctx context.Context) error {
-	if err := os.MkdirAll(c.cfg.SpoolDir, 0o755); err != nil {
+	// 0700 + chmod: the spool holds captured (possibly confidential) jobs
+	// and anything in it gets uploaded with our device token — no other
+	// local user may read it or plant files/symlinks in it.
+	if err := os.MkdirAll(c.cfg.SpoolDir, 0o700); err != nil {
 		return fmt.Errorf("capture spool dir: %w", err)
+	}
+	if err := os.Chmod(c.cfg.SpoolDir, 0o700); err != nil {
+		return fmt.Errorf("capture spool dir perms: %w", err)
 	}
 	ln, err := net.Listen("tcp", c.cfg.Listen)
 	if err != nil {
@@ -85,7 +91,7 @@ func (c *Capturer) handleConn(conn net.Conn) {
 
 	path := filepath.Join(c.cfg.SpoolDir,
 		fmt.Sprintf("%s-%09d.zpl", time.Now().UTC().Format("20060102-150405"), time.Now().Nanosecond()))
-	if err := os.WriteFile(path, data, 0o644); err != nil {
+	if err := os.WriteFile(path, data, 0o600); err != nil {
 		log.Printf("capture spool write: %v", err)
 		return
 	}
@@ -120,6 +126,15 @@ func (c *Capturer) flushSpool() {
 }
 
 func (c *Capturer) uploadFile(path string) {
+	// Regular files only (Lstat): a symlink planted in the spool must not
+	// turn the uploader into an arbitrary-file exfiltration channel.
+	info, err := os.Lstat(path)
+	if err != nil || !info.Mode().IsRegular() {
+		if err == nil {
+			log.Printf("capture spool: skipping non-regular file %s", filepath.Base(path))
+		}
+		return
+	}
 	data, err := os.ReadFile(path)
 	if err != nil {
 		return
