@@ -7,6 +7,7 @@ import { Canvas } from "../editor/Canvas";
 import { ExportZplModal } from "../editor/ExportZplModal";
 import { ImportZplModal } from "../editor/ImportZplModal";
 import { PrintModal } from "../editor/PrintModal";
+import { PrintPreviewModal } from "../editor/PrintPreviewModal";
 import { VersionHistoryModal } from "../editor/VersionHistoryModal";
 import { LabelSettingsModal } from "../editor/LabelSettingsModal";
 import { LeftPanel } from "../editor/LeftPanel";
@@ -16,6 +17,7 @@ import { Toolbar } from "../editor/Toolbar";
 import { useEditorStore } from "../editor/store";
 import type { CanvasData } from "../editor/types";
 import { useAutosave } from "../editor/useAutosave";
+import { type PdfWarning, useGeneratePdf } from "../hooks/useGeneratePdf";
 import { useTemplate, useUpdateTemplate } from "../hooks/useTemplates";
 
 export function EditorPage() {
@@ -161,6 +163,8 @@ export function EditorPage() {
   const [showLabelSize, setShowLabelSize] = useState(false);
   const [showPrint, setShowPrint] = useState(false);
   const [showHistory, setShowHistory] = useState(false);
+  const generatePreview = useGeneratePdf();
+  const [preview, setPreview] = useState<{ blob: Blob; warnings: PdfWarning[] } | null>(null);
 
   if (template.isLoading) {
     return <div className="p-6 text-slate-400">{t("common.loading")}</div>;
@@ -191,6 +195,12 @@ export function EditorPage() {
         onLabelSize={() => setShowLabelSize(true)}
         onPrint={() => setShowPrint(true)}
         onHistory={() => setShowHistory(true)}
+        onPreview={() => {
+          generatePreview.mutate(
+            { templateId: template.data.id },
+            { onSuccess: (res) => setPreview({ blob: res.blob, warnings: res.warnings }) },
+          );
+        }}
       />
       <AlignmentBar />
       <div className="flex min-h-0 flex-1">
@@ -235,6 +245,14 @@ export function EditorPage() {
               templateId={template.data.id}
               onClose={() => setShowHistory(false)}
               onRestored={(restored) => replaceCanvas(restored.canvas_data)}
+            />
+          )}
+          {preview && (
+            <PrintPreviewModal
+              blob={preview.blob}
+              warnings={preview.warnings}
+              filename={`${template.data.name.replace(/[^A-Za-z0-9._-]+/g, "_") || "label"}.pdf`}
+              onClose={() => setPreview(null)}
             />
           )}
         </>

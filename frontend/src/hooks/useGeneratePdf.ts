@@ -1,29 +1,25 @@
 import { useMutation } from "@tanstack/react-query";
 import { readCsrfCookie } from "../lib/csrf";
+import { triggerDownload } from "../lib/download";
 
 export type PdfWarning = { object_id: string; message: string };
 
 export type PdfGenerateResult = {
+  blob: Blob;
   durationMs: number;
   warnings: PdfWarning[];
 };
 
 /**
- * Triggers PDF generation on the backend and downloads the resulting
- * file directly. Reads the optional `X-PDF-Warnings` response header
- * (JSON-encoded list of soft-failure entries — currently text-block
- * overflow at minimum font size) and returns it alongside the duration
- * so the caller can surface a UI chip.
+ * Generate a single-label PDF on the backend and return the blob (plus the
+ * optional `X-PDF-Warnings` soft-failure list and duration). The caller
+ * decides what to do with the blob — download it (`downloadPdfBlob`) or show
+ * it in a preview. Splitting fetch from download lets one code path back both
+ * the "Download PDF" and "Preview" buttons.
  */
 export function useGeneratePdf() {
   return useMutation({
-    mutationFn: async ({
-      templateId,
-      filename,
-    }: {
-      templateId: number;
-      filename: string;
-    }): Promise<PdfGenerateResult> => {
+    mutationFn: async ({ templateId }: { templateId: number }): Promise<PdfGenerateResult> => {
       const csrf = readCsrfCookie();
       const t0 = performance.now();
       const response = await fetch("/api/generate", {
@@ -48,7 +44,7 @@ export function useGeneratePdf() {
 
       // Soft-failure list: header is set when the renderer hit conditions
       // worth surfacing (text overflow). Parse defensively — the header
-      // is optional and a malformed value shouldn't blow up the download.
+      // is optional and a malformed value shouldn't blow up generation.
       let warnings: PdfWarning[] = [];
       const raw = response.headers.get("X-PDF-Warnings");
       if (raw) {
@@ -61,16 +57,11 @@ export function useGeneratePdf() {
       }
 
       const blob = await response.blob();
-      const url = URL.createObjectURL(blob);
-      const a = document.createElement("a");
-      a.href = url;
-      a.download = filename;
-      document.body.appendChild(a);
-      a.click();
-      a.remove();
-      URL.revokeObjectURL(url);
-
-      return { durationMs: performance.now() - t0, warnings };
+      return { blob, durationMs: performance.now() - t0, warnings };
     },
   });
+}
+
+export function downloadPdfBlob(blob: Blob, filename: string): void {
+  triggerDownload(blob, filename);
 }

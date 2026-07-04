@@ -1,7 +1,7 @@
 import { useTranslation } from "react-i18next";
 import { Link } from "react-router-dom";
 import { Button } from "../components/ui/Button";
-import { useGeneratePdf } from "../hooks/useGeneratePdf";
+import { downloadPdfBlob, useGeneratePdf } from "../hooks/useGeneratePdf";
 import { type TemplateDetail, exportTemplateToFile } from "../hooks/useTemplates";
 import { useEditorStore } from "./store";
 
@@ -22,6 +22,7 @@ type Props = {
   onLabelSize: () => void;
   onPrint: () => void;
   onHistory: () => void;
+  onPreview: () => void;
 };
 
 export function Toolbar({
@@ -38,6 +39,7 @@ export function Toolbar({
   onLabelSize,
   onPrint,
   onHistory,
+  onPreview,
 }: Props) {
   const { t } = useTranslation();
   const dirty = useEditorStore((s) => s.dirty);
@@ -146,11 +148,17 @@ export function Toolbar({
         <Button variant="ghost" onClick={onHistory} title={t("history.tooltip")}>
           🕘 {t("history.button")}
         </Button>
+        <Button variant="ghost" onClick={onPreview} title={t("preview.tooltip")}>
+          👁 {t("preview.button")}
+        </Button>
         <Button
           variant="secondary"
           onClick={() => {
             const safeName = template.name.replace(/[^A-Za-z0-9._-]+/g, "_");
-            generate.mutate({ templateId: template.id, filename: `${safeName}.pdf` });
+            generate.mutate(
+              { templateId: template.id },
+              { onSuccess: (res) => downloadPdfBlob(res.blob, `${safeName}.pdf`) },
+            );
           }}
           disabled={generate.isPending}
         >

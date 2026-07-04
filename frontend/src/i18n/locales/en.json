@@ -425,5 +425,14 @@
     "single": "single",
     "download": "Download",
     "confirmDelete": "Delete this file from history?"
+  },
+  "preview": {
+    "title": "Print preview",
+    "button": "Preview",
+    "tooltip": "See the PDF before downloading",
+    "download": "Download PDF",
+    "warnings": "Warnings ({{count}})",
+    "embedFallback": "Your browser can't embed PDFs.",
+    "openInTab": "Open in a new tab"
   }
 }

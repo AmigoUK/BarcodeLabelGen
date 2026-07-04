@@ -425,5 +425,14 @@
     "single": "pojedyncza",
     "download": "Pobierz",
     "confirmDelete": "Usunąć ten plik z historii?"
+  },
+  "preview": {
+    "title": "Podgląd wydruku",
+    "button": "Podgląd",
+    "tooltip": "Zobacz PDF przed pobraniem",
+    "download": "Pobierz PDF",
+    "warnings": "Ostrzeżenia ({{count}})",
+    "embedFallback": "Twoja przeglądarka nie potrafi osadzić PDF.",
+    "openInTab": "Otwórz w nowej karcie"
   }
 }
