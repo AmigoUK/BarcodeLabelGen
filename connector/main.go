@@ -57,6 +57,15 @@ func main() {
 	ctx, stop := signal.NotifyContext(context.Background(), syscall.SIGINT, syscall.SIGTERM)
 	defer stop()
 
+	if cfg.Capture.Listen != "" {
+		capturer := NewCapturer(cfg.Capture, client)
+		go func() {
+			if err := capturer.Run(ctx); err != nil {
+				log.Fatalf("capture: %v", err)
+			}
+		}()
+	}
+
 	heartbeat := func() {
 		printers := make([]Printer, len(cfg.Printers))
 		copy(printers, cfg.Printers)

@@ -3,6 +3,7 @@ package main
 import (
 	"fmt"
 	"os"
+	"path/filepath"
 	"strings"
 	"time"
 
@@ -20,13 +21,22 @@ type Printer struct {
 
 func (p Printer) IsFile() bool { return strings.HasPrefix(p.Host, "file://") }
 
+// CaptureConfig enables the virtual-printer listener: a Windows printer
+// pointed at this TCP port (Standard TCP/IP → 127.0.0.1:9101, ZDesigner
+// driver) turns any application's print into a captured ZPL job.
+type CaptureConfig struct {
+	Listen   string `yaml:"listen"`    // empty = capture disabled
+	SpoolDir string `yaml:"spool_dir"` // pending uploads survive restarts
+}
+
 type Config struct {
-	ServerURL                string    `yaml:"server_url"`
-	Token                    string    `yaml:"token"`
-	PollIntervalSeconds      int       `yaml:"poll_interval_seconds"`
-	HeartbeatIntervalSeconds int       `yaml:"heartbeat_interval_seconds"`
-	Listen                   string    `yaml:"listen"`
-	Printers                 []Printer `yaml:"printers"`
+	ServerURL                string        `yaml:"server_url"`
+	Token                    string        `yaml:"token"`
+	PollIntervalSeconds      int           `yaml:"poll_interval_seconds"`
+	HeartbeatIntervalSeconds int           `yaml:"heartbeat_interval_seconds"`
+	Listen                   string        `yaml:"listen"`
+	Printers                 []Printer     `yaml:"printers"`
+	Capture                  CaptureConfig `yaml:"capture"`
 }
 
 func (c *Config) PollInterval() time.Duration {
@@ -82,6 +92,9 @@ func LoadConfig(path string) (*Config, error) {
 	}
 	if cfg.HeartbeatIntervalSeconds < 10 {
 		cfg.HeartbeatIntervalSeconds = 60
+	}
+	if cfg.Capture.Listen != "" && cfg.Capture.SpoolDir == "" {
+		cfg.Capture.SpoolDir = filepath.Join(os.TempDir(), "blg-connector-captures")
 	}
 	return cfg, nil
 }

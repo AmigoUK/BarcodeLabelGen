@@ -1,6 +1,8 @@
 package main
 
 import (
+	"context"
+	"encoding/base64"
 	"encoding/json"
 	"net"
 	"net/http"
@@ -9,6 +11,7 @@ import (
 	"path/filepath"
 	"strings"
 	"testing"
+	"time"
 )
 
 func writeConfig(t *testing.T, body string) string {
@@ -228,5 +231,111 @@ func TestLocalAPIStatusAndPrint(t *testing.T) {
 		strings.NewReader(`{"printer":"nope","zpl":"^XA^XZ"}`))
 	if post2.StatusCode != http.StatusNotFound {
 		t.Errorf("unknown printer: HTTP %d", post2.StatusCode)
+	}
+}
+
+func TestCapturerSpoolsAndUploads(t *testing.T) {
+	uploads := make(chan string, 4)
+	srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		if r.URL.Path != "/api/agent/captures" {
+			http.NotFound(w, r)
+			return
+		}
+		var body struct {
+			ZplB64 string `json:"zpl_b64"`
+		}
+		_ = json.NewDecoder(r.Body).Decode(&body)
+		raw, _ := base64.StdEncoding.DecodeString(body.ZplB64)
+		uploads <- string(raw)
+		w.WriteHeader(http.StatusCreated)
+		_, _ = w.Write([]byte(`{"capture":{"id":1}}`))
+	}))
+	defer srv.Close()
+
+	spool := t.TempDir()
+	cap := NewCapturer(CaptureConfig{Listen: "127.0.0.1:0", SpoolDir: spool}, NewClient(srv.URL, "blg_t"))
+
+	ctx, cancel := context.WithCancel(context.Background())
+	defer cancel()
+	// Run on a random port: start manually to learn the address.
+	ln, err := net.Listen("tcp", "127.0.0.1:0")
+	if err != nil {
+		t.Fatal(err)
+	}
+	addr := ln.Addr().String()
+	_ = ln.Close()
+	cap.cfg.Listen = addr
+	go func() { _ = cap.Run(ctx) }()
+	time.Sleep(150 * time.Millisecond)
+
+	// "Windows print": one connection, payload, close.
+	conn, err := net.Dial("tcp", addr)
+	if err != nil {
+		t.Fatal(err)
+	}
+	_, _ = conn.Write([]byte("^XA^FDfrom-word^FS^XZ"))
+	_ = conn.Close()
+
+	select {
+	case got := <-uploads:
+		if !strings.Contains(got, "from-word") {
+			t.Errorf("uploaded payload: %q", got)
+		}
+	case <-time.After(3 * time.Second):
+		t.Fatal("capture was not uploaded")
+	}
+	// uploadFile removes the spool file after the HTTP call returns — poll.
+	deadline := time.Now().Add(2 * time.Second)
+	for {
+		entries, _ := os.ReadDir(spool)
+		if len(entries) == 0 {
+			break
+		}
+		if time.Now().After(deadline) {
+			t.Errorf("spool should be empty after upload, got %v", entries)
+			break
+		}
+		time.Sleep(50 * time.Millisecond)
+	}
+
+	// Non-ZPL payload is dropped, not uploaded.
+	conn2, _ := net.Dial("tcp", addr)
+	_, _ = conn2.Write([]byte("%PDF-1.4 not zpl at all"))
+	_ = conn2.Close()
+	select {
+	case got := <-uploads:
+		t.Errorf("non-ZPL payload was uploaded: %q", got)
+	case <-time.After(700 * time.Millisecond):
+	}
+}
+
+func TestCapturerRetriesFromSpool(t *testing.T) {
+	spool := t.TempDir()
+	// Pre-existing spool file (e.g. server was down during a previous run).
+	_ = os.WriteFile(filepath.Join(spool, "pending.zpl"), []byte("^XA^FDretry^FS^XZ"), 0o644)
+
+	uploads := make(chan string, 1)
+	srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		var body struct {
+			ZplB64 string `json:"zpl_b64"`
+		}
+		_ = json.NewDecoder(r.Body).Decode(&body)
+		raw, _ := base64.StdEncoding.DecodeString(body.ZplB64)
+		uploads <- string(raw)
+		w.WriteHeader(http.StatusCreated)
+		_, _ = w.Write([]byte(`{}`))
+	}))
+	defer srv.Close()
+
+	cap := NewCapturer(CaptureConfig{SpoolDir: spool}, NewClient(srv.URL, "blg_t"))
+	cap.flushSpool()
+
+	select {
+	case got := <-uploads:
+		if !strings.Contains(got, "retry") {
+			t.Errorf("payload: %q", got)
+		}
+	case <-time.After(2 * time.Second):
+		t.Fatal("spooled capture was not uploaded")
 	}
 }
