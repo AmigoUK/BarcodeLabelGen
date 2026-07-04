@@ -258,11 +258,15 @@ def test_featured_image_set_view_and_clone(
     assert client.get(f"/api/templates/{cloned['id']}/featured-image").status_code == 200
 
 
-def test_featured_image_unset(app: Flask, client: FlaskClient, csrf: CsrfHelper, tmp_path, monkeypatch) -> None:
+def test_featured_image_unset(
+    app: Flask, client: FlaskClient, csrf: CsrfHelper, tmp_path, monkeypatch
+) -> None:
     monkeypatch.setenv("ASSETS_DIR", str(tmp_path))
     fmt_id = _seed_format_and_login(app, client, csrf)
     tid = _mk_template(client, csrf, fmt_id, "Bez grafiki")
     asset_id = _upload_png(client, csrf)
-    client.put(f"/api/templates/{tid}", json={"featured_asset_id": asset_id}, headers=csrf.headers())
+    client.put(
+        f"/api/templates/{tid}", json={"featured_asset_id": asset_id}, headers=csrf.headers()
+    )
     client.put(f"/api/templates/{tid}", json={"featured_asset_id": None}, headers=csrf.headers())
     assert client.get(f"/api/templates/{tid}/featured-image").status_code == 404

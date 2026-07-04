@@ -37,7 +37,9 @@ def get_owned_folder(session: Session, folder_id: int, *, owner_id: int) -> Fold
     return folder
 
 
-def create_folder(session: Session, *, owner_id: int, name: str, color: str | None = None) -> Folder:
+def create_folder(
+    session: Session, *, owner_id: int, name: str, color: str | None = None
+) -> Folder:
     folder = Folder(owner_id=owner_id, name=name, color=color)
     session.add(folder)
     try:
