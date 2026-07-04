@@ -155,15 +155,16 @@ func TestClientUnauthorized(t *testing.T) {
 func TestLocalAPIStatusAndPrint(t *testing.T) {
 	dir := t.TempDir()
 	cfg := &Config{
-		Listen:   "127.0.0.1:0",
-		Printers: []Printer{{Name: "spool", Host: "file://" + dir}},
+		ServerURL: "https://app.example.com:18003",
+		Listen:    "127.0.0.1:0",
+		Printers:  []Printer{{Name: "spool", Host: "file://" + dir}},
 	}
 	api := NewLocalAPI(cfg)
 	api.RecordPoll(true)
 	srv := httptest.NewServer(api.Handler())
 	defer srv.Close()
 
-	// status
+	// status (no Origin — plain local tooling)
 	resp, err := http.Get(srv.URL + "/status")
 	if err != nil {
 		t.Fatal(err)
@@ -173,16 +174,25 @@ func TestLocalAPIStatusAndPrint(t *testing.T) {
 	if status["version"] != Version || status["last_poll_ok"] != true {
 		t.Errorf("status: %v", status)
 	}
-	if resp.Header.Get("Access-Control-Allow-Origin") != "*" {
-		t.Error("missing CORS header")
-	}
 
-	// preflight with Private Network Access
+	// allowed origin gets CORS + PNA headers on preflight
 	req, _ := http.NewRequest(http.MethodOptions, srv.URL+"/print", nil)
+	req.Header.Set("Origin", "https://app.example.com:18003")
 	req.Header.Set("Access-Control-Request-Private-Network", "true")
 	pre, _ := http.DefaultClient.Do(req)
+	if pre.Header.Get("Access-Control-Allow-Origin") != "https://app.example.com:18003" {
+		t.Error("missing CORS header for allowed origin")
+	}
 	if pre.Header.Get("Access-Control-Allow-Private-Network") != "true" {
 		t.Error("missing PNA header on preflight")
+	}
+
+	// foreign origin is rejected outright — no drive-by print, no topology read
+	reqEvil, _ := http.NewRequest(http.MethodGet, srv.URL+"/printers", nil)
+	reqEvil.Header.Set("Origin", "https://evil.example")
+	evil, _ := http.DefaultClient.Do(reqEvil)
+	if evil.StatusCode != http.StatusForbidden {
+		t.Errorf("foreign origin: HTTP %d, want 403", evil.StatusCode)
 	}
 
 	// print to the spool printer
@@ -197,6 +207,20 @@ func TestLocalAPIStatusAndPrint(t *testing.T) {
 	entries, _ := os.ReadDir(dir)
 	if len(entries) != 1 {
 		t.Fatalf("expected spooled file, got %v", entries)
+	}
+
+	// non-JSON content type is rejected (blocks CORS "simple requests")
+	simple, _ := http.Post(srv.URL+"/print", "text/plain",
+		strings.NewReader(`{"printer":"spool","zpl":"^XA^XZ"}`))
+	if simple.StatusCode != http.StatusUnsupportedMediaType {
+		t.Errorf("text/plain: HTTP %d, want 415", simple.StatusCode)
+	}
+
+	// copies over the cap are rejected
+	huge, _ := http.Post(srv.URL+"/print", "application/json",
+		strings.NewReader(`{"printer":"spool","zpl":"^XA^XZ","copies":100000}`))
+	if huge.StatusCode != http.StatusBadRequest {
+		t.Errorf("huge copies: HTTP %d, want 400", huge.StatusCode)
 	}
 
 	// unknown printer

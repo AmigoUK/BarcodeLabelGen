@@ -9,7 +9,12 @@ import (
 	"time"
 )
 
-const printTimeout = 10 * time.Second
+const (
+	printTimeout = 10 * time.Second
+	// MaxCopies mirrors the server-side schema limit and bounds the
+	// strings.Repeat buffer (local /print callers are untrusted).
+	MaxCopies = 1000
+)
 
 // Print sends the ZPL to the printer `copies` times. TCP printers get one
 // connection with the payload repeated (JetDirect / RAW 9100); file://
@@ -17,6 +22,9 @@ const printTimeout = 10 * time.Second
 func Print(p Printer, zpl string, copies int) error {
 	if copies < 1 {
 		copies = 1
+	}
+	if copies > MaxCopies {
+		copies = MaxCopies
 	}
 	if p.IsFile() {
 		return printToFile(p, zpl, copies)

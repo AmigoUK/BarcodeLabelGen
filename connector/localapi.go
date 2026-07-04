@@ -4,23 +4,38 @@ import (
 	"encoding/json"
 	"log"
 	"net/http"
+	"net/url"
+	"strings"
 	"sync"
 	"time"
 )
 
 // LocalAPI is the loopback HTTP server (default 127.0.0.1:9110) used by the
 // web app's fast path: the browser can print without the server round-trip.
-// CORS is wide open — the server binds to loopback only, and Chrome's
-// Private Network Access preflight gets the required header.
+// CORS allows only the configured server's origin — any other website in a
+// local browser must not be able to drive-by print or read printer IPs.
+// Chrome's Private Network Access preflight gets the required header.
 type LocalAPI struct {
-	cfg *Config
+	cfg           *Config
+	allowedOrigin string
 
 	mu         sync.Mutex
 	lastPoll   time.Time
 	lastPollOK bool
 }
 
-func NewLocalAPI(cfg *Config) *LocalAPI { return &LocalAPI{cfg: cfg} }
+func NewLocalAPI(cfg *Config) *LocalAPI {
+	return &LocalAPI{cfg: cfg, allowedOrigin: originOf(cfg.ServerURL)}
+}
+
+// originOf reduces a URL to scheme://host[:port] for CORS matching.
+func originOf(rawURL string) string {
+	u, err := url.Parse(rawURL)
+	if err != nil || u.Scheme == "" || u.Host == "" {
+		return ""
+	}
+	return u.Scheme + "://" + u.Host
+}
 
 func (a *LocalAPI) RecordPoll(ok bool) {
 	a.mu.Lock()
@@ -39,11 +54,20 @@ func (a *LocalAPI) Handler() http.Handler {
 
 func (a *LocalAPI) withCORS(next http.HandlerFunc) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
-		w.Header().Set("Access-Control-Allow-Origin", "*")
-		w.Header().Set("Access-Control-Allow-Methods", "GET, POST, OPTIONS")
-		w.Header().Set("Access-Control-Allow-Headers", "Content-Type")
-		if r.Header.Get("Access-Control-Request-Private-Network") == "true" {
-			w.Header().Set("Access-Control-Allow-Private-Network", "true")
+		origin := r.Header.Get("Origin")
+		if origin != "" {
+			// Browser request: only the web app's origin may call us.
+			if a.allowedOrigin == "" || origin != a.allowedOrigin {
+				http.Error(w, "origin not allowed", http.StatusForbidden)
+				return
+			}
+			w.Header().Set("Access-Control-Allow-Origin", a.allowedOrigin)
+			w.Header().Set("Vary", "Origin")
+			w.Header().Set("Access-Control-Allow-Methods", "GET, POST, OPTIONS")
+			w.Header().Set("Access-Control-Allow-Headers", "Content-Type")
+			if r.Header.Get("Access-Control-Request-Private-Network") == "true" {
+				w.Header().Set("Access-Control-Allow-Private-Network", "true")
+			}
 		}
 		if r.Method == http.MethodOptions {
 			w.WriteHeader(http.StatusNoContent)
@@ -92,6 +116,13 @@ func (a *LocalAPI) handlePrint(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, "method not allowed", http.StatusMethodNotAllowed)
 		return
 	}
+	// Requiring application/json means a cross-site form/fetch can't reach
+	// this as a "simple request" — the browser preflights, and preflight is
+	// gated on the allowed origin above.
+	if ct := r.Header.Get("Content-Type"); !strings.HasPrefix(ct, "application/json") {
+		writeJSON(w, http.StatusUnsupportedMediaType, map[string]any{"error": "json_required"})
+		return
+	}
 	var req struct {
 		Printer string `json:"printer"`
 		Zpl     string `json:"zpl"`
@@ -103,6 +134,13 @@ func (a *LocalAPI) handlePrint(w http.ResponseWriter, r *http.Request) {
 	}
 	if req.Zpl == "" {
 		writeJSON(w, http.StatusBadRequest, map[string]any{"error": "zpl_required"})
+		return
+	}
+	if req.Copies < 1 {
+		req.Copies = 1
+	}
+	if req.Copies > MaxCopies {
+		writeJSON(w, http.StatusBadRequest, map[string]any{"error": "too_many_copies", "max": MaxCopies})
 		return
 	}
 	printer, ok := a.cfg.PrinterByName(req.Printer)
