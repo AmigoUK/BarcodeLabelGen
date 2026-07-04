@@ -18,7 +18,9 @@ from typing import Any
 from reportlab.lib.colors import HexColor
 from reportlab.lib.units import mm
 from reportlab.lib.utils import ImageReader
+from reportlab.pdfbase import pdfmetrics
 from reportlab.pdfbase.pdfmetrics import stringWidth
+from reportlab.pdfbase.ttfonts import TTFont
 from reportlab.pdfgen import canvas as rl_canvas
 
 from app.models.asset import Asset
@@ -36,6 +38,56 @@ AssetResolver = Callable[[int], Asset | None]
 
 class PdfRenderError(ValueError):
     pass
+
+
+# ReportLab's built-in Type1 fonts (Helvetica/Times/Courier) are WinAnsi-only
+# and render Polish glyphs (ż ł ć ę ą ź ń ś …) as tofu boxes. Liberation is
+# metric-compatible with Helvetica/Times/Courier but covers Latin Extended-A,
+# so we embed it and keep the exact same family mapping. Registered lazily
+# once; if the TTFs aren't on disk (bare dev box without fonts-liberation) we
+# fall back to the built-ins and set the flag so _resolve_font stays correct.
+_LIBERATION_DIR = "/usr/share/fonts/truetype/liberation"
+_FONT_FILES = {
+    "Helvetica": ("LiberationSans-Regular.ttf", "Sans"),
+    "Helvetica-Bold": ("LiberationSans-Bold.ttf", "Sans-Bold"),
+    "Helvetica-Oblique": ("LiberationSans-Italic.ttf", "Sans-Italic"),
+    "Helvetica-BoldOblique": ("LiberationSans-BoldItalic.ttf", "Sans-BoldItalic"),
+    "Times-Roman": ("LiberationSerif-Regular.ttf", "Serif"),
+    "Times-Bold": ("LiberationSerif-Bold.ttf", "Serif-Bold"),
+    "Times-Italic": ("LiberationSerif-Italic.ttf", "Serif-Italic"),
+    "Times-BoldItalic": ("LiberationSerif-BoldItalic.ttf", "Serif-BoldItalic"),
+    "Courier": ("LiberationMono-Regular.ttf", "Mono"),
+    "Courier-Bold": ("LiberationMono-Bold.ttf", "Mono-Bold"),
+    "Courier-Oblique": ("LiberationMono-Italic.ttf", "Mono-Italic"),
+    "Courier-BoldOblique": ("LiberationMono-BoldItalic.ttf", "Mono-BoldItalic"),
+}
+_FONT_MAP: dict[str, str] = {}  # built-in name → registered Unicode font name
+_fonts_ready = False
+
+
+def _ensure_fonts() -> None:
+    global _fonts_ready
+    if _fonts_ready:
+        return
+    import os
+
+    for builtin, (filename, registered) in _FONT_FILES.items():
+        path = os.path.join(_LIBERATION_DIR, filename)
+        if os.path.isfile(path):
+            try:
+                pdfmetrics.registerFont(TTFont(registered, path))
+                _FONT_MAP[builtin] = registered
+            except Exception:  # noqa: BLE001 — corrupt font → keep built-in
+                _FONT_MAP[builtin] = builtin
+        else:
+            _FONT_MAP[builtin] = builtin  # font not installed → built-in fallback
+    _fonts_ready = True
+
+
+def _unicode_font(builtin_name: str) -> str:
+    """Map a built-in Type1 font name to the embedded Unicode equivalent."""
+    _ensure_fonts()
+    return _FONT_MAP.get(builtin_name, builtin_name)
 
 
 def render_template_pdf(
@@ -147,7 +199,7 @@ def _resolve_font(obj: dict[str, Any]) -> str:
         base = "Helvetica"
         styles = ("", "-Bold", "-Oblique", "-BoldOblique")
     idx = (1 if bold else 0) + (2 if italic else 0)
-    return f"{base}{styles[idx]}"
+    return _unicode_font(f"{base}{styles[idx]}")
 
 
 def _wrap_lines(text: str, font: str, font_size_pt: float, max_width_pt: float) -> list[str]:

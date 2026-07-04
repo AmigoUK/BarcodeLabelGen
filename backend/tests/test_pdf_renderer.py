@@ -457,3 +457,34 @@ def test_generate_requires_auth(client: FlaskClient) -> None:
     # be 401 if the cookie were present. Either way, mutating endpoints
     # are protected.
     assert response.status_code in (401, 403)
+
+
+def test_polish_diacritics_render_as_unicode() -> None:
+    """Base14 Type1 fonts are WinAnsi-only and turn ż/ł/ę into tofu; the
+    embedded Liberation fonts must round-trip Polish text extractably."""
+    import io
+
+    import pdfplumber
+
+    from app.services.pdf_renderer import render_template_pdf
+
+    canvas = {
+        "version": 1,
+        "stage": {"width_mm": 105, "height_mm": 30},
+        "objects": [
+            {
+                "id": "t",
+                "type": "text",
+                "x": 5,
+                "y": 5,
+                "text": "zażółć gęślą jaźń",
+                "fontSize": 6,
+                "fontFamily": "Helvetica",
+                "fill": "#000000",
+            }
+        ],
+    }
+    pdf = render_template_pdf(canvas, width_mm=105, height_mm=30)
+    with pdfplumber.open(io.BytesIO(pdf)) as doc:
+        text = doc.pages[0].extract_text()
+    assert "zażółć gęślą jaźń" in text

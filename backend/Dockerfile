@@ -30,8 +30,10 @@ FROM python:3.12-slim AS runtime
 WORKDIR /app
 
 # libpq for psycopg, curl for healthcheck
+# libpq for psycopg, curl for healthcheck, fonts-liberation for Unicode
+# PDF text (Polish glyphs — the base14 Type1 fonts are WinAnsi-only).
 RUN apt-get update \
-    && apt-get install -y --no-install-recommends libpq5 curl \
+    && apt-get install -y --no-install-recommends libpq5 curl fonts-liberation \
     && rm -rf /var/lib/apt/lists/*
 
 # Non-root user
