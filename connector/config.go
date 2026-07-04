@@ -21,9 +21,10 @@ type Printer struct {
 
 func (p Printer) IsFile() bool { return strings.HasPrefix(p.Host, "file://") }
 
-// CaptureConfig enables the virtual-printer listener: a Windows printer
-// pointed at this TCP port (Standard TCP/IP → 127.0.0.1:9101, ZDesigner
-// driver) turns any application's print into a captured ZPL job.
+// CaptureConfig enables the virtual-printer listener: a print queue pointed
+// at this TCP port turns another app's ZPL output into a captured job.
+// Windows: Standard TCP/IP port → 127.0.0.1:9101 with a ZDesigner driver.
+// macOS/Linux: a CUPS raw queue → socket://127.0.0.1:9101 (see README).
 type CaptureConfig struct {
 	Listen   string `yaml:"listen"`    // empty = capture disabled
 	SpoolDir string `yaml:"spool_dir"` // pending uploads survive restarts

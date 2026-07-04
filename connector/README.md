@@ -99,8 +99,7 @@ Natywna usługa Windows + tray: planowane.
 
 > **Druk RAW TCP 9100 działa identycznie na Windows, macOS i Linux** — konfiguracja
 > drukarek w `config.yaml` jest ta sama. Wirtualna drukarka (przechwytywanie) ma
-> na razie instrukcję tylko dla Windows; odpowiednik przez CUPS na macOS/Linux to
-> pozycja backlogu F35.
+> instrukcję dla Windows oraz dla macOS/Linux przez CUPS (patrz niżej).
 
 ## Wirtualna drukarka (przechwytywanie ZPL z innych aplikacji)
 
@@ -119,6 +118,40 @@ w edytorze jako edytowalny szablon.
 3. Jako sterownik wybierz ZDesigner (dowolny model o rozmiarze twoich
    etykiet). Nazwij drukarkę np. „BarcodeLabelGen (przechwytywanie)".
 4. Drukuj na nią z dowolnej aplikacji — zadanie pojawi się w Inboxie.
+
+**Konfiguracja na macOS / Linux (CUPS):**
+
+Na Unix nie ma sterownika ZDesigner, więc przechwytywanie działa dla
+aplikacji, które **już wysyłają ZPL** (POS, systemy etykietujące, skrypty).
+Zwykłe aplikacje (Word, przeglądarka) drukują PostScript — agent je odrzuci.
+
+1. W `config.yaml` agenta włącz sekcję `capture` nasłuchującą na porcie
+   `127.0.0.1:9101` (patrz przykład konfiguracji wyżej) i uruchom agenta.
+2. Utwórz systemową kolejkę CUPS kierującą na agenta — jedną komendą:
+
+   ```
+   cd connector
+   ./install-capture-cups.sh
+   ```
+
+   (nazwę kolejki lub cel zmienisz przez `QUEUE=… TARGET=host:port
+   ./install-capture-cups.sh`). Równoważnie ręcznie:
+   `lpadmin -p BarcodeLabelGen-Capture -E -v socket://127.0.0.1:9101 -m raw`.
+   Skrypt nie wywołuje `sudo` sam — jeśli `lpadmin` zgłosi brak uprawnień,
+   uruchom go przez `sudo` lub dodaj się do grupy `lpadmin`/`_lpadmin`.
+3. Drukuj ZPL na kolejkę: `lp -d BarcodeLabelGen-Capture etykieta.zpl` —
+   zadanie pojawi się w Inboxie. Kolejkę usuniesz przez
+   `lpadmin -x BarcodeLabelGen-Capture`.
+
+> **Uwaga o „raw queues":** nowsze CUPS wypisują ostrzeżenie
+> `Raw queues are deprecated and will stop working in a future version of CUPS`
+> (widoczne też na Linuksie) — kolejka nadal działa, ale to sygnał, że w
+> przyszłości Zebra/CUPS może wymagać sterownika. Na **macOS** ścieżka jest
+> udokumentowana, lecz **niezweryfikowana na fizycznym Macu**; na Linuksie
+> została sprawdzona i działa. Zgłoś, jeśli natrafisz na problem.
+
+> Chcesz przechwytywać ze zwykłych aplikacji (nie-ZPL)? To wymaga sterownika
+> Zebra/CUPS generującego ZPL — poza zakresem tej wersji.
 
 Ograniczenia: przechwycone zadanie musi zawierać `^XA` (nie-ZPL jest
 odrzucany); grafika trybu binarnego (`^GFB`) nie jest wspierana — zostaw
