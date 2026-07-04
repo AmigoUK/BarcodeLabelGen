@@ -213,7 +213,7 @@
     "barcode": "Barcode",
     "barcodeType": "Code type",
     "barcodeData": "Barcode data",
-    "dynamicHint": "Use {{'{{column_name}}'}} to insert a dynamic field (replaced by CSV/Excel data in the batch generator) or {{'{{date+14d}}'}} for a date computed at generation time.",
+    "dynamicHint": "Use {{column_name}} to insert a dynamic field (replaced by CSV/Excel data in the batch generator) or {{date+14d}} for a date computed at generation time.",
     "dynamicFields": "Detected dynamic fields:",
     "datePreviewTooltip": "Date field — computed at generation time (preview uses your browser's date)",
     "downloadPdf": "Download PDF",

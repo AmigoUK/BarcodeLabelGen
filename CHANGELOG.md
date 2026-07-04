@@ -9,6 +9,25 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 _Nothing yet._
 
+## [0.5.1] — 2026-07-04
+
+### Added
+- **Real screenshots in the user guide (PL/EN).** The 20 described
+  placeholders in `docs/HELP.{pl,en}.md` are now actual captures
+  (login, templates, editor, label size, date chip, series wizard,
+  ZPL import/export, admin panel), taken headlessly against a demo
+  account. The in-app `/help` page bundles and renders them;
+  regeneration script at `tools/capture-help-screenshots.py`.
+
+### Fixed
+- **Editor "dynamic fields" hint rendered raw i18next braces**
+  (`{{'{{nazwa_kolumny}}'}}`) instead of the example placeholder —
+  the hint now interpolates correctly in both languages.
+- **Dependency security bumps** resolving all 7 open Dependabot
+  alerts: vite 6.4.3 (high: `server.fs.deny` bypass), cryptography
+  49.0.0 (high: vulnerable bundled OpenSSL), js-yaml 4.3.0,
+  react-router 7.18.1, @babel/core 7.29.7, idna 3.18.
+
 ## [0.5.0] — 2026-07-04
 
 ### Added
@@ -107,7 +126,8 @@ _Nothing yet._
   label formats, dataset upload (CSV/XLSX/SQLite) with `{{column}}`
   mail-merge, and PDF single-label + batch generation via ReportLab.
 
-[Unreleased]: https://github.com/AmigoUK/BarcodeLabelGen/compare/v0.5.0...HEAD
+[Unreleased]: https://github.com/AmigoUK/BarcodeLabelGen/compare/v0.5.1...HEAD
+[0.5.1]: https://github.com/AmigoUK/BarcodeLabelGen/releases/tag/v0.5.1
 [0.5.0]: https://github.com/AmigoUK/BarcodeLabelGen/releases/tag/v0.5.0
 [0.4.1]: https://github.com/AmigoUK/BarcodeLabelGen/releases/tag/v0.4.1
 [0.4.0]: https://github.com/AmigoUK/BarcodeLabelGen/releases/tag/v0.4.0

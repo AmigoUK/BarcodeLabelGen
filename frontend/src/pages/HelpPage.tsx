@@ -16,6 +16,20 @@ import helpEn from "../../../docs/HELP.en.md?raw";
 import faqPl from "../../../docs/FAQ.pl.md?raw";
 import faqEn from "../../../docs/FAQ.en.md?raw";
 
+// Screenshots referenced from the markdown live in docs/screenshots/help/;
+// Vite bundles them and we rewrite the relative src to the hashed asset URL.
+const helpImages = import.meta.glob("../../../docs/screenshots/help/**/*.png", {
+  eager: true,
+  query: "?url",
+  import: "default",
+}) as Record<string, string>;
+
+function resolveImageSrc(src: string | undefined): string | undefined {
+  if (!src) return src;
+  const match = Object.entries(helpImages).find(([key]) => key.endsWith(src));
+  return match ? match[1] : src;
+}
+
 type Tab = "help" | "faq";
 
 export function HelpPage() {
@@ -43,7 +57,21 @@ export function HelpPage() {
       </div>
 
       <article className="help-prose rounded-lg border border-slate-800 bg-slate-900/30 p-6 leading-relaxed text-slate-200">
-        <ReactMarkdown remarkPlugins={[remarkGfm]}>{source}</ReactMarkdown>
+        <ReactMarkdown
+          remarkPlugins={[remarkGfm]}
+          components={{
+            img: ({ src, alt }) => (
+              <img
+                src={resolveImageSrc(src)}
+                alt={alt}
+                loading="lazy"
+                className="my-3 w-full rounded-md border border-slate-700"
+              />
+            ),
+          }}
+        >
+          {source}
+        </ReactMarkdown>
       </article>
     </div>
   );

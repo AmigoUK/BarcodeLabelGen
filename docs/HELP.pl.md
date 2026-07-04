@@ -12,7 +12,9 @@ Krótki przewodnik po programie. Czytaj sekcjami, w kolejności, albo skacz od r
 2. Wpisz email i hasło, które dał ci administrator.
 3. Przy pierwszym logowaniu program poprosi cię o ustawienie własnego hasła (min. 10 znaków). To jednorazowe — kolejne logowania od razu pokazują panel.
 
-> 📷 **[SCREENSHOT: Ekran logowania]** — *kadr: formularz Email + Hasło z przyciskiem „Zaloguj" i przełącznikiem języka PL/EN w prawym górnym rogu.*
+![Ekran logowania](screenshots/help/pl/login.png)
+
+*kadr: formularz Email + Hasło z przyciskiem „Zaloguj" i przełącznikiem języka PL/EN w prawym górnym rogu.*
 
 ### Pulpit
 
@@ -42,7 +44,9 @@ Po zalogowaniu trafiasz na **Pulpit**. To tylko ekran powitalny — żeby zaczą
 
 W nagłówku po prawej: twój email, przełącznik języka **PL/EN** i przycisk **Wyloguj**.
 
-> 📷 **[SCREENSHOT: Lista szablonów]** — *kadr: strona Szablony z kilkoma kafelkami, polem wyszukiwania oraz przyciskami „Importuj" i „Nowy szablon" w prawym górnym rogu.*
+![Lista szablonów](screenshots/help/pl/templates.png)
+
+*kadr: strona Szablony z kilkoma kafelkami, polem wyszukiwania oraz przyciskami „Importuj" i „Nowy szablon" w prawym górnym rogu.*
 
 ### Edytor — układ ekranu
 
@@ -54,7 +58,9 @@ Po otwarciu szablonu widzisz:
 - **Pasek wyrównania (nad canvasem)** — wyrównywanie i kolejność warstw.
 - **Prawy panel (Właściwości)** — ustawienia zaznaczonego obiektu.
 
-> 📷 **[SCREENSHOT: Edytor — widok ogólny]** — *kadr: cały edytor z otwartym szablonem; podpisane strzałkami: toolbar, panel Dodaj, canvas, pasek wyrównania, panel Właściwości.*
+![Edytor — widok ogólny](screenshots/help/pl/editor-overview.png)
+
+*kadr: cały edytor z otwartym szablonem; podpisane strzałkami: toolbar, panel Dodaj, canvas, pasek wyrównania, panel Właściwości.*
 
 ### Pasek wyrównania — co która grupa robi
 
@@ -172,7 +178,9 @@ Rozmiar ustawiony przy tworzeniu szablonu **można zmienić w każdej chwili**: 
 - Wpisz nową szerokość i wysokość w mm (1–1000), albo kliknij jeden z gotowych presetów (40×100, 50×30, 100×150, 105×148, 210×297).
 - Obiekty **nie są przeskalowywane** — zachowują pozycje w mm. Po zmniejszeniu etykiety elementy poza krawędzią po prostu przesuwasz z powrotem.
 
-> 📷 **[SCREENSHOT: Okno „Rozmiar etykiety"]** — *kadr: modal z polami Szerokość/Wysokość i rzędem presetów-chipów; kursor nad przyciskiem „Zastosuj".*
+![Okno „Rozmiar etykiety"](screenshots/help/pl/label-size.png)
+
+*kadr: modal z polami Szerokość/Wysokość i rzędem presetów-chipów; kursor nad przyciskiem „Zastosuj".*
 
 ---
 
@@ -198,7 +206,9 @@ Wstaw w Text lub Barcode placeholder w postaci `{{nazwa_kolumny}}`, np.:
 
 Każde wystąpienie zostanie podmienione wartością z odpowiedniej kolumny.
 
-> 📷 **[SCREENSHOT: Wykryte pola dynamiczne]** — *kadr: prawy panel Właściwości z polem tekstowym zawierającym `{{name}}` i `{{date+14d}}`; poniżej dwa chipy — fioletowy `{{name}}` i zielony `{{date+14d}} → 18.07.2026`.*
+![Wykryte pola dynamiczne](screenshots/help/pl/dynamic-fields.png)
+
+*kadr: prawy panel Właściwości z polem tekstowym zawierającym `{{name}}` i `{{date+14d}}`; poniżej dwa chipy — fioletowy `{{name}}` i zielony `{{date+14d}} → 18.07.2026`.*
 
 ### Krok 1 — Wgraj dane
 
@@ -238,7 +248,9 @@ Program wykrywa wszystkie placeholdery `{{...}}` z szablonu. Jeśli nazwa placeh
 
 Możesz odsiać wiersze przed generowaniem, np. *price > 10* albo *category contains "tea"*. Klik **Sprawdź filtr** pokazuje ile wierszy się załapie. Pomiń ten krok jeśli chcesz wszystkie.
 
-> 📷 **[SCREENSHOT: Kreator serii — mapowanie]** — *kadr: krok 2 kreatora z listą placeholderów po lewej i selectami kolumn po prawej; przy `{{date}}` widoczna zielona podpowiedź „Opcjonalne — bez mapowania użyta zostanie dzisiejsza data".*
+![Kreator serii — mapowanie](screenshots/help/pl/series-map.png)
+
+*kadr: krok 2 kreatora z listą placeholderów po lewej i selectami kolumn po prawej; przy `{{date}}` widoczna zielona podpowiedź „Opcjonalne — bez mapowania użyta zostanie dzisiejsza data".*
 
 ### Krok 4 — Generuj PDF
 
@@ -272,7 +284,9 @@ Oprócz kolumn z arkusza możesz wstawiać **daty liczone automatycznie w momenc
 
 Po wpisaniu placeholdera w prawym panelu pojawia się **zielony chip z podglądem obliczonej daty** (fioletowe chipy to zwykłe kolumny z arkusza). Najedź na chip — tooltip przypomina, że finalna wartość liczy się przy generowaniu.
 
-> 📷 **[SCREENSHOT: Zielony chip daty]** — *kadr: zbliżenie na prawy panel; pole Treść z `{{date+14d}}` i zielony chip `{{date+14d}} → 18.07.2026` pod spodem.*
+![Zielony chip daty](screenshots/help/pl/date-chip.png)
+
+*kadr: zbliżenie na prawy panel; pole Treść z `{{date+14d}}` i zielony chip `{{date+14d}} → 18.07.2026` pod spodem.*
 
 ### Dobrze wiedzieć
 
@@ -297,7 +311,9 @@ Toolbar → **⤓ Importuj ZPL**.
 
 Zmienne drukarkowe w pojedynczych klamrach (np. `{NAZWA}`) przechodzą bez zmian, a polecenia, których edytor nie modeluje, są zachowywane i wracają przy eksporcie.
 
-> 📷 **[SCREENSHOT: Okno importu ZPL]** — *kadr: modal z wklejonym kodem ZPL, selektem DPI ustawionym na „Wykryj automatycznie" i wynikiem analizy „12 obiektów · 203 dpi".*
+![Okno importu ZPL](screenshots/help/pl/zpl-import.png)
+
+*kadr: modal z wklejonym kodem ZPL, selektem DPI ustawionym na „Wykryj automatycznie" i wynikiem analizy „12 obiektów · 203 dpi".*
 
 ### Eksport ZPL
 
@@ -308,7 +324,9 @@ Toolbar → **⤒ ZPL**. Dwa tryby:
 
 Wybierz DPI zgodne z twoją drukarką (203 lub 300).
 
-> 📷 **[SCREENSHOT: Okno eksportu ZPL]** — *kadr: modal w trybie „Szablon (zmienne)" z podglądem wygenerowanego kodu i przyciskami Kopiuj / Pobierz .zpl.*
+![Okno eksportu ZPL](screenshots/help/pl/zpl-export.png)
+
+*kadr: modal w trybie „Szablon (zmienne)" z podglądem wygenerowanego kodu i przyciskami Kopiuj / Pobierz .zpl.*
 
 ---
 
@@ -316,7 +334,9 @@ Wybierz DPI zgodne z twoją drukarką (203 lub 300).
 
 Lewe menu → **Administracja → Użytkownicy**.
 
-> 📷 **[SCREENSHOT: Panel użytkowników]** — *kadr: tabela użytkowników z kolumnami Email / Rola / Aktywne / Ostatnie logowanie i przyciskiem „Utwórz konto" u góry.*
+![Panel użytkowników](screenshots/help/pl/users-admin.png)
+
+*kadr: tabela użytkowników z kolumnami Email / Rola / Aktywne / Ostatnie logowanie i przyciskiem „Utwórz konto" u góry.*
 
 ### Tworzenie użytkownika
 

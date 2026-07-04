@@ -12,7 +12,9 @@ A short guide to the app. Read top-to-bottom for a complete tour, or jump straig
 2. Enter the email and password your administrator gave you.
 3. On your first login, the app will ask you to set your own password (minimum 10 characters). This happens once — afterwards you go straight to the dashboard.
 
-> 📷 **[SCREENSHOT: Login screen]** — *frame: the Email + Password form with the "Log in" button and the PL/EN language switcher in the top-right corner.*
+![Login screen](screenshots/help/en/login.png)
+
+*frame: the Email + Password form with the "Log in" button and the PL/EN language switcher in the top-right corner.*
 
 ### The dashboard
 
@@ -42,7 +44,9 @@ After signing in you land on the **Dashboard**. It's just a welcome screen — t
 
 In the header, on the right: your email, the **PL/EN** language switcher and the **Log out** button.
 
-> 📷 **[SCREENSHOT: Templates list]** — *frame: the Templates page with a few tiles, the search field, and the "Import" and "New template" buttons in the top-right corner.*
+![Templates list](screenshots/help/en/templates.png)
+
+*frame: the Templates page with a few tiles, the search field, and the "Import" and "New template" buttons in the top-right corner.*
 
 ### The editor — screen layout
 
@@ -54,7 +58,9 @@ When you open a template you'll see:
 - **Alignment bar (above canvas)** — alignment and z-order controls.
 - **Right panel (Properties)** — settings for the selected object.
 
-> 📷 **[SCREENSHOT: The editor — overview]** — *frame: the whole editor with a template open; arrows labelling the toolbar, the Add panel, the canvas, the alignment bar and the Properties panel.*
+![The editor — overview](screenshots/help/en/editor-overview.png)
+
+*frame: the whole editor with a template open; arrows labelling the toolbar, the Add panel, the canvas, the alignment bar and the Properties panel.*
 
 ### Alignment bar — what each group does
 
@@ -172,7 +178,9 @@ The size you picked when creating the template **can be changed at any time**: c
 - Type a new width and height in mm (1–1000), or click one of the ready-made presets (40×100, 50×30, 100×150, 105×148, 210×297).
 - Objects are **not rescaled** — they keep their positions in mm. If you shrink the label, just drag any elements that ended up past the edge back in.
 
-> 📷 **[SCREENSHOT: The "Label size" dialog]** — *frame: the modal with the Width/Height fields and the row of preset chips; cursor hovering the "Apply" button.*
+![The "Label size" dialog](screenshots/help/en/label-size.png)
+
+*frame: the modal with the Width/Height fields and the row of preset chips; cursor hovering the "Apply" button.*
 
 ---
 
@@ -198,7 +206,9 @@ In a Text or Barcode object, insert a placeholder shaped like `{{column_name}}`,
 
 Each occurrence will be replaced with the value from the matching column.
 
-> 📷 **[SCREENSHOT: Detected dynamic fields]** — *frame: the right Properties panel with a text field containing `{{name}}` and `{{date+14d}}`; below it two chips — a purple `{{name}}` and a green `{{date+14d}} → 18.07.2026`.*
+![Detected dynamic fields](screenshots/help/en/dynamic-fields.png)
+
+*frame: the right Properties panel with a text field containing `{{name}}` and `{{date+14d}}`; below it two chips — a purple `{{name}}` and a green `{{date+14d}} → 18.07.2026`.*
 
 ### Step 1 — Upload data
 
@@ -238,7 +248,9 @@ The app detects every `{{...}}` placeholder in the template. If the placeholder 
 
 Drop rows before generating, e.g. *price > 10* or *category contains "tea"*. Click **Test filter** to see how many rows match. Skip this step to keep all rows.
 
-> 📷 **[SCREENSHOT: Series wizard — mapping]** — *frame: step 2 of the wizard with the placeholder list on the left and column selects on the right; next to `{{date}}` a green hint reading "Optional — today's date is used when unmapped".*
+![Series wizard — mapping](screenshots/help/en/series-map.png)
+
+*frame: step 2 of the wizard with the placeholder list on the left and column selects on the right; next to `{{date}}` a green hint reading "Optional — today's date is used when unmapped".*
 
 ### Step 4 — Generate PDF
 
@@ -272,7 +284,9 @@ Besides spreadsheet columns you can insert **dates calculated automatically at g
 
 Once you type the placeholder, a **green chip previewing the calculated date** appears in the right panel (purple chips are regular spreadsheet columns). Hover the chip — a tooltip reminds you that the final value is calculated at generation time.
 
-> 📷 **[SCREENSHOT: Green date chip]** — *frame: close-up of the right panel; the Content field with `{{date+14d}}` and the green chip `{{date+14d}} → 18.07.2026` underneath.*
+![Green date chip](screenshots/help/en/date-chip.png)
+
+*frame: close-up of the right panel; the Content field with `{{date+14d}}` and the green chip `{{date+14d}} → 18.07.2026` underneath.*
 
 ### Good to know
 
@@ -297,7 +311,9 @@ Toolbar → **⤓ Import ZPL**.
 
 Printer variables in single braces (e.g. `{NAZWA}`) pass through untouched, and commands the editor doesn't model are preserved and come back on export.
 
-> 📷 **[SCREENSHOT: ZPL import dialog]** — *frame: the modal with ZPL code pasted in, the DPI select set to "Auto-detect" and the analysis result "12 objects · 203 dpi".*
+![ZPL import dialog](screenshots/help/en/zpl-import.png)
+
+*frame: the modal with ZPL code pasted in, the DPI select set to "Auto-detect" and the analysis result "12 objects · 203 dpi".*
 
 ### Exporting ZPL
 
@@ -308,7 +324,9 @@ Toolbar → **⤒ ZPL**. Two modes:
 
 Pick the DPI that matches your printer (203 or 300).
 
-> 📷 **[SCREENSHOT: ZPL export dialog]** — *frame: the modal in "Template (variables)" mode with a preview of the generated code and the Copy / Download .zpl buttons.*
+![ZPL export dialog](screenshots/help/en/zpl-export.png)
+
+*frame: the modal in "Template (variables)" mode with a preview of the generated code and the Copy / Download .zpl buttons.*
 
 ---
 
@@ -316,7 +334,9 @@ Pick the DPI that matches your printer (203 or 300).
 
 Left menu → **Administration → Users**.
 
-> 📷 **[SCREENSHOT: Users panel]** — *frame: the users table with the Email / Role / Active / Last login columns and the "Create account" button at the top.*
+![Users panel](screenshots/help/en/users-admin.png)
+
+*frame: the users table with the Email / Role / Active / Last login columns and the "Create account" button at the top.*
 
 ### Creating a user
 
