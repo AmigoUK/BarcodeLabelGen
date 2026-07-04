@@ -57,7 +57,7 @@ Pracownicy biurowi nie mają obecnie narzędzia, które pozwoliłoby im samodzie
 | F17 | Wersjonowanie szablonów (każdy save = nowa wersja, możliwość przywrócenia) — **zrealizowane w v0.14.0** (migawki przy ręcznym zapisie); spec: `docs/superpowers/specs/2026-07-04-template-versioning-design.md` | P1 |
 | F18 | Historia wygenerowanych PDF (lista, ponowne pobranie do 30 dni) — **zrealizowane w v0.15.0**; spec: `docs/superpowers/specs/2026-07-04-generated-files-history-design.md` | P1 |
 | F19 | Export/import szablonów (JSON) | P1 |
-| F20 | Print preview (podgląd PDF w przeglądarce przed pobraniem) | P1 |
+| F20 | Print preview (podgląd PDF w przeglądarce przed pobraniem) — **zrealizowane w v0.16.0** (osadzony podgląd pojedynczej etykiety); spec: `docs/superpowers/specs/2026-07-04-print-preview-design.md` | P1 |
 | F21 | Integracja Zebra Browser Print (bezpośredni druk ZPL) — **zrealizowane w v0.10.0** własnym konektorem: szybka ścieżka localhost w dialogu druku | P1 |
 | F22 | Integracja Toshiba (TSPL przez agenta lub Browser Print) | P2 |
 | F23 | Dodatkowe języki UI (DE, ES, FR — tłumaczenie społecznościowe) | P2 |

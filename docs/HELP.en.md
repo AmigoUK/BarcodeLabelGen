@@ -224,7 +224,7 @@ The size you picked when creating the template **can be changed at any time**: c
 
 ## 5. Downloading a PDF — single label
 
-Click **Download PDF** in the editor toolbar. Rendering is synchronous (a few seconds), then the PDF downloads automatically.
+Want to see the result first? Click **👁 Preview** — the PDF appears embedded in the app with a **Download PDF** button. Or click **Download PDF** in the editor toolbar directly. Rendering is synchronous (a few seconds), then the PDF downloads automatically.
 
 If any text didn't fit its block, you'll see an **N warnings** chip — hover it for details.
 

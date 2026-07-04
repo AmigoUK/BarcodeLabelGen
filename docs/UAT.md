@@ -145,6 +145,11 @@ Testy oznaczone 🔴 są **blokujące** dla decyzji o prod; 🟡 — ważne, ale
   typem/rozmiarem; ponowne pobranie daje ten sam plik.
   Wynik: ..................................................
 
+## J. Podgląd wydruku (v0.16.0)
+
+- [ ] 🟡 **J1. Podgląd PDF.** W edytorze kliknij **👁 Podgląd**. *Oczekiwane:* PDF pokazuje się osadzony w oknie (nie pobiera się od razu); **Pobierz PDF** z okna ściąga plik; w Historii powstaje jeden wpis, nie dwa.
+  Wynik: ..................................................
+
 ---
 
 ## Decyzja

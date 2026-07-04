@@ -9,6 +9,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 _Nothing yet._
 
+## [0.16.0] — 2026-07-04
+
+### Added
+- **Print preview (F20).** A new 👁 Preview button in the editor toolbar
+  renders the single-label PDF and shows it embedded in a modal (with any
+  text-overflow warnings) before you commit to downloading — Download and
+  Close from there. `useGeneratePdf` was split (fetch returns the blob;
+  `downloadPdfBlob` saves it) so Preview and Download PDF share one path
+  and preview+download stays a single history entry.
+
 ## [0.15.0] — 2026-07-04
 
 ### Added
@@ -314,7 +324,8 @@ _Nothing yet._
   label formats, dataset upload (CSV/XLSX/SQLite) with `{{column}}`
   mail-merge, and PDF single-label + batch generation via ReportLab.
 
-[Unreleased]: https://github.com/AmigoUK/BarcodeLabelGen/compare/v0.15.0...HEAD
+[Unreleased]: https://github.com/AmigoUK/BarcodeLabelGen/compare/v0.16.0...HEAD
+[0.16.0]: https://github.com/AmigoUK/BarcodeLabelGen/releases/tag/v0.16.0
 [0.15.0]: https://github.com/AmigoUK/BarcodeLabelGen/releases/tag/v0.15.0
 [0.14.0]: https://github.com/AmigoUK/BarcodeLabelGen/releases/tag/v0.14.0
 [0.13.0]: https://github.com/AmigoUK/BarcodeLabelGen/releases/tag/v0.13.0

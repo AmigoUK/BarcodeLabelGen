@@ -224,7 +224,7 @@ Rozmiar ustawiony przy tworzeniu szablonu **można zmienić w każdej chwili**: 
 
 ## 5. Pobieranie PDF — pojedyncza etykieta
 
-W toolbarze edytora kliknij **Pobierz PDF**. Renderowanie jest synchroniczne (kilka sekund), plik PDF zaczyna się ściągać.
+Chcesz najpierw zobaczyć wynik? Kliknij **👁 Podgląd** — PDF pokaże się w oknie aplikacji z przyciskiem **Pobierz PDF**. Albo od razu **Pobierz PDF** w toolbarze. Renderowanie jest synchroniczne (kilka sekund), plik PDF zaczyna się ściągać.
 
 Jeśli któryś tekst nie zmieścił się w bloku, zobaczysz chip **N ostrzeżeń** — najedź żeby zobaczyć szczegóły.
 
