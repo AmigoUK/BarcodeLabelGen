@@ -21,6 +21,7 @@ type Props = {
   onExportZpl: () => void;
   onLabelSize: () => void;
   onPrint: () => void;
+  onHistory: () => void;
 };
 
 export function Toolbar({
@@ -36,6 +37,7 @@ export function Toolbar({
   onExportZpl,
   onLabelSize,
   onPrint,
+  onHistory,
 }: Props) {
   const { t } = useTranslation();
   const dirty = useEditorStore((s) => s.dirty);
@@ -140,6 +142,9 @@ export function Toolbar({
         </Button>
         <Button variant="ghost" onClick={onPrint} title={t("print.tooltip")}>
           🖨 {t("print.button")}
+        </Button>
+        <Button variant="ghost" onClick={onHistory} title={t("history.tooltip")}>
+          🕘 {t("history.button")}
         </Button>
         <Button
           variant="secondary"

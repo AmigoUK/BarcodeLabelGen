@@ -7,6 +7,7 @@ import { Canvas } from "../editor/Canvas";
 import { ExportZplModal } from "../editor/ExportZplModal";
 import { ImportZplModal } from "../editor/ImportZplModal";
 import { PrintModal } from "../editor/PrintModal";
+import { VersionHistoryModal } from "../editor/VersionHistoryModal";
 import { LabelSettingsModal } from "../editor/LabelSettingsModal";
 import { LeftPanel } from "../editor/LeftPanel";
 import { RightPanel } from "../editor/RightPanel";
@@ -55,7 +56,9 @@ export function EditorPage() {
   // the request was in flight — otherwise dirty stays true and the next
   // autosave/Save picks up the newer canvas.
   const saveCanvas = useCallback(
-    async (c: CanvasData) => {
+    // `snapshot` distinguishes a deliberate save (button / Ctrl+S) from an
+    // autosave — only the former records a version in the history (F17).
+    async (c: CanvasData, opts?: { snapshot?: boolean }) => {
       if (!templateId) return;
       // Persist the label dimensions alongside the canvas so the template
       // record (used by PDF/ZPL generation) stays in sync with the stage the
@@ -66,6 +69,7 @@ export function EditorPage() {
           canvas_data: c,
           width_mm: c.stage.width_mm,
           height_mm: c.stage.height_mm,
+          snapshot: opts?.snapshot ?? false,
         },
       });
       if (useEditorStore.getState().canvas === c) {
@@ -75,7 +79,7 @@ export function EditorPage() {
     [templateId, update, markClean],
   );
 
-  // Autosave 30s after the last edit.
+  // Autosave 30s after the last edit — never snapshots.
   const autosave = useAutosave(canvas, dirty, saveCanvas, 30_000);
 
   // Keyboard shortcuts — suppressed while typing in inputs.
@@ -104,7 +108,7 @@ export function EditorPage() {
         redo();
       } else if (mod && e.key.toLowerCase() === "s") {
         e.preventDefault();
-        if (canvas) void saveCanvas(canvas);
+        if (canvas) void saveCanvas(canvas, { snapshot: true });
       } else if (mod && e.key.toLowerCase() === "d" && !e.shiftKey) {
         // Ctrl/Cmd+D — duplicate selection in place with a small offset so
         // the clones don't overlap the originals. preventDefault stops the
@@ -156,6 +160,7 @@ export function EditorPage() {
   const [showExportZpl, setShowExportZpl] = useState(false);
   const [showLabelSize, setShowLabelSize] = useState(false);
   const [showPrint, setShowPrint] = useState(false);
+  const [showHistory, setShowHistory] = useState(false);
 
   if (template.isLoading) {
     return <div className="p-6 text-slate-400">{t("common.loading")}</div>;
@@ -168,7 +173,7 @@ export function EditorPage() {
     <div className="flex h-screen flex-col bg-slate-950">
       <Toolbar
         template={template.data}
-        onSave={() => canvas && void saveCanvas(canvas)}
+        onSave={() => canvas && void saveCanvas(canvas, { snapshot: true })}
         saving={update.isPending}
         saveError={
           update.error
@@ -185,6 +190,7 @@ export function EditorPage() {
         onExportZpl={() => setShowExportZpl(true)}
         onLabelSize={() => setShowLabelSize(true)}
         onPrint={() => setShowPrint(true)}
+        onHistory={() => setShowHistory(true)}
       />
       <AlignmentBar />
       <div className="flex min-h-0 flex-1">
@@ -224,6 +230,13 @@ export function EditorPage() {
             onApply={(w, h) => setStageSize(w, h)}
           />
           <PrintModal open={showPrint} onClose={() => setShowPrint(false)} canvas={canvas} />
+          {showHistory && (
+            <VersionHistoryModal
+              templateId={template.data.id}
+              onClose={() => setShowHistory(false)}
+              onRestored={(restored) => replaceCanvas(restored.canvas_data)}
+            />
+          )}
         </>
       )}
     </div>

@@ -403,5 +403,14 @@
     "use": "Use",
     "yourTemplate": "Your template",
     "emptyShared": "Nothing shared yet. Share yours: Templates → ⚙ on a card → \"Share in the Library\"."
+  },
+  "history": {
+    "title": "Version history",
+    "button": "History",
+    "tooltip": "Saved template versions — preview and restore",
+    "intro": "Each manual save (Save / Ctrl+S) creates a version; autosave does not. You can restore any of them — the current state is then kept in history as a new version.",
+    "empty": "No saved versions yet. Click Save to create the first.",
+    "restore": "Restore",
+    "confirmRestore": "Restore version v{{version}}? The current state will be saved to history."
   }
 }

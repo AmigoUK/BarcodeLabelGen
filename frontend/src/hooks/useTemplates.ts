@@ -152,6 +152,8 @@ type UpdateTemplateInput = {
     height_mm: number;
     folder_id: number | null;
     featured_asset_id: number | null;
+    /** F17: true = manual save → history snapshot; false/absent = autosave. */
+    snapshot: boolean;
   }>;
 };
 

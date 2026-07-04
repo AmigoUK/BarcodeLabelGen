@@ -403,5 +403,14 @@
     "use": "Użyj",
     "yourTemplate": "Twój szablon",
     "emptyShared": "Nikt jeszcze niczego nie udostępnił. Udostępnij swój szablon: Szablony → ⚙ na kafelku → „Udostępnij w Bibliotece\"."
+  },
+  "history": {
+    "title": "Historia wersji",
+    "button": "Historia",
+    "tooltip": "Zapisane wersje szablonu — podgląd i przywracanie",
+    "intro": "Każde ręczne zapisanie (Zapisz / Ctrl+S) tworzy wersję. Autozapis nie tworzy wersji. Możesz przywrócić dowolną — bieżący stan trafi wtedy do historii jako nowa wersja.",
+    "empty": "Brak zapisanych wersji. Kliknij Zapisz, aby utworzyć pierwszą.",
+    "restore": "Przywróć",
+    "confirmRestore": "Przywrócić wersję v{{version}}? Bieżący stan zostanie zapisany w historii."
   }
 }
