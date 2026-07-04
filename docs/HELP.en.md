@@ -83,7 +83,8 @@ On the **Templates** page there's a folder rail on the left: **All**, your folde
 
 - **New folder** — button at the bottom of the rail.
 - **Moving templates**: hover a template card → **⚙** → pick a folder → Save.
-- **Rename / delete** — the ✎ and ✕ icons next to a folder (on hover). Deleting a folder **does not delete the templates** — they go back to "No folder".
+- **Edit folder (✎)** — rename and pick a **folder color** (8-color palette): a colored dot appears next to the folder in the rail and on its template cards.
+- **Delete (✕)** — **does not delete the templates**, they go back to "No folder".
 
 ### The Library — ready-made projects and templates from others
 
@@ -96,7 +97,7 @@ The **"Use"** button always creates **your own copy** and opens it in the editor
 
 ### Sharing your own template
 
-Templates → hover a card → **⚙** → tick **"Share in the Library"**. From then on every logged-in user can see it in the Library and clone it; **only you can edit it**. A shared template shows a 📚 icon in the list. Untick to withdraw it from the Library.
+Templates → hover a card → **⚙** → tick **"Share in the Library"**. In the same dialog you can also upload a **featured image** — a preview picture shown on the list card and in the Library. From then on every logged-in user can see it in the Library and clone it; **only you can edit it**. A shared template shows a 📚 icon in the list. Untick to withdraw it from the Library.
 
 ---
 

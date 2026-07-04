@@ -83,7 +83,8 @@ Na stronie **Szablony** po lewej masz pasek folderów: **Wszystkie**, Twoje fold
 
 - **Nowy folder** — przycisk na dole paska.
 - **Przenoszenie**: najedź na kafelek szablonu → **⚙** → wybierz folder → Zapisz.
-- **Zmiana nazwy / usunięcie** — ikony ✎ i ✕ przy folderze (po najechaniu). Usunięcie folderu **nie kasuje szablonów** — wracają do „Bez folderu".
+- **Edycja (✎)** — zmiana nazwy i **kolor folderu** (paleta 8 kolorów): kolorowa kropka pojawia się przy folderze na pasku i na kafelkach jego szablonów.
+- **Usunięcie (✕)** — **nie kasuje szablonów**, wracają do „Bez folderu".
 
 ### Biblioteka — gotowe projekty i szablony od innych
 
@@ -96,7 +97,7 @@ Przycisk **„Użyj"** zawsze tworzy **Twoją własną kopię** i otwiera ją w 
 
 ### Udostępnianie własnego szablonu
 
-Szablony → najedź na kafelek → **⚙** → zaznacz **„Udostępnij w Bibliotece"**. Od tej chwili wszyscy zalogowani widzą go w Bibliotece i mogą sklonować; **edytujesz tylko Ty**. Udostępniony szablon ma na liście ikonę 📚. Odznacz, aby wycofać z Biblioteki.
+Szablony → najedź na kafelek → **⚙** → zaznacz **„Udostępnij w Bibliotece"**. W tym samym oknie możesz też wgrać **grafikę wyróżniającą** — obrazek podglądowy pokazywany na kafelku listy i w Bibliotece. Od tej chwili wszyscy zalogowani widzą go w Bibliotece i mogą sklonować; **edytujesz tylko Ty**. Udostępniony szablon ma na liście ikonę 📚. Odznacz, aby wycofać z Biblioteki.
 
 ---
 

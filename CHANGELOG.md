@@ -9,6 +9,20 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 _Nothing yet._
 
+## [0.12.0] — 2026-07-04
+
+### Added
+- **Folder colors (F32).** The folder ✎ now opens a proper edit dialog
+  (replacing the window.prompt rename) with an 8-colour palette; the
+  chosen colour shows as a dot next to the folder in the rail and on
+  every template card belonging to it.
+- **Featured images (F33).** The template ⚙ dialog gains an image
+  upload (PNG/JPG/SVG, 5 MB); the thumbnail renders on Templates-page
+  cards and in the Library. Served via
+  `GET /api/templates/:id/featured-image` with template-level access,
+  so library viewers see thumbnails of shared templates; cloning
+  copies the image into the cloner's account. Alembic 0010.
+
 ## [0.11.0] — 2026-07-04
 
 ### Added
@@ -238,7 +252,8 @@ _Nothing yet._
   label formats, dataset upload (CSV/XLSX/SQLite) with `{{column}}`
   mail-merge, and PDF single-label + batch generation via ReportLab.
 
-[Unreleased]: https://github.com/AmigoUK/BarcodeLabelGen/compare/v0.11.0...HEAD
+[Unreleased]: https://github.com/AmigoUK/BarcodeLabelGen/compare/v0.12.0...HEAD
+[0.12.0]: https://github.com/AmigoUK/BarcodeLabelGen/releases/tag/v0.12.0
 [0.11.0]: https://github.com/AmigoUK/BarcodeLabelGen/releases/tag/v0.11.0
 [0.10.0]: https://github.com/AmigoUK/BarcodeLabelGen/releases/tag/v0.10.0
 [0.9.0]: https://github.com/AmigoUK/BarcodeLabelGen/releases/tag/v0.9.0
