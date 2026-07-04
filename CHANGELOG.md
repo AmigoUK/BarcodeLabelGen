@@ -9,6 +9,23 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 _Nothing yet._
 
+## [0.10.0] — 2026-07-04
+
+### Added
+- **Browser fast path for printing (F21).** The print dialog probes the
+  loopback connector (`http://127.0.0.1:9110`) when opened; if an agent
+  runs on the same machine it appears as a preselected **⚡ This
+  computer — instant print** target with its own printer list, and the
+  label goes straight over the loopback with an immediate result — no
+  server queue round-trip. Verified in real Chromium from the HTTPS
+  origin (Private Network Access preflight answered by the agent). Any
+  probe failure silently falls back to the queue path.
+- **UAT checklist (`docs/UAT.md`, F30)** — owner-run manual tests (real
+  Zebra hardware, Windows virtual printer, production data, resilience)
+  gating the production go/no-go decision.
+- Backlog: F31 — template folders / ready-made project library /
+  sharing (to be brainstormed).
+
 ## [0.9.0] — 2026-07-04
 
 ### Added
@@ -196,7 +213,8 @@ _Nothing yet._
   label formats, dataset upload (CSV/XLSX/SQLite) with `{{column}}`
   mail-merge, and PDF single-label + batch generation via ReportLab.
 
-[Unreleased]: https://github.com/AmigoUK/BarcodeLabelGen/compare/v0.9.0...HEAD
+[Unreleased]: https://github.com/AmigoUK/BarcodeLabelGen/compare/v0.10.0...HEAD
+[0.10.0]: https://github.com/AmigoUK/BarcodeLabelGen/releases/tag/v0.10.0
 [0.9.0]: https://github.com/AmigoUK/BarcodeLabelGen/releases/tag/v0.9.0
 [0.8.0]: https://github.com/AmigoUK/BarcodeLabelGen/releases/tag/v0.8.0
 [0.7.0]: https://github.com/AmigoUK/BarcodeLabelGen/releases/tag/v0.7.0
