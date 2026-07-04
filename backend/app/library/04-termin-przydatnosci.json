@@ -1,0 +1,61 @@
+{
+  "$schema": "blg-template/v1",
+  "exportedAt": "2026-07-04T12:00:00Z",
+  "exportedBy": "BarcodeLabelGen starters",
+  "template": {
+    "name": "Termin przydatności (50×30)",
+    "description": "Data produkcji i „najlepiej spożyć przed” liczone automatycznie w dniu wydruku + numer partii z arkusza.",
+    "width_mm": 50,
+    "height_mm": 30
+  },
+  "canvas_data": {
+    "version": 1,
+    "stage": {
+      "width_mm": 50,
+      "height_mm": 30
+    },
+    "objects": [
+      {
+        "id": "prod",
+        "type": "text",
+        "x": 3,
+        "y": 4,
+        "text": "Data produkcji: {{date}}",
+        "fontSize": 3,
+        "fontFamily": "Inter, sans-serif",
+        "fill": "#0f172a"
+      },
+      {
+        "id": "best",
+        "type": "text",
+        "x": 3,
+        "y": 10,
+        "text": "Najlepiej spożyć przed:",
+        "fontSize": 3,
+        "fontFamily": "Inter, sans-serif",
+        "fill": "#0f172a"
+      },
+      {
+        "id": "best-d",
+        "type": "text",
+        "x": 3,
+        "y": 15,
+        "text": "{{date+90d}}",
+        "fontSize": 5,
+        "fontFamily": "Inter, sans-serif",
+        "fill": "#0f172a"
+      },
+      {
+        "id": "lot",
+        "type": "text",
+        "x": 3,
+        "y": 24,
+        "text": "Partia: {{partia}}",
+        "fontSize": 2.8,
+        "fontFamily": "Inter, sans-serif",
+        "fill": "#0f172a"
+      }
+    ]
+  },
+  "assets": []
+}

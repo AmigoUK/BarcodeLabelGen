@@ -235,9 +235,15 @@ def test_shared_template_visible_to_other_users(
         headers=csrf.headers(),
     )
 
+    # Default scope=mine no longer mixes in other users' shared templates…
     response = client.get("/api/templates")
     assert response.status_code == 200
-    assert any(t["id"] == tid for t in response.get_json()["templates"])
+    assert not any(t["id"] == tid for t in response.get_json()["templates"])
+
+    # …they live in the library scope instead, annotated with the owner.
+    library = client.get("/api/templates?scope=library").get_json()["templates"]
+    row = next(t for t in library if t["id"] == tid)
+    assert row["owner_email"] == "user@example.com"
 
     # And can read the canvas
     assert client.get(f"/api/templates/{tid}").status_code == 200

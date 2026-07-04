@@ -25,6 +25,7 @@ from app.schemas.template import (
 )
 from app.services import templates as tpl_svc
 from app.services import templates_io as tpl_io
+from app.services.folders import FolderNotFoundError
 
 _SAFE_FILENAME_RE = re.compile(r"[^A-Za-z0-9._-]+")
 
@@ -46,11 +47,44 @@ def list_label_formats() -> ResponseReturnValue:
 @templates_bp.get("/templates")
 @login_required
 def list_templates() -> ResponseReturnValue:
+    """List templates. `scope=mine` (default) → own only, optionally
+    filtered by `folder_id=<id>` or `folder_id=none` (unfiled).
+    `scope=library` → everything shared, with the owner's email."""
     session = get_session()
-    items = tpl_svc.list_visible(session, owner_id=current_user.id)
+    scope = request.args.get("scope", "mine")
+    if scope == "library":
+        items = tpl_svc.list_library(session)
+        out = []
+        for t in items:
+            row = TemplateSummary.model_validate(t).model_dump(mode="json")
+            row["owner_email"] = t.owner.email
+            out.append(row)
+        return jsonify({"templates": out})
+
+    folder_arg = request.args.get("folder_id")
+    unfiled = folder_arg == "none"
+    folder_id = int(folder_arg) if folder_arg and folder_arg.isdigit() else None
+    items = tpl_svc.list_mine(
+        session, owner_id=current_user.id, folder_id=folder_id, unfiled_only=unfiled
+    )
     return jsonify(
         {"templates": [TemplateSummary.model_validate(t).model_dump(mode="json") for t in items]}
     )
+
+
+@templates_bp.post("/templates/<int:template_id>/clone")
+@login_required
+def clone_template(template_id: int) -> ResponseReturnValue:
+    """\"Użyj\" from the library: copy an accessible template (with its
+    image assets) into the caller's own templates."""
+    session = get_session()
+    try:
+        tpl = tpl_svc.clone(session, template_id, requesting_user_id=current_user.id)
+    except tpl_svc.TemplateNotFoundError:
+        return jsonify({"error": "template_not_found"}), 404
+    except tpl_svc.TemplateAccessError:
+        return jsonify({"error": "template_not_found"}), 404
+    return jsonify(TemplatePublic.model_validate(tpl).model_dump(mode="json")), 201
 
 
 @templates_bp.post("/templates")
@@ -112,11 +146,15 @@ def update_template(template_id: int) -> ResponseReturnValue:
             is_shared=payload.is_shared,
             width_mm=payload.width_mm,
             height_mm=payload.height_mm,
+            folder_id=payload.folder_id,
+            folder_id_set="folder_id" in payload.model_fields_set,
         )
     except tpl_svc.TemplateNotFoundError:
         return jsonify({"error": "template_not_found"}), 404
     except tpl_svc.TemplateAccessError:
         return jsonify({"error": "forbidden"}), 403
+    except FolderNotFoundError:
+        return jsonify({"error": "folder_not_found"}), 400
 
     return jsonify(TemplatePublic.model_validate(tpl).model_dump(mode="json"))
 

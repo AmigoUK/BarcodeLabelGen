@@ -1,0 +1,71 @@
+{
+  "$schema": "blg-template/v1",
+  "exportedAt": "2026-07-04T12:00:00Z",
+  "exportedBy": "BarcodeLabelGen starters",
+  "template": {
+    "name": "Etykieta magazynowa z QR (3×2\")",
+    "description": "Lokalizacja magazynowa jako QR do skanowania + opis. Podmień dane QR na {{lokalizacja}}, aby generować serię z arkusza.",
+    "width_mm": 76.2,
+    "height_mm": 50.8,
+    "format_hint": {
+      "name": "Zebra 3×2\"",
+      "width_mm": 76.2,
+      "height_mm": 50.8
+    }
+  },
+  "canvas_data": {
+    "version": 1,
+    "stage": {
+      "width_mm": 76.2,
+      "height_mm": 50.8
+    },
+    "objects": [
+      {
+        "id": "qr",
+        "type": "barcode",
+        "x": 4,
+        "y": 6,
+        "width": 24,
+        "height": 24,
+        "barcodeType": "qr",
+        "data": "MAG-A-01-03"
+      },
+      {
+        "id": "lok",
+        "type": "text",
+        "x": 32,
+        "y": 8,
+        "text": "{{lokalizacja}}",
+        "fontSize": 6,
+        "fontFamily": "Inter, sans-serif",
+        "fill": "#0f172a"
+      },
+      {
+        "id": "opis",
+        "type": "text",
+        "x": 32,
+        "y": 20,
+        "text": "{{opis}}",
+        "fontSize": 3.4,
+        "fontFamily": "Inter, sans-serif",
+        "fill": "#0f172a",
+        "width": 40,
+        "height": 16,
+        "autoFit": true,
+        "minFontSize": 2,
+        "maxFontSize": 4
+      },
+      {
+        "id": "data",
+        "type": "text",
+        "x": 4,
+        "y": 42,
+        "text": "Zaktualizowano: {{date}}",
+        "fontSize": 2.6,
+        "fontFamily": "Inter, sans-serif",
+        "fill": "#0f172a"
+      }
+    ]
+  },
+  "assets": []
+}

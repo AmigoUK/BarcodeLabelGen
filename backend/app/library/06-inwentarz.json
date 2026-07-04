@@ -1,0 +1,66 @@
+{
+  "$schema": "blg-template/v1",
+  "exportedAt": "2026-07-04T12:00:00Z",
+  "exportedBy": "BarcodeLabelGen starters",
+  "template": {
+    "name": "Naklejka inwentarzowa (2×1\")",
+    "description": "Mała naklejka z numerem inwentarzowym i QR — idealna na sprzęt biurowy.",
+    "width_mm": 50.8,
+    "height_mm": 25.4,
+    "format_hint": {
+      "name": "Zebra 2×1\"",
+      "width_mm": 50.8,
+      "height_mm": 25.4
+    }
+  },
+  "canvas_data": {
+    "version": 1,
+    "stage": {
+      "width_mm": 50.8,
+      "height_mm": 25.4
+    },
+    "objects": [
+      {
+        "id": "qr",
+        "type": "barcode",
+        "x": 2,
+        "y": 2.5,
+        "width": 20,
+        "height": 20,
+        "barcodeType": "qr",
+        "data": "INW-000001"
+      },
+      {
+        "id": "nr",
+        "type": "text",
+        "x": 24,
+        "y": 5,
+        "text": "Nr inw.:",
+        "fontSize": 2.8,
+        "fontFamily": "Inter, sans-serif",
+        "fill": "#0f172a"
+      },
+      {
+        "id": "nr-v",
+        "type": "text",
+        "x": 24,
+        "y": 10,
+        "text": "{{nr_inwentarzowy}}",
+        "fontSize": 4,
+        "fontFamily": "Inter, sans-serif",
+        "fill": "#0f172a"
+      },
+      {
+        "id": "firma",
+        "type": "text",
+        "x": 24,
+        "y": 19,
+        "text": "Twoja Firma",
+        "fontSize": 2.4,
+        "fontFamily": "Inter, sans-serif",
+        "fill": "#0f172a"
+      }
+    ]
+  },
+  "assets": []
+}

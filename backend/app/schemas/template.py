@@ -33,6 +33,9 @@ class TemplateSummary(BaseModel):
     height_mm: float
     is_shared: bool
     version: int
+    folder_id: int | None = None
+    # Filled only in library listings — who shared this template.
+    owner_email: str | None = None
     created_at: datetime
     updated_at: datetime
 
@@ -64,6 +67,9 @@ class UpdateTemplateRequest(BaseModel):
     # the size after importing ZPL) without recreating it.
     width_mm: float | None = Field(default=None, gt=0, le=1000)
     height_mm: float | None = Field(default=None, gt=0, le=1000)
+    # Explicit null moves the template out of its folder; absent = no change
+    # (distinguished via model_fields_set in the route).
+    folder_id: int | None = None
 
 
 class AssetPublic(BaseModel):

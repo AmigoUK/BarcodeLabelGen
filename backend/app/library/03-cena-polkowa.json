@@ -1,0 +1,85 @@
+{
+  "$schema": "blg-template/v1",
+  "exportedAt": "2026-07-04T12:00:00Z",
+  "exportedBy": "BarcodeLabelGen starters",
+  "template": {
+    "name": "Cena półkowa (A6)",
+    "description": "Duża cena i nazwa produktu z arkusza — do druku na A6 i wywieszenia na półce.",
+    "width_mm": 105,
+    "height_mm": 148,
+    "format_hint": {
+      "name": "A6 (105×148 mm)",
+      "width_mm": 105,
+      "height_mm": 148
+    }
+  },
+  "canvas_data": {
+    "version": 1,
+    "stage": {
+      "width_mm": 105,
+      "height_mm": 148
+    },
+    "objects": [
+      {
+        "id": "name",
+        "type": "text",
+        "x": 8,
+        "y": 12,
+        "text": "{{name}}",
+        "fontSize": 8,
+        "fontFamily": "Inter, sans-serif",
+        "fill": "#0f172a",
+        "width": 90,
+        "height": 24,
+        "autoFit": true,
+        "minFontSize": 4,
+        "maxFontSize": 10
+      },
+      {
+        "id": "sep",
+        "type": "line",
+        "x": 8,
+        "y": 44,
+        "points": [
+          0,
+          0,
+          89,
+          0
+        ],
+        "stroke": "#0f172a",
+        "strokeWidth": 0.5
+      },
+      {
+        "id": "cena",
+        "type": "text",
+        "x": 8,
+        "y": 62,
+        "text": "{{cena}} zł",
+        "fontSize": 20,
+        "fontFamily": "Inter, sans-serif",
+        "fill": "#0f172a"
+      },
+      {
+        "id": "jm",
+        "type": "text",
+        "x": 8,
+        "y": 100,
+        "text": "za {{jednostka}}",
+        "fontSize": 5,
+        "fontFamily": "Inter, sans-serif",
+        "fill": "#0f172a"
+      },
+      {
+        "id": "data",
+        "type": "text",
+        "x": 8,
+        "y": 132,
+        "text": "Obowiązuje od: {{date}}",
+        "fontSize": 3.4,
+        "fontFamily": "Inter, sans-serif",
+        "fill": "#0f172a"
+      }
+    ]
+  },
+  "assets": []
+}

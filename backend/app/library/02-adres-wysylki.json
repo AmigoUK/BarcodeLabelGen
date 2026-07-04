@@ -1,0 +1,110 @@
+{
+  "$schema": "blg-template/v1",
+  "exportedAt": "2026-07-04T12:00:00Z",
+  "exportedBy": "BarcodeLabelGen starters",
+  "template": {
+    "name": "Adres wysyłki (4×6\")",
+    "description": "Etykieta kurierska: odbiorca i adres z arkusza, numer przesyłki jako Code 128 (podmień na {{nr_przesylki}}).",
+    "width_mm": 101.6,
+    "height_mm": 152.4,
+    "format_hint": {
+      "name": "Zebra 4×6\"",
+      "width_mm": 101.6,
+      "height_mm": 152.4
+    }
+  },
+  "canvas_data": {
+    "version": 1,
+    "stage": {
+      "width_mm": 101.6,
+      "height_mm": 152.4
+    },
+    "objects": [
+      {
+        "id": "nadawca",
+        "type": "text",
+        "x": 6,
+        "y": 6,
+        "text": "Nadawca: Twoja Firma Sp. z o.o.",
+        "fontSize": 3.2,
+        "fontFamily": "Inter, sans-serif",
+        "fill": "#0f172a"
+      },
+      {
+        "id": "sep",
+        "type": "line",
+        "x": 6,
+        "y": 14,
+        "points": [
+          0,
+          0,
+          89,
+          0
+        ],
+        "stroke": "#0f172a",
+        "strokeWidth": 0.3
+      },
+      {
+        "id": "odb-l",
+        "type": "text",
+        "x": 6,
+        "y": 20,
+        "text": "Odbiorca:",
+        "fontSize": 3.4,
+        "fontFamily": "Inter, sans-serif",
+        "fill": "#0f172a"
+      },
+      {
+        "id": "odbiorca",
+        "type": "text",
+        "x": 6,
+        "y": 27,
+        "text": "{{odbiorca}}",
+        "fontSize": 6,
+        "fontFamily": "Inter, sans-serif",
+        "fill": "#0f172a"
+      },
+      {
+        "id": "adres",
+        "type": "text",
+        "x": 6,
+        "y": 38,
+        "text": "{{adres}}",
+        "fontSize": 5,
+        "fontFamily": "Inter, sans-serif",
+        "fill": "#0f172a"
+      },
+      {
+        "id": "miasto",
+        "type": "text",
+        "x": 6,
+        "y": 47,
+        "text": "{{kod}} {{miasto}}",
+        "fontSize": 5,
+        "fontFamily": "Inter, sans-serif",
+        "fill": "#0f172a"
+      },
+      {
+        "id": "nr",
+        "type": "barcode",
+        "x": 6,
+        "y": 105,
+        "width": 88,
+        "height": 26,
+        "barcodeType": "code128",
+        "data": "PACZKA0000001"
+      },
+      {
+        "id": "nr-txt",
+        "type": "text",
+        "x": 6,
+        "y": 135,
+        "text": "Nr przesyłki: {{nr_przesylki}}",
+        "fontSize": 3.4,
+        "fontFamily": "Inter, sans-serif",
+        "fill": "#0f172a"
+      }
+    ]
+  },
+  "assets": []
+}

@@ -21,6 +21,8 @@ from app.routes.barcodes import barcodes_bp
 from app.routes.captures import captures_bp
 from app.routes.datasets import datasets_bp
 from app.routes.devices import devices_bp
+from app.routes.folders import folders_bp
+from app.routes.library import library_bp
 from app.routes.generate import generate_bp, jobs_bp
 from app.routes.health import health_bp
 from app.routes.me import me_bp
@@ -99,6 +101,8 @@ def create_app(
     app.register_blueprint(print_jobs_bp, url_prefix="/api")
     app.register_blueprint(agent_bp, url_prefix="/api")
     app.register_blueprint(captures_bp, url_prefix="/api")
+    app.register_blueprint(folders_bp, url_prefix="/api")
+    app.register_blueprint(library_bp, url_prefix="/api")
 
     # CLI
     register_cli(app)

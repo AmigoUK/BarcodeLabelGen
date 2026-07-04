@@ -2,6 +2,7 @@ from app.models.asset import Asset
 from app.models.capture import Capture
 from app.models.dataset import DataSet
 from app.models.device import Device
+from app.models.folder import Folder
 from app.models.label_format import FormatKind, LabelFormat
 from app.models.print_job import PrintJob, PrintJobStatus
 from app.models.template import Template
@@ -12,6 +13,7 @@ __all__ = [
     "Capture",
     "DataSet",
     "Device",
+    "Folder",
     "FormatKind",
     "LabelFormat",
     "PrintJob",

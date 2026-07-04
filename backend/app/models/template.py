@@ -10,6 +10,7 @@ from sqlalchemy.dialects.postgresql import JSONB
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from app.db.base import Base
+from app.models.folder import Folder  # noqa: F401 — FK target must be mapped first
 from app.models.label_format import LabelFormat
 from app.models.user import User
 
@@ -47,6 +48,12 @@ class Template(Base):
 
     is_shared: Mapped[bool] = mapped_column(Boolean, nullable=False, default=False)
     version: Mapped[int] = mapped_column(Integer, nullable=False, default=1)
+
+    # Flat private folders — deleting a folder strands its templates back
+    # into "no folder" rather than deleting them.
+    folder_id: Mapped[int | None] = mapped_column(
+        ForeignKey("folders.id", ondelete="SET NULL"), nullable=True, index=True
+    )
 
     created_at: Mapped[datetime] = mapped_column(
         DateTime(timezone=True), nullable=False, default=_utcnow

@@ -1,0 +1,86 @@
+{
+  "$schema": "blg-template/v1",
+  "exportedAt": "2026-07-04T12:00:00Z",
+  "exportedBy": "BarcodeLabelGen starters",
+  "template": {
+    "name": "Etykieta produktu EAN-13 (50×30)",
+    "description": "Nazwa z arkusza ({{name}}), termin przydatności liczony automatycznie i kod EAN-13. Podmień dane kodu na {{ean}}, aby brać go z arkusza.",
+    "width_mm": 50,
+    "height_mm": 30
+  },
+  "canvas_data": {
+    "version": 1,
+    "stage": {
+      "width_mm": 50,
+      "height_mm": 30
+    },
+    "objects": [
+      {
+        "id": "frame",
+        "type": "rect",
+        "x": 1.5,
+        "y": 1.5,
+        "width": 47,
+        "height": 27,
+        "fill": "#ffffff",
+        "stroke": "#0f172a",
+        "strokeWidth": 0.4
+      },
+      {
+        "id": "name",
+        "type": "text",
+        "x": 4,
+        "y": 4,
+        "text": "{{name}}",
+        "fontSize": 4.2,
+        "fontFamily": "Inter, sans-serif",
+        "fill": "#0f172a"
+      },
+      {
+        "id": "sep",
+        "type": "line",
+        "x": 4,
+        "y": 10,
+        "points": [
+          0,
+          0,
+          42,
+          0
+        ],
+        "stroke": "#0f172a",
+        "strokeWidth": 0.25
+      },
+      {
+        "id": "exp",
+        "type": "text",
+        "x": 4,
+        "y": 12,
+        "text": "Zużyć do: {{date+30d}}",
+        "fontSize": 3,
+        "fontFamily": "Inter, sans-serif",
+        "fill": "#0f172a"
+      },
+      {
+        "id": "ean",
+        "type": "barcode",
+        "x": 4,
+        "y": 16.5,
+        "width": 28,
+        "height": 11,
+        "barcodeType": "ean13",
+        "data": "5901234123457"
+      },
+      {
+        "id": "price",
+        "type": "text",
+        "x": 34,
+        "y": 19.5,
+        "text": "{{cena}} zł",
+        "fontSize": 2.6,
+        "fontFamily": "Inter, sans-serif",
+        "fill": "#0f172a"
+      }
+    ]
+  },
+  "assets": []
+}
