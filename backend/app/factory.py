@@ -18,6 +18,7 @@ from app.routes.agent import agent_bp
 from app.routes.assets import assets_bp
 from app.routes.auth import auth_bp
 from app.routes.barcodes import barcodes_bp
+from app.routes.captures import captures_bp
 from app.routes.datasets import datasets_bp
 from app.routes.devices import devices_bp
 from app.routes.generate import generate_bp, jobs_bp
@@ -97,6 +98,7 @@ def create_app(
     app.register_blueprint(devices_bp, url_prefix="/api")
     app.register_blueprint(print_jobs_bp, url_prefix="/api")
     app.register_blueprint(agent_bp, url_prefix="/api")
+    app.register_blueprint(captures_bp, url_prefix="/api")
 
     # CLI
     register_cli(app)

@@ -1,4 +1,5 @@
 from app.models.asset import Asset
+from app.models.capture import Capture
 from app.models.dataset import DataSet
 from app.models.device import Device
 from app.models.label_format import FormatKind, LabelFormat
@@ -8,6 +9,7 @@ from app.models.user import Role, User
 
 __all__ = [
     "Asset",
+    "Capture",
     "DataSet",
     "Device",
     "FormatKind",

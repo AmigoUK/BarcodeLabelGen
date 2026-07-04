@@ -71,3 +71,22 @@ class AgentPrinter(BaseModel):
 class AgentStateRequest(BaseModel):
     agent_version: str | None = Field(default=None, max_length=50)
     printers: list[AgentPrinter] = Field(default_factory=list, max_length=50)
+
+
+# ~2 MB of base64 — driver-generated ZPL with ^GFA bitmaps gets big.
+_MAX_CAPTURE_B64 = 3 * 1024 * 1024
+
+
+class AgentCaptureRequest(BaseModel):
+    """Captured print job, base64-encoded for safe JSON transport."""
+
+    zpl_b64: str = Field(min_length=1, max_length=_MAX_CAPTURE_B64)
+
+
+class CapturePublic(BaseModel):
+    model_config = ConfigDict(from_attributes=True)
+
+    id: int
+    device_id: int
+    size_bytes: int
+    created_at: datetime
