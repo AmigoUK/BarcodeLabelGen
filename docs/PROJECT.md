@@ -62,8 +62,8 @@ Pracownicy biurowi nie mają obecnie narzędzia, które pozwoliłoby im samodzie
 | F22 | Integracja Toshiba (TSPL przez agenta lub Browser Print) | P2 |
 | F23 | Dodatkowe języki UI (DE, ES, FR — tłumaczenie społecznościowe) | P2 |
 | F24 | Placeholdery dynamicznej daty `{{date±Nd/m/y:FORMAT}}` obliczane przy generowaniu (PDF/ZPL) | P0 |
-| F25 | Konektor lokalny (Go): print server — druk ZPL bezpośrednio na drukarki sieciowe (rozszerza F21) | P1 |
-| F26 | Konektor: kolejka wydruków po stronie serwera + tokeny urządzeń (druk zdalny przez polling agenta) | P1 |
+| F25 | Konektor lokalny (Go): print server — druk ZPL bezpośrednio na drukarki sieciowe (rozszerza F21) — **zrealizowane w v0.7.0** | P1 |
+| F26 | Konektor: kolejka wydruków po stronie serwera + tokeny urządzeń (druk zdalny przez polling agenta) — **zrealizowane w v0.6.0** | P1 |
 | F27 | Konektor: wirtualna drukarka Windows — przechwytywanie ZPL z innych aplikacji + „Inbox" w web appce (import do edytora) | P2 |
 | F28 | Dokumentacja użytkownika: instrukcja + FAQ (PL/EN), placeholdery na screenshoty z opisami | P0 |
 

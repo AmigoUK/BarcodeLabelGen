@@ -133,7 +133,13 @@ Przechodzą nietknięte w obie strony (import i eksport) — to zmienne drukarko
 - **Wsad** — wybierasz wgrany plik danych i dostajesz jeden `.zpl` z etykietą na każdy wiersz (wszystko podmienione).
 
 ### Czy mogę drukować bezpośrednio na drukarkę Zebra z programu?
-Jeszcze nie — dziś eksportujesz `.zpl` i wysyłasz go do drukarki własnym narzędziem. Bezpośredni druk przez lokalny konektor jest w planach (backlog F25–F27).
+Tak — przez **konektor** (`blg-connector`), mały program instalowany na komputerze w sieci z drukarkami. Skonfiguruj go raz (strona **Urządzenia** → token + plik `config.yaml`), a potem w edytorze klikasz **🖨 Drukuj**, wybierasz urządzenie i drukarkę — etykieta trafia do kolejki, agent odbiera ją i wysyła na drukarkę. Instrukcja: `connector/README.md` w repozytorium.
+
+### Przycisk Drukuj mówi, że urządzenie jest offline.
+Agent na tym komputerze nie zgłosił się od ponad minuty — sprawdź, czy `blg-connector` działa i ma połączenie z serwerem. Zadanie możesz mimo to wysłać: poczeka w kolejce, aż agent wróci.
+
+### Zadanie druku skończyło się błędem „printer unreachable".
+Agent nie mógł połączyć się z drukarką po TCP (port 9100). Sprawdź IP drukarki w `config.yaml` agenta i czy drukarka jest włączona; potem wyślij zadanie ponownie.
 
 ---
 

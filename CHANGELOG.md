@@ -9,6 +9,26 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 _Nothing yet._
 
+## [0.7.0] — 2026-07-04
+
+### Added
+- **Connector phase C (F25): the `blg-connector` Go agent + in-editor
+  printing.** Single static binary (Linux amd64/arm64, Windows; release
+  assets) that polls the print queue with its device token, sends ZPL to
+  printers over RAW TCP 9100 (Zebra / JetDirect) or spools to a
+  `file://` directory (simulated-printer mode), reports done/error and
+  heartbeats its printer list. Loopback HTTP API on `127.0.0.1:9110`
+  (`/status`, `/printers`, `/print`) for the future browser fast path —
+  CORS locked to the configured server origin, JSON-only, copies capped.
+  New editor **🖨 Print** dialog: pick an online device + reported
+  printer + copies + DPI, queue the job and watch it live until the
+  agent reports the outcome. User guide + FAQ updated (PL/EN).
+
+### Fixed
+- Loopback-API hardening from the automated security review: no
+  cross-origin drive-by printing, no printer-topology disclosure to
+  foreign sites, bounded `copies` multiplier.
+
 ## [0.6.0] — 2026-07-04
 
 ### Added
@@ -140,7 +160,8 @@ _Nothing yet._
   label formats, dataset upload (CSV/XLSX/SQLite) with `{{column}}`
   mail-merge, and PDF single-label + batch generation via ReportLab.
 
-[Unreleased]: https://github.com/AmigoUK/BarcodeLabelGen/compare/v0.6.0...HEAD
+[Unreleased]: https://github.com/AmigoUK/BarcodeLabelGen/compare/v0.7.0...HEAD
+[0.7.0]: https://github.com/AmigoUK/BarcodeLabelGen/releases/tag/v0.7.0
 [0.6.0]: https://github.com/AmigoUK/BarcodeLabelGen/releases/tag/v0.6.0
 [0.5.1]: https://github.com/AmigoUK/BarcodeLabelGen/releases/tag/v0.5.1
 [0.5.0]: https://github.com/AmigoUK/BarcodeLabelGen/releases/tag/v0.5.0

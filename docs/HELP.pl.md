@@ -328,6 +328,16 @@ Wybierz DPI zgodne z twoją drukarką (203 lub 300).
 
 *kadr: modal w trybie „Szablon (zmienne)" z podglądem wygenerowanego kodu i przyciskami Kopiuj / Pobierz .zpl.*
 
+### Druk bezpośredni — konektor
+
+Zamiast pobierać plik `.zpl`, możesz drukować **prosto z edytora** przyciskiem **🖨 Drukuj**:
+
+1. Na komputerze w sieci z drukarkami zainstaluj agenta **blg-connector** (binarka w Assets każdego wydania na GitHubie; konfiguracja: `connector/README.md`).
+2. W aplikacji: **Urządzenia → Dodaj urządzenie** → skopiuj token do `config.yaml` agenta. Urządzenie przejdzie na **Online** i zgłosi listę drukarek.
+3. W edytorze: **🖨 Drukuj** → wybierz urządzenie, drukarkę, liczbę kopii i DPI → **Drukuj**. Okno pokaże postęp: *w kolejce → agent odebrał → wydrukowano* (lub błąd z powodem).
+
+Placeholdery daty są obliczane w momencie druku; placeholdery kolumn zostają w kodzie (druk pojedynczej etykiety, nie serii).
+
 ---
 
 ## 8. Administracja (tylko admin)

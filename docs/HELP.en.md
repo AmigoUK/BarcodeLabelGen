@@ -328,6 +328,16 @@ Pick the DPI that matches your printer (203 or 300).
 
 *frame: the modal in "Template (variables)" mode with a preview of the generated code and the Copy / Download .zpl buttons.*
 
+### Direct printing — the connector
+
+Instead of downloading a `.zpl` file, you can print **straight from the editor** with the **🖨 Print** button:
+
+1. On a computer on the same network as your printers, install the **blg-connector** agent (binary in the Assets of every GitHub release; configuration: `connector/README.md`).
+2. In the app: **Devices → Add device** → copy the token into the agent's `config.yaml`. The device switches to **Online** and reports its list of printers.
+3. In the editor: **🖨 Print** → pick the device, printer, number of copies and DPI → **Print**. The dialog shows the progress: *queued → agent picked it up → printed* (or an error with the reason).
+
+Date placeholders are calculated at print time; column placeholders stay in the code (this prints a single label, not a series).
+
 ---
 
 ## 8. Administration (admin only)

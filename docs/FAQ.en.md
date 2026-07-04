@@ -133,7 +133,13 @@ They pass through untouched in both directions (import and export) — those are
 - **Batch** — you pick an uploaded data file and get one `.zpl` with a label for every row (everything substituted).
 
 ### Can I print directly to a Zebra printer from the app?
-Not yet — today you export a `.zpl` and send it to the printer with your own tool. Direct printing through a local connector is planned (backlog F25–F27).
+Yes — through the **connector** (`blg-connector`), a small program you install on a computer on the same network as your printers. Set it up once (**Devices** page → token + `config.yaml` file), then in the editor click **🖨 Print**, pick a device and a printer — the label goes into a queue, the agent picks it up and sends it to the printer. Instructions: `connector/README.md` in the repository.
+
+### The Print button says the device is offline.
+The agent on that computer hasn't checked in for over a minute — make sure `blg-connector` is running and can reach the server. You can still submit the job: it will wait in the queue until the agent comes back.
+
+### A print job failed with a "printer unreachable" error.
+The agent couldn't connect to the printer over TCP (port 9100). Check the printer's IP in the agent's `config.yaml` and make sure the printer is switched on; then submit the job again.
 
 ---
 
