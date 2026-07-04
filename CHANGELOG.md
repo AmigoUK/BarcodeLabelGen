@@ -9,6 +9,20 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 _Nothing yet._
 
+## [0.9.0] — 2026-07-04
+
+### Added
+- **Inbound ZPL validation (F29).** Every external ZPL entry point —
+  the print queue, the import parser, virtual-printer captures and the
+  agent's loopback `/print` — now runs a shared sanity gate: empty
+  payloads, a missing/reversed `^XA…^XZ` envelope, and recognizable
+  wrong formats (HTML error pages, PDF, PostScript, PCL, JSON) are
+  rejected as `422 invalid_zpl` with a named reason. The import and
+  print dialogs show a readable localized message instead of an error
+  code, and the agent logs why it dropped a capture. Closes the gap
+  found during v0.7.0 testing where an HTML 500-page could be queued
+  and "printed".
+
 ## [0.8.0] — 2026-07-04
 
 ### Added
@@ -182,7 +196,8 @@ _Nothing yet._
   label formats, dataset upload (CSV/XLSX/SQLite) with `{{column}}`
   mail-merge, and PDF single-label + batch generation via ReportLab.
 
-[Unreleased]: https://github.com/AmigoUK/BarcodeLabelGen/compare/v0.8.0...HEAD
+[Unreleased]: https://github.com/AmigoUK/BarcodeLabelGen/compare/v0.9.0...HEAD
+[0.9.0]: https://github.com/AmigoUK/BarcodeLabelGen/releases/tag/v0.9.0
 [0.8.0]: https://github.com/AmigoUK/BarcodeLabelGen/releases/tag/v0.8.0
 [0.7.0]: https://github.com/AmigoUK/BarcodeLabelGen/releases/tag/v0.7.0
 [0.6.0]: https://github.com/AmigoUK/BarcodeLabelGen/releases/tag/v0.6.0

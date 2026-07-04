@@ -66,7 +66,7 @@ Pracownicy biurowi nie mają obecnie narzędzia, które pozwoliłoby im samodzie
 | F26 | Konektor: kolejka wydruków po stronie serwera + tokeny urządzeń (druk zdalny przez polling agenta) — **zrealizowane w v0.6.0** | P1 |
 | F27 | Konektor: wirtualna drukarka Windows — przechwytywanie ZPL z innych aplikacji + „Inbox" w web appce (import do edytora) — **zrealizowane w v0.8.0** | P2 |
 | F28 | Dokumentacja użytkownika: instrukcja + FAQ (PL/EN), placeholdery na screenshoty z opisami | P0 |
-| F29 | Walidacja ZPL na wejściu (kolejka druku, przechwyty, import): sanity-check `^XA…^XZ`, limity rozmiaru, odrzucanie nie-ZPL (np. omyłkowo wysłanych stron błędów HTML) z czytelnym komunikatem | P1 |
+| F29 | Walidacja ZPL na wejściu (kolejka druku, przechwyty, import): sanity-check `^XA…^XZ`, limity rozmiaru, odrzucanie nie-ZPL (np. omyłkowo wysłanych stron błędów HTML) z czytelnym komunikatem — **zrealizowane w v0.9.0** | P1 |
 
 ### 2.3 User Stories (wybrane kluczowe)
 
