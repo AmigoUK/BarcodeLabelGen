@@ -14,13 +14,16 @@ from app.db.session import get_session, init_engine
 from app.extensions import login_manager, session_ext
 from app.models.user import User
 from app.routes.admin import admin_bp
+from app.routes.agent import agent_bp
 from app.routes.assets import assets_bp
 from app.routes.auth import auth_bp
 from app.routes.barcodes import barcodes_bp
 from app.routes.datasets import datasets_bp
+from app.routes.devices import devices_bp
 from app.routes.generate import generate_bp, jobs_bp
 from app.routes.health import health_bp
 from app.routes.me import me_bp
+from app.routes.print_jobs import print_jobs_bp
 from app.routes.templates import templates_bp
 from app.routes.zpl import zpl_bp
 
@@ -91,6 +94,9 @@ def create_app(
     app.register_blueprint(datasets_bp, url_prefix="/api")
     app.register_blueprint(jobs_bp, url_prefix="/api")
     app.register_blueprint(zpl_bp, url_prefix="/api")
+    app.register_blueprint(devices_bp, url_prefix="/api")
+    app.register_blueprint(print_jobs_bp, url_prefix="/api")
+    app.register_blueprint(agent_bp, url_prefix="/api")
 
     # CLI
     register_cli(app)

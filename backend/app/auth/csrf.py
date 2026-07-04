@@ -20,6 +20,9 @@ CSRF_COOKIE_NAME = "csrf_token"
 CSRF_HEADER_NAME = "X-CSRF-Token"
 SAFE_METHODS = frozenset({"GET", "HEAD", "OPTIONS"})
 EXEMPT_PATHS = frozenset({"/api/health"})
+# The connector agent authenticates with a Bearer device token, not a browser
+# session — there is no cookie for an attacker to ride, so CSRF doesn't apply.
+EXEMPT_PREFIXES = ("/api/agent/",)
 
 
 def _new_token() -> str:
@@ -30,6 +33,8 @@ def init_csrf(app: Flask) -> None:
     @app.before_request
     def _enforce_csrf() -> Response | None:
         if request.path in EXEMPT_PATHS:
+            return None
+        if request.path.startswith(EXEMPT_PREFIXES):
             return None
         if request.method in SAFE_METHODS:
             return None
