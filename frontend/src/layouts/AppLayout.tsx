@@ -42,6 +42,7 @@ export function AppLayout({ children }: Props) {
           {navItem("/", t("nav.dashboard"))}
           {navItem("/templates", t("nav.templates"))}
           {navItem("/library", t("nav.library"))}
+          {navItem("/history", t("nav.history"))}
           {navItem("/devices", t("nav.devices"))}
           {navItem("/help", t("nav.help"))}
           {me?.role === "admin" && (

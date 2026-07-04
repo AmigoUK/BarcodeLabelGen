@@ -412,5 +412,18 @@
     "empty": "Brak zapisanych wersji. Kliknij Zapisz, aby utworzyć pierwszą.",
     "restore": "Przywróć",
     "confirmRestore": "Przywrócić wersję v{{version}}? Bieżący stan zostanie zapisany w historii."
+  },
+  "historyPage": {
+    "intro": "Wygenerowane pliki (pojedyncze etykiety i serie) — możesz je pobrać ponownie przez 30 dni.",
+    "empty": "Brak wygenerowanych plików. Wygeneruj PDF z edytora albo serię z arkusza.",
+    "template": "Szablon",
+    "type": "Typ",
+    "labels": "Etykiety",
+    "size": "Rozmiar",
+    "generatedAt": "Wygenerowano",
+    "series": "seria",
+    "single": "pojedyncza",
+    "download": "Pobierz",
+    "confirmDelete": "Usunąć ten plik z historii?"
   }
 }

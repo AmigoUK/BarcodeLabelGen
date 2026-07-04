@@ -5,6 +5,7 @@ import { AppLayout } from "./layouts/AppLayout";
 import { ChangePasswordPage } from "./pages/ChangePasswordPage";
 import { DashboardPage } from "./pages/DashboardPage";
 import { DevicesPage } from "./pages/DevicesPage";
+import { HistoryPage } from "./pages/HistoryPage";
 import { LibraryPage } from "./pages/LibraryPage";
 import { LoginPage } from "./pages/LoginPage";
 import { TemplatesPage } from "./pages/TemplatesPage";
@@ -86,6 +87,16 @@ export function App() {
             <ProtectedRoute>
               <AppLayout>
                 <LibraryPage />
+              </AppLayout>
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/history"
+          element={
+            <ProtectedRoute>
+              <AppLayout>
+                <HistoryPage />
               </AppLayout>
             </ProtectedRoute>
           }

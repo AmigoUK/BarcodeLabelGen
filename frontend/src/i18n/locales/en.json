@@ -412,5 +412,18 @@
     "empty": "No saved versions yet. Click Save to create the first.",
     "restore": "Restore",
     "confirmRestore": "Restore version v{{version}}? The current state will be saved to history."
+  },
+  "historyPage": {
+    "intro": "Generated files (single labels and series) — re-downloadable for 30 days.",
+    "empty": "No generated files yet. Generate a PDF from the editor or a series from a dataset.",
+    "template": "Template",
+    "type": "Type",
+    "labels": "Labels",
+    "size": "Size",
+    "generatedAt": "Generated",
+    "series": "series",
+    "single": "single",
+    "download": "Download",
+    "confirmDelete": "Delete this file from history?"
   }
 }
