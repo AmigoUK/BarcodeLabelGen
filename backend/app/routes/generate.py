@@ -35,6 +35,7 @@ from app.services import templates as tpl_svc
 from app.services.batch_render import AssetResolver, render_batch_pdf
 from app.services.datasets import FilterOp
 from app.services.pdf_renderer import PdfRenderError, render_template_pdf
+from app.services.placeholders import substitute_dates_in_canvas
 
 generate_bp = Blueprint("generate", __name__)
 
@@ -117,6 +118,9 @@ def generate_pdf() -> ResponseReturnValue:
 
     # --- single-label sync mode -------------------------------------------
     if payload.dataset_id is None:
+        # Date placeholders resolve at generation time; {{column}} tokens
+        # stay verbatim in single mode (no dataset to fill them from).
+        canvas_data = substitute_dates_in_canvas(canvas_data)
         warnings: list[dict[str, Any]] = []
         try:
             pdf_bytes = render_template_pdf(

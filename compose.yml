@@ -41,6 +41,9 @@ services:
       REDIS_URL: redis://redis:6379/0
       SECRET_KEY: ${SECRET_KEY:-change-me-in-prod}
       FLASK_ENV: production
+      # Date placeholders ({{date+14d}}) compute "today" in server-local
+      # time — without TZ the container runs UTC and can be a day off.
+      TZ: ${TZ:-Europe/London}
     depends_on:
       db:
         condition: service_healthy

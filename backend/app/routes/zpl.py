@@ -28,6 +28,7 @@ from app.routes.generate import FilterSpec, _apply_mapping, _safe_filename
 from app.services import datasets as ds_svc
 from app.services import jobs as jobs_svc
 from app.services import templates as tpl_svc
+from app.services.placeholders import substitute_dates_in_canvas
 from app.services.zpl import detect_dpi, dpmm_for_dpi, generate_zpl, parse_zpl
 from app.services.zpl.batch import render_batch_zpl
 
@@ -111,6 +112,10 @@ def generate_endpoint() -> ResponseReturnValue:
                 {"error": "no_canvas", "detail": "provide canvas_data or template_id"}
             ), 400
 
+        # Resolve date placeholders now — no downstream ZPL consumer can
+        # evaluate the app's {{...}} syntax. Printer variables in single
+        # braces ({NAME}) pass through untouched.
+        canvas_data = substitute_dates_in_canvas(canvas_data)
         warnings: list[dict[str, Any]] = []
         zpl_text = generate_zpl(canvas_data, dpmm=dpmm, warnings=warnings)
         name = "labels"

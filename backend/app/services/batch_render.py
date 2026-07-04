@@ -26,6 +26,7 @@ from app.services.pdf_renderer import (
     _draw_rect,
     _draw_text,
 )
+from app.services.placeholders import evaluate_date_key, is_plain_date_key
 
 PLACEHOLDER_RE = re.compile(r"\{\{\s*([^}]+?)\s*\}\}")
 
@@ -34,10 +35,17 @@ ProgressCallback = Callable[[int, int], None]
 
 
 def substitute_string(value: str, row: dict[str, Any]) -> str:
-    """Replace every {{column}} occurrence with row's value (str-cast)."""
+    """Replace every {{column}} occurrence with row's value (str-cast).
+
+    Date placeholders ({{date}}, {{date+14d:DD/MM/YY}}, …) are computed at
+    render time; a dataset column literally named `date` still wins for the
+    plain {{date}} form, offset/format forms are always computed."""
 
     def repl(m: re.Match[str]) -> str:
         key = m.group(1).strip()
+        computed = evaluate_date_key(key)
+        if computed is not None and not (is_plain_date_key(key) and key in row):
+            return computed
         return "" if key not in row else str(row[key])
 
     return PLACEHOLDER_RE.sub(repl, value)

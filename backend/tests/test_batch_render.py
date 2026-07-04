@@ -25,6 +25,26 @@ def test_substitute_string_handles_multiple_placeholders() -> None:
     assert substitute_string("{{a}}-{{b}}", {"a": "X", "b": "Y"}) == "X-Y"
 
 
+def test_substitute_string_plain_date_prefers_row_column() -> None:
+    assert substitute_string("{{date}}", {"date": "row-val"}) == "row-val"
+
+
+def test_substitute_string_offset_date_ignores_row_column() -> None:
+    out = substitute_string("{{date+1d}}", {"date+1d": "row-val", "date": "x"})
+    assert out != "row-val"
+    assert "." in out  # DD.MM.YYYY default format
+
+
+def test_substitute_string_plain_date_computed_without_column() -> None:
+    out = substitute_string("{{date}}", {})
+    assert len(out) == 10 and out[2] == "." and out[5] == "."
+
+
+def test_substitute_string_invalid_date_syntax_falls_through() -> None:
+    assert substitute_string("{{date+xyz}}", {}) == ""
+    assert substitute_string("{{date+xyz}}", {"date+xyz": "v"}) == "v"
+
+
 def test_substitute_object_only_touches_text_and_data() -> None:
     obj = {"type": "text", "text": "{{name}}", "x": 1, "y": 2}
     result = substitute_object(obj, {"name": "Z"})
