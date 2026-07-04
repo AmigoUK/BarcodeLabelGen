@@ -172,12 +172,25 @@ def test_update_template_bumps_version_on_canvas_change(
     tid = created.get_json()["id"]
     assert created.get_json()["version"] == 1
 
+    # Autosave (snapshot omitted) overwrites the canvas WITHOUT bumping the
+    # version — versioning is manual-save only now (F17).
     response = client.put(
         f"/api/templates/{tid}",
         json={"canvas_data": {"version": 1, "stage": {}, "objects": [{"type": "rect"}]}},
         headers=csrf.headers(),
     )
     assert response.status_code == 200
+    assert response.get_json()["version"] == 1
+
+    # A manual save (snapshot=true) bumps the version.
+    response = client.put(
+        f"/api/templates/{tid}",
+        json={
+            "canvas_data": {"version": 1, "stage": {}, "objects": [{"type": "rect"}]},
+            "snapshot": True,
+        },
+        headers=csrf.headers(),
+    )
     assert response.get_json()["version"] == 2
 
     # Renaming alone should NOT bump version

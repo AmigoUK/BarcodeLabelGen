@@ -14,6 +14,8 @@ from sqlalchemy import select
 from app.api_helpers import validation_error_response
 from app.db.session import get_session
 from app.models.label_format import LabelFormat
+from app.models.template import Template as _Template
+from app.models.user import User as _User
 from app.schemas.template import (
     CreateTemplateRequest,
     ImportRequest,
@@ -23,6 +25,7 @@ from app.schemas.template import (
     TemplateSummary,
     UpdateTemplateRequest,
 )
+from app.services import template_versions as tv_svc
 from app.services import templates as tpl_svc
 from app.services import templates_io as tpl_io
 from app.services.folders import FolderNotFoundError
@@ -98,6 +101,76 @@ def featured_image(template_id: int) -> ResponseReturnValue:
     from app.api_helpers import harden_image_response
 
     return harden_image_response(send_file(path, mimetype=asset.mime_type, max_age=300))
+
+
+@templates_bp.get("/templates/<int:template_id>/versions")
+@login_required
+def list_versions(template_id: int) -> ResponseReturnValue:
+    session = get_session()
+    # History is private to the owner even for shared templates.
+    tpl = session.get(_Template, template_id)
+    if tpl is None or tpl.owner_id != current_user.id:
+        return jsonify({"error": "template_not_found"}), 404
+
+    rows = tv_svc.list_versions(session, template_id)
+    emails: dict[int, str] = {}
+    out = []
+    for r in rows:
+        email = None
+        if r.created_by is not None:
+            if r.created_by not in emails:
+                user = session.get(_User, r.created_by)
+                emails[r.created_by] = user.email if user else ""
+            email = emails[r.created_by] or None
+        out.append(
+            {
+                "version": r.version,
+                "note": r.note,
+                "created_at": r.created_at.isoformat(),
+                "created_by_email": email,
+            }
+        )
+    return jsonify({"versions": out})
+
+
+@templates_bp.get("/templates/<int:template_id>/versions/<int:version>")
+@login_required
+def get_version(template_id: int, version: int) -> ResponseReturnValue:
+    session = get_session()
+    tpl = session.get(_Template, template_id)
+    if tpl is None or tpl.owner_id != current_user.id:
+        return jsonify({"error": "template_not_found"}), 404
+    try:
+        row = tv_svc.get_version(session, template_id, version)
+    except tv_svc.VersionNotFoundError:
+        return jsonify({"error": "version_not_found"}), 404
+    return jsonify(
+        {
+            "version": row.version,
+            "canvas_data": row.canvas_data,
+            "width_mm": row.width_mm,
+            "height_mm": row.height_mm,
+            "note": row.note,
+            "created_at": row.created_at.isoformat(),
+        }
+    )
+
+
+@templates_bp.post("/templates/<int:template_id>/versions/<int:version>/restore")
+@login_required
+def restore_version(template_id: int, version: int) -> ResponseReturnValue:
+    session = get_session()
+    try:
+        tpl = tpl_svc.restore_version(
+            session, template_id, version, requesting_user_id=current_user.id
+        )
+    except tpl_svc.TemplateNotFoundError:
+        return jsonify({"error": "template_not_found"}), 404
+    except tpl_svc.TemplateAccessError:
+        return jsonify({"error": "forbidden"}), 403
+    except tv_svc.VersionNotFoundError:
+        return jsonify({"error": "version_not_found"}), 404
+    return jsonify(TemplatePublic.model_validate(tpl).model_dump(mode="json"))
 
 
 @templates_bp.post("/templates/<int:template_id>/clone")
@@ -178,6 +251,7 @@ def update_template(template_id: int) -> ResponseReturnValue:
             folder_id_set="folder_id" in payload.model_fields_set,
             featured_asset_id=payload.featured_asset_id,
             featured_asset_id_set="featured_asset_id" in payload.model_fields_set,
+            snapshot=payload.snapshot,
         )
     except tpl_svc.TemplateNotFoundError:
         return jsonify({"error": "template_not_found"}), 404

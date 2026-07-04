@@ -173,6 +173,7 @@ def update(
     folder_id_set: bool = False,
     featured_asset_id: int | None = None,
     featured_asset_id_set: bool = False,
+    snapshot: bool = False,
 ) -> Template:
     tpl = session.get(Template, template_id)
     if tpl is None:
@@ -209,8 +210,43 @@ def update(
         tpl.height_mm = float(height_mm)
     if canvas_data is not None:
         tpl.canvas_data = canvas_data
-        tpl.version += 1
+        # F17: a manual save bumps the version and records a history
+        # snapshot; autosave (snapshot=False) just overwrites the live
+        # canvas, keeping the history free of 30-second noise.
+        if snapshot:
+            tpl.version += 1
+            from app.services import template_versions as tv_svc
 
+            session.flush()  # tpl.version is visible to the snapshot row
+            tv_svc.snapshot(session, tpl, created_by=requesting_user_id)
+
+    session.commit()
+    session.refresh(tpl)
+    return tpl
+
+
+def restore_version(
+    session: Session, template_id: int, version: int, *, requesting_user_id: int
+) -> Template:
+    """Set the template's canvas/size to a historical version and record the
+    restore itself as a new snapshot (so it's undoable and shows in history)."""
+    from app.services import template_versions as tv_svc
+
+    tpl = session.get(Template, template_id)
+    if tpl is None:
+        raise TemplateNotFoundError(template_id)
+    if tpl.owner_id != requesting_user_id:
+        raise TemplateAccessError(template_id)
+
+    src = tv_svc.get_version(session, template_id, version)
+    tpl.canvas_data = src.canvas_data
+    tpl.width_mm = src.width_mm
+    tpl.height_mm = src.height_mm
+    tpl.version += 1
+    session.flush()
+    tv_svc.snapshot(
+        session, tpl, created_by=requesting_user_id, note=f"restored from v{version}"
+    )
     session.commit()
     session.refresh(tpl)
     return tpl

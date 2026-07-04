@@ -73,6 +73,9 @@ class UpdateTemplateRequest(BaseModel):
     folder_id: int | None = None
     # Explicit null removes the featured image; absent = no change.
     featured_asset_id: int | None = None
+    # F17: true = manual save → record a history snapshot + bump version;
+    # false/absent = autosave → overwrite the live canvas without a version.
+    snapshot: bool = False
 
 
 class AssetPublic(BaseModel):

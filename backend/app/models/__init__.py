@@ -6,6 +6,7 @@ from app.models.folder import Folder
 from app.models.label_format import FormatKind, LabelFormat
 from app.models.print_job import PrintJob, PrintJobStatus
 from app.models.template import Template
+from app.models.template_version import TemplateVersion
 from app.models.user import Role, User
 
 __all__ = [
@@ -20,5 +21,6 @@ __all__ = [
     "PrintJobStatus",
     "Role",
     "Template",
+    "TemplateVersion",
     "User",
 ]
