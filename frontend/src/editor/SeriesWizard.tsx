@@ -26,6 +26,7 @@ import {
   useUploadDataset,
 } from "../hooks/useDatasets";
 import { ApiError } from "../lib/api";
+import { evaluateDatePlaceholder, isPlainDateKey } from "../lib/datePlaceholder";
 import type { CanvasData } from "./types";
 
 /** Pull the most useful human-readable string out of an unknown thrown value.
@@ -56,7 +57,11 @@ function detectTemplatePlaceholders(canvas: CanvasData): string[] {
     let m: RegExpExecArray | null;
     PLACEHOLDER_RE.lastIndex = 0;
     while ((m = PLACEHOLDER_RE.exec(text)) !== null) {
-      out.add(m[1].trim());
+      const key = m[1].trim();
+      // Computed date forms ({{date+14d}}, {{date:YYYY-MM-DD}}) never map
+      // to a column; only the bare {{date}} may be shadowed by one.
+      if (evaluateDatePlaceholder(key) !== null && !isPlainDateKey(key)) continue;
+      out.add(key);
     }
   }
   return Array.from(out);
@@ -108,7 +113,8 @@ export function SeriesWizard({ templateId, templateName, canvas, onClose }: Prop
   const isSqliteUnconfigured =
     dataset !== null && dataset.source_type === "sqlite" && dataset.columns.length === 0;
   const canAdvanceFromUpload = dataset !== null && !isSqliteUnconfigured;
-  const canAdvanceFromMap = placeholders.every((ph) => mapping[ph]);
+  // Bare {{date}} needs no mapping — the backend fills in today's date.
+  const canAdvanceFromMap = placeholders.every((ph) => mapping[ph] || isPlainDateKey(ph));
 
   return (
     <Modal open onClose={onClose} title={`${t("series.title")} - ${templateName}`} footer={null}>
@@ -480,17 +486,22 @@ function MapStep({
         {placeholders.map((ph) => (
           <div key={ph} className="grid grid-cols-2 items-center gap-3">
             <code className="rounded bg-indigo-900/40 px-2 py-1 font-mono text-sm text-indigo-200">{`{{${ph}}}`}</code>
-            <Select
-              value={mapping[ph] ?? ""}
-              onChange={(e) => onChange({ ...mapping, [ph]: e.target.value })}
-            >
-              <option value="">- {t("series.chooseColumn")} -</option>
-              {columns.map((c) => (
-                <option key={c} value={c}>
-                  {c}
-                </option>
-              ))}
-            </Select>
+            <div>
+              <Select
+                value={mapping[ph] ?? ""}
+                onChange={(e) => onChange({ ...mapping, [ph]: e.target.value })}
+              >
+                <option value="">- {t("series.chooseColumn")} -</option>
+                {columns.map((c) => (
+                  <option key={c} value={c}>
+                    {c}
+                  </option>
+                ))}
+              </Select>
+              {isPlainDateKey(ph) && !mapping[ph] && (
+                <p className="mt-1 text-xs text-emerald-400">{t("series.dateAutoHint")}</p>
+              )}
+            </div>
           </div>
         ))}
       </div>

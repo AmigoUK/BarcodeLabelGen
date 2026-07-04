@@ -2,6 +2,7 @@ import { useTranslation } from "react-i18next";
 import { Input } from "../components/ui/Input";
 import { Select } from "../components/ui/Select";
 import { Button } from "../components/ui/Button";
+import { evaluateDatePlaceholder } from "../lib/datePlaceholder";
 import { useEditorStore } from "./store";
 import type {
   BarcodeObject,
@@ -33,20 +34,32 @@ function detectPlaceholders(value: string): string[] {
 }
 
 function PlaceholderChips({ value, label }: { value: string; label: string }) {
+  const { t } = useTranslation();
   const fields = detectPlaceholders(value);
   if (fields.length === 0) return null;
   return (
     <div className="mt-1 space-y-1">
       <p className="text-xs text-slate-500">{label}</p>
       <div className="flex flex-wrap gap-1">
-        {fields.map((f) => (
-          <span
-            key={f}
-            className="rounded bg-indigo-900/40 px-2 py-0.5 font-mono text-xs text-indigo-300"
-          >
-            {`{{${f}}}`}
-          </span>
-        ))}
+        {fields.map((f) => {
+          const datePreview = evaluateDatePlaceholder(f);
+          return datePreview !== null ? (
+            <span
+              key={f}
+              title={t("editor.datePreviewTooltip")}
+              className="rounded bg-emerald-900/40 px-2 py-0.5 font-mono text-xs text-emerald-300"
+            >
+              {`{{${f}}} → ${datePreview}`}
+            </span>
+          ) : (
+            <span
+              key={f}
+              className="rounded bg-indigo-900/40 px-2 py-0.5 font-mono text-xs text-indigo-300"
+            >
+              {`{{${f}}}`}
+            </span>
+          );
+        })}
       </div>
     </div>
   );
