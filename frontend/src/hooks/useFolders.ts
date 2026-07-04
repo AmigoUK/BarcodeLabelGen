@@ -4,6 +4,7 @@ import { api } from "../lib/api";
 export type FolderSummary = {
   id: number;
   name: string;
+  color: string | null;
   template_count: number | null;
   created_at: string;
 };
@@ -36,11 +37,11 @@ export function useCreateFolder() {
   });
 }
 
-export function useRenameFolder() {
+export function useUpdateFolder() {
   const qc = useQueryClient();
   return useMutation({
-    mutationFn: ({ id, name }: { id: number; name: string }) =>
-      api(`/api/folders/${id}`, { method: "PATCH", body: JSON.stringify({ name }) }),
+    mutationFn: ({ id, name, color }: { id: number; name?: string; color?: string | null }) =>
+      api(`/api/folders/${id}`, { method: "PATCH", body: JSON.stringify({ name, color }) }),
     onSuccess: invalidator(qc),
   });
 }

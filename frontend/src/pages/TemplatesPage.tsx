@@ -16,11 +16,36 @@ import {
   useUpdateTemplate,
 } from "../hooks/useTemplates";
 import {
+  type FolderSummary,
   useCreateFolder,
   useDeleteFolder,
   useFolders,
-  useRenameFolder,
+  useUpdateFolder,
 } from "../hooks/useFolders";
+import { featuredImageUrl } from "../hooks/useTemplates";
+import { useUploadAsset } from "../hooks/useAssets";
+
+/** Fixed palette for folder colours — dot in the rail + on cards. */
+const FOLDER_COLORS = [
+  "#ef4444",
+  "#f97316",
+  "#eab308",
+  "#22c55e",
+  "#06b6d4",
+  "#3b82f6",
+  "#8b5cf6",
+  "#ec4899",
+] as const;
+
+function ColorDot({ color, className = "" }: { color: string | null; className?: string }) {
+  if (!color) return null;
+  return (
+    <span
+      className={`inline-block h-2.5 w-2.5 shrink-0 rounded-full ${className}`}
+      style={{ backgroundColor: color }}
+    />
+  );
+}
 
 type FolderFilter = "all" | "none" | number;
 
@@ -28,6 +53,9 @@ export function TemplatesPage() {
   const { t } = useTranslation();
   const [folderFilter, setFolderFilter] = useState<FolderFilter>("all");
   const templates = useTemplates(folderFilter === "all" ? undefined : folderFilter);
+  const folders = useFolders();
+  const folderColor = (id: number | null) =>
+    id === null ? null : (folders.data?.find((f) => f.id === id)?.color ?? null);
   const del = useDeleteTemplate();
   const [showCreate, setShowCreate] = useState(false);
   const [showImport, setShowImport] = useState(false);
@@ -86,6 +114,14 @@ export function TemplatesPage() {
               href={`/templates/${tpl.id}/edit`}
               className="group rounded-lg border border-slate-800 bg-slate-900/50 p-4 transition-colors hover:border-indigo-600"
             >
+              {tpl.featured_asset_id !== null && (
+                <img
+                  src={featuredImageUrl(tpl)}
+                  alt=""
+                  loading="lazy"
+                  className="mb-3 h-24 w-full rounded object-cover"
+                />
+              )}
               <h3 className="mb-1 truncate font-semibold text-slate-100">
                 {tpl.is_shared && (
                   <span className="mr-1" title={t("templates.sharedBadge")}>
@@ -94,7 +130,8 @@ export function TemplatesPage() {
                 )}
                 {tpl.name}
               </h3>
-              <p className="text-xs text-slate-500">
+              <p className="flex items-center gap-1.5 text-xs text-slate-500">
+                <ColorDot color={folderColor(tpl.folder_id)} />
                 {tpl.width_mm} × {tpl.height_mm} mm
               </p>
               {tpl.description && (
@@ -171,13 +208,19 @@ function FolderRail({
   const { t } = useTranslation();
   const folders = useFolders();
   const createFolder = useCreateFolder();
-  const renameFolder = useRenameFolder();
   const deleteFolder = useDeleteFolder();
   const [newName, setNewName] = useState("");
   const [adding, setAdding] = useState(false);
+  const [editing, setEditing] = useState<FolderSummary | null>(null);
 
-  const item = (key: FolderFilter, label: string, count?: number | null) => (
+  const item = (
+    key: FolderFilter,
+    label: string,
+    count?: number | null,
+    folder?: FolderSummary,
+  ) => (
     <button
+      key={String(key)}
       type="button"
       onClick={() => onSelect(key)}
       className={[
@@ -185,19 +228,22 @@ function FolderRail({
         active === key ? "bg-indigo-600 text-white" : "text-slate-300 hover:bg-slate-800",
       ].join(" ")}
     >
-      <span className="truncate">📁 {label}</span>
+      <span className="flex min-w-0 items-center gap-1.5">
+        <span>📁</span>
+        <ColorDot color={folder?.color ?? null} />
+        <span className="truncate">{label}</span>
+      </span>
       <span className="flex items-center gap-1">
-        {typeof key === "number" && (
+        {folder && (
           <span className="hidden gap-0.5 group-hover/f:flex">
             <span
               role="button"
               tabIndex={0}
-              title={t("folders.rename")}
+              title={t("folders.edit")}
               className="rounded px-1 hover:bg-slate-700"
               onClick={(e) => {
                 e.stopPropagation();
-                const name = window.prompt(t("folders.renamePrompt"), label);
-                if (name?.trim()) renameFolder.mutate({ id: key, name: name.trim() });
+                setEditing(folder);
               }}
             >
               ✎
@@ -210,8 +256,8 @@ function FolderRail({
               onClick={(e) => {
                 e.stopPropagation();
                 if (window.confirm(t("folders.confirmDelete", { name: label }))) {
-                  deleteFolder.mutate(key);
-                  if (active === key) onSelect("all");
+                  deleteFolder.mutate(folder.id);
+                  if (active === folder.id) onSelect("all");
                 }
               }}
             >
@@ -230,8 +276,9 @@ function FolderRail({
         {t("folders.title")}
       </h2>
       {item("all", t("folders.all"))}
-      {folders.data?.map((f) => item(f.id, f.name, f.template_count))}
+      {folders.data?.map((f) => item(f.id, f.name, f.template_count, f))}
       {item("none", t("folders.unfiled"))}
+      {editing && <FolderEditModal folder={editing} onClose={() => setEditing(null)} />}
       {adding ? (
         <form
           className="flex gap-1 px-1 pt-1"
@@ -274,6 +321,75 @@ function FolderRail({
   );
 }
 
+function FolderEditModal({ folder, onClose }: { folder: FolderSummary; onClose: () => void }) {
+  const { t } = useTranslation();
+  const update = useUpdateFolder();
+  const [name, setName] = useState(folder.name);
+  const [color, setColor] = useState<string | null>(folder.color);
+
+  return (
+    <Modal
+      open
+      onClose={onClose}
+      title={t("folders.editTitle")}
+      footer={
+        <>
+          <Button variant="secondary" onClick={onClose}>
+            {t("common.cancel")}
+          </Button>
+          <Button
+            disabled={update.isPending || !name.trim()}
+            onClick={() =>
+              update.mutate({ id: folder.id, name: name.trim(), color }, { onSuccess: onClose })
+            }
+          >
+            {t("common.save")}
+          </Button>
+        </>
+      }
+    >
+      <div className="space-y-4">
+        <Input
+          label={t("folders.namePlaceholder")}
+          value={name}
+          onChange={(e) => setName(e.target.value)}
+          required
+        />
+        <div className="space-y-1">
+          <span className="block text-sm font-medium text-slate-200">{t("folders.color")}</span>
+          <div className="flex items-center gap-2">
+            <button
+              type="button"
+              onClick={() => setColor(null)}
+              title={t("folders.colorNone")}
+              className={[
+                "flex h-7 w-7 items-center justify-center rounded-full border text-xs",
+                color === null ? "border-white text-white" : "border-slate-600 text-slate-500",
+              ].join(" ")}
+            >
+              ∅
+            </button>
+            {FOLDER_COLORS.map((c) => (
+              <button
+                key={c}
+                type="button"
+                onClick={() => setColor(c)}
+                aria-label={c}
+                className={[
+                  "h-7 w-7 rounded-full border-2",
+                  color === c ? "border-white" : "border-transparent",
+                ].join(" ")}
+                style={{ backgroundColor: c }}
+              />
+            ))}
+          </div>
+        </div>
+        {update.error && <p className="text-sm text-rose-400">{t("folders.errors.nameTaken")}</p>}
+      </div>
+    </Modal>
+  );
+}
+
 function TemplateSettingsModal({
   template,
   onClose,
@@ -284,8 +400,13 @@ function TemplateSettingsModal({
   const { t } = useTranslation();
   const folders = useFolders();
   const update = useUpdateTemplate();
+  const upload = useUploadAsset();
   const [folderId, setFolderId] = useState<number | "">(template.folder_id ?? "");
   const [shared, setShared] = useState(template.is_shared);
+  const [featuredId, setFeaturedId] = useState<number | null>(template.featured_asset_id);
+  const [featuredPreview, setFeaturedPreview] = useState<string | null>(
+    template.featured_asset_id !== null ? featuredImageUrl(template) : null,
+  );
 
   return (
     <Modal
@@ -306,6 +427,7 @@ function TemplateSettingsModal({
                   patch: {
                     folder_id: folderId === "" ? null : folderId,
                     is_shared: shared,
+                    featured_asset_id: featuredId,
                   },
                 },
                 { onSuccess: onClose },
@@ -342,6 +464,56 @@ function TemplateSettingsModal({
             <span className="block text-xs text-slate-500">{t("templates.shareHint")}</span>
           </span>
         </label>
+
+        <div className="space-y-2">
+          <span className="block text-sm font-medium text-slate-200">
+            {t("templates.featuredImage")}
+          </span>
+          {featuredPreview && (
+            <img
+              src={featuredPreview}
+              alt=""
+              className="h-24 w-full rounded border border-slate-700 object-cover"
+            />
+          )}
+          <div className="flex items-center gap-2">
+            <label className="cursor-pointer rounded-md border border-slate-700 bg-slate-900 px-3 py-1.5 text-xs text-slate-200 hover:bg-slate-800">
+              {upload.isPending ? t("common.loading") : t("templates.featuredUpload")}
+              <input
+                type="file"
+                accept="image/png,image/jpeg,image/svg+xml"
+                className="hidden"
+                onChange={(e) => {
+                  const file = e.target.files?.[0];
+                  if (!file) return;
+                  upload.mutate(file, {
+                    onSuccess: (asset) => {
+                      setFeaturedId(asset.id);
+                      setFeaturedPreview(URL.createObjectURL(file));
+                    },
+                  });
+                }}
+              />
+            </label>
+            {featuredId !== null && (
+              <Button
+                variant="ghost"
+                onClick={() => {
+                  setFeaturedId(null);
+                  setFeaturedPreview(null);
+                }}
+              >
+                {t("templates.featuredRemove")}
+              </Button>
+            )}
+          </div>
+          <p className="text-xs text-slate-500">{t("templates.featuredHint")}</p>
+          {upload.error && (
+            <p className="text-xs text-rose-400">
+              {upload.error instanceof Error ? upload.error.message : String(upload.error)}
+            </p>
+          )}
+        </div>
         {update.error && <p className="text-sm text-rose-400">{t("auth.errors.generic")}</p>}
       </div>
     </Modal>

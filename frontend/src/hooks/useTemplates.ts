@@ -24,6 +24,7 @@ export type TemplateSummary = {
   is_shared: boolean;
   version: number;
   folder_id: number | null;
+  featured_asset_id: number | null;
   /** Present only in library listings — who shared this template. */
   owner_email: string | null;
   created_at: string;
@@ -150,8 +151,13 @@ type UpdateTemplateInput = {
     width_mm: number;
     height_mm: number;
     folder_id: number | null;
+    featured_asset_id: number | null;
   }>;
 };
+
+/** Card thumbnail URL — access follows the template (works for shared). */
+export const featuredImageUrl = (t: Pick<TemplateSummary, "id" | "updated_at">): string =>
+  `/api/templates/${t.id}/featured-image?v=${encodeURIComponent(t.updated_at)}`;
 
 export function useUpdateTemplate() {
   const qc = useQueryClient();

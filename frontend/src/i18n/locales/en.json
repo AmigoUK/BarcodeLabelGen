@@ -147,7 +147,11 @@
     "settingsTitle": "Template settings",
     "shareToggle": "Share in the Library",
     "shareHint": "Everyone signed in will see this template in the Library and can clone it (\"Use\"). Only you can edit it.",
-    "sharedBadge": "Shared in the Library"
+    "sharedBadge": "Shared in the Library",
+    "featuredImage": "Featured image",
+    "featuredUpload": "Upload image…",
+    "featuredRemove": "Remove image",
+    "featuredHint": "Preview image shown on the list card and in the Library (PNG/JPG/SVG, max 5 MB)."
   },
   "editor": {
     "add": "Add",
@@ -373,13 +377,15 @@
     "unfiled": "No folder",
     "new": "New folder",
     "namePlaceholder": "Folder name",
-    "rename": "Rename",
-    "renamePrompt": "New folder name:",
     "confirmDelete": "Delete folder \"{{name}}\"? Its templates stay (moved to \"No folder\").",
     "moveTo": "Folder",
     "errors": {
       "nameTaken": "You already have a folder with this name."
-    }
+    },
+    "edit": "Edit folder",
+    "editTitle": "Edit folder",
+    "color": "Color",
+    "colorNone": "No color"
   },
   "library": {
     "title": "Library",

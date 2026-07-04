@@ -147,7 +147,11 @@
     "settingsTitle": "Ustawienia szablonu",
     "shareToggle": "Udostępnij w Bibliotece",
     "shareHint": "Wszyscy zalogowani zobaczą szablon w Bibliotece i będą mogli go sklonować („Użyj\"). Edytować możesz tylko Ty.",
-    "sharedBadge": "Udostępniony w Bibliotece"
+    "sharedBadge": "Udostępniony w Bibliotece",
+    "featuredImage": "Grafika wyróżniająca",
+    "featuredUpload": "Wgraj obrazek…",
+    "featuredRemove": "Usuń grafikę",
+    "featuredHint": "Obrazek podglądowy pokazywany na kafelku listy i w Bibliotece (PNG/JPG/SVG, maks 5 MB)."
   },
   "editor": {
     "add": "Dodaj",
@@ -373,13 +377,15 @@
     "unfiled": "Bez folderu",
     "new": "Nowy folder",
     "namePlaceholder": "Nazwa folderu",
-    "rename": "Zmień nazwę",
-    "renamePrompt": "Nowa nazwa folderu:",
     "confirmDelete": "Usunąć folder „{{name}}\"? Szablony w nim zostaną (trafią do „Bez folderu\").",
     "moveTo": "Folder",
     "errors": {
       "nameTaken": "Masz już folder o tej nazwie."
-    }
+    },
+    "edit": "Edytuj folder",
+    "editTitle": "Edytuj folder",
+    "color": "Kolor",
+    "colorNone": "Bez koloru"
   },
   "library": {
     "title": "Biblioteka",

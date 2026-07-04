@@ -9,6 +9,7 @@ import { useNavigate } from "react-router-dom";
 import { Button } from "../components/ui/Button";
 import { useMe } from "../hooks/useMe";
 import {
+  featuredImageUrl,
   useCloneTemplate,
   useLibraryTemplates,
   useStarters,
@@ -85,6 +86,14 @@ export function LibraryPage() {
                 key={tpl.id}
                 className="flex flex-col rounded-lg border border-slate-800 bg-slate-900/50 p-4"
               >
+                {tpl.featured_asset_id !== null && (
+                  <img
+                    src={featuredImageUrl(tpl)}
+                    alt=""
+                    loading="lazy"
+                    className="mb-3 h-24 w-full rounded object-cover"
+                  />
+                )}
                 <h3 className="font-semibold text-slate-100">{tpl.name}</h3>
                 <p className="text-xs text-slate-500">
                   {tpl.width_mm} × {tpl.height_mm} mm · {tpl.owner_email}
