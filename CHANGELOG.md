@@ -9,6 +9,20 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 _Nothing yet._
 
+## [0.6.0] — 2026-07-04
+
+### Added
+- **Connector phase B (F26): device tokens + server-side print queue.**
+  New "Devices" page — register a local print agent and get its Bearer
+  token (shown exactly once; only a SHA-256 digest is stored). Session
+  API: `GET/POST/DELETE /api/devices`, `POST/GET /api/print-jobs`
+  (fully-resolved ZPL, per-device queue, ownership-scoped). Agent API
+  (Bearer auth, CSRF-exempt): `GET /api/agent/jobs` (poll-and-claim,
+  pending→sent), `POST /api/agent/jobs/:id/status` (done/error),
+  `POST /api/agent/state` (printer list + version heartbeat, drives the
+  online indicator). New tables `devices`/`print_jobs` (alembic 0007).
+  The Go agent itself lands in phase C.
+
 ## [0.5.1] — 2026-07-04
 
 ### Added
@@ -126,7 +140,8 @@ _Nothing yet._
   label formats, dataset upload (CSV/XLSX/SQLite) with `{{column}}`
   mail-merge, and PDF single-label + batch generation via ReportLab.
 
-[Unreleased]: https://github.com/AmigoUK/BarcodeLabelGen/compare/v0.5.1...HEAD
+[Unreleased]: https://github.com/AmigoUK/BarcodeLabelGen/compare/v0.6.0...HEAD
+[0.6.0]: https://github.com/AmigoUK/BarcodeLabelGen/releases/tag/v0.6.0
 [0.5.1]: https://github.com/AmigoUK/BarcodeLabelGen/releases/tag/v0.5.1
 [0.5.0]: https://github.com/AmigoUK/BarcodeLabelGen/releases/tag/v0.5.0
 [0.4.1]: https://github.com/AmigoUK/BarcodeLabelGen/releases/tag/v0.4.1

@@ -328,12 +328,17 @@ META
   GET    /api/health
   GET    /api/docs                    → Swagger UI
 
-KONEKTOR (planowane, F25–F27 — auth tokenem urządzenia, poza sesją/CSRF)
-  POST   /api/print-jobs              (P1) → { template/zpl, printer, copies } → { job_id }
-  GET    /api/agent/jobs              (P1) → polling agenta: oczekujące zadania druku
-  POST   /api/agent/jobs/:id/status   (P1) → done|error (raport agenta)
-  POST   /api/agent/captures          (P2) → upload ZPL przechwyconego przez wirtualną drukarkę
-  GET    /api/captures                (P2) → „Inbox" przechwyconych etykiet (import do edytora)
+KONEKTOR (F26 zaimplementowane w v0.6.0; agent auth tokenem urządzenia Bearer, poza sesją/CSRF)
+  GET    /api/devices                 → urządzenia użytkownika (status, drukarki, last_seen)
+  POST   /api/devices                 → { name } → { device, token }  (token pokazany raz)
+  DELETE /api/devices/:id             → odwołanie tokenu
+  POST   /api/print-jobs              → { device_id, printer, zpl, copies } → { job }
+  GET    /api/print-jobs              → zadania użytkownika (status pending/sent/done/error)
+  GET    /api/agent/jobs              → polling agenta: claim oczekujących zadań (pending→sent)
+  POST   /api/agent/jobs/:id/status   → done|error (raport agenta)
+  POST   /api/agent/state             → heartbeat: wersja agenta + lista drukarek
+  POST   /api/agent/captures          (P2, planowane) → upload ZPL z wirtualnej drukarki
+  GET    /api/captures                (P2, planowane) → „Inbox" przechwyconych etykiet
 ```
 
 ### 7.2 Integracje zewnętrzne
