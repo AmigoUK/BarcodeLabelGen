@@ -58,7 +58,7 @@ Pracownicy biurowi nie mają obecnie narzędzia, które pozwoliłoby im samodzie
 | F18 | Historia wygenerowanych PDF (lista, ponowne pobranie do 30 dni) | P1 |
 | F19 | Export/import szablonów (JSON) | P1 |
 | F20 | Print preview (podgląd PDF w przeglądarce przed pobraniem) | P1 |
-| F21 | Integracja Zebra Browser Print (bezpośredni druk ZPL) | P1 |
+| F21 | Integracja Zebra Browser Print (bezpośredni druk ZPL) — **zrealizowane w v0.10.0** własnym konektorem: szybka ścieżka localhost w dialogu druku | P1 |
 | F22 | Integracja Toshiba (TSPL przez agenta lub Browser Print) | P2 |
 | F23 | Dodatkowe języki UI (DE, ES, FR — tłumaczenie społecznościowe) | P2 |
 | F24 | Placeholdery dynamicznej daty `{{date±Nd/m/y:FORMAT}}` obliczane przy generowaniu (PDF/ZPL) | P0 |
@@ -67,6 +67,8 @@ Pracownicy biurowi nie mają obecnie narzędzia, które pozwoliłoby im samodzie
 | F27 | Konektor: wirtualna drukarka Windows — przechwytywanie ZPL z innych aplikacji + „Inbox" w web appce (import do edytora) — **zrealizowane w v0.8.0** | P2 |
 | F28 | Dokumentacja użytkownika: instrukcja + FAQ (PL/EN), placeholdery na screenshoty z opisami | P0 |
 | F29 | Walidacja ZPL na wejściu (kolejka druku, przechwyty, import): sanity-check `^XA…^XZ`, limity rozmiaru, odrzucanie nie-ZPL (np. omyłkowo wysłanych stron błędów HTML) z czytelnym komunikatem — **zrealizowane w v0.9.0** | P1 |
+| F30 | Lista manualnych testów UAT (checklista dla właściciela: sprzęt, Windows, realna drukarka) — warunek decyzji o wdrożeniu na prod; checklist: `docs/UAT.md` | P0 |
+| F31 | Struktura folderów/katalogów szablonów + biblioteka gotowych projektów + udostępnianie innym użytkownikom (konsoliduje F15/F16) — **wymaga sesji brainstormingu przed implementacją** | P1 |
 
 ### 2.3 User Stories (wybrane kluczowe)
 

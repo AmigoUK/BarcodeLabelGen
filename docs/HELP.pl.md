@@ -336,6 +336,8 @@ Zamiast pobierać plik `.zpl`, możesz drukować **prosto z edytora** przyciskie
 2. W aplikacji: **Urządzenia → Dodaj urządzenie** → skopiuj token do `config.yaml` agenta. Urządzenie przejdzie na **Online** i zgłosi listę drukarek.
 3. W edytorze: **🖨 Drukuj** → wybierz urządzenie, drukarkę, liczbę kopii i DPI → **Drukuj**. Okno pokaże postęp: *w kolejce → agent odebrał → wydrukowano* (lub błąd z powodem).
 
+**Szybka ścieżka:** jeśli konektor działa **na tym samym komputerze**, na którym otwarta jest przeglądarka, dialog wykryje go automatycznie i pokaże opcję **⚡ Ten komputer — druk natychmiastowy** (domyślnie wybraną) — etykieta idzie wtedy prosto na drukarkę, bez rundy przez serwer.
+
 Placeholdery daty są obliczane w momencie druku; placeholdery kolumn zostają w kodzie (druk pojedynczej etykiety, nie serii).
 
 ### Wirtualna drukarka — przejmij etykiety z innych programów

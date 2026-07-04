@@ -336,6 +336,8 @@ Instead of downloading a `.zpl` file, you can print **straight from the editor**
 2. In the app: **Devices → Add device** → copy the token into the agent's `config.yaml`. The device switches to **Online** and reports its list of printers.
 3. In the editor: **🖨 Print** → pick the device, printer, number of copies and DPI → **Print**. The dialog shows the progress: *queued → agent picked it up → printed* (or an error with the reason).
 
+**Fast path:** if the connector runs **on the same computer** as your browser, the dialog detects it automatically and shows a preselected **⚡ This computer — instant print** option — the label then goes straight to the printer, skipping the server round-trip.
+
 Date placeholders are calculated at print time; column placeholders stay in the code (this prints a single label, not a series).
 
 ### Virtual printer — capture labels from other programs
