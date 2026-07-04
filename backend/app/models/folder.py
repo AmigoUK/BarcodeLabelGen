@@ -23,6 +23,9 @@ class Folder(Base):
         ForeignKey("users.id", ondelete="CASCADE"), nullable=False, index=True
     )
     name: Mapped[str] = mapped_column(String(100), nullable=False)
+    # Optional display colour ("#rrggbb") shown as a dot in the folder rail
+    # and on template cards belonging to this folder.
+    color: Mapped[str | None] = mapped_column(String(7), nullable=True)
     created_at: Mapped[datetime] = mapped_column(
         DateTime(timezone=True), nullable=False, default=_utcnow
     )

@@ -53,6 +53,7 @@ def test_folder_crud_and_counts(app: Flask, client: FlaskClient, csrf: CsrfHelpe
         {
             "id": folder_id,
             "name": "Produkcja",
+            "color": None,
             "template_count": 1,
             "created_at": folders[0]["created_at"],
         }
@@ -168,3 +169,100 @@ def test_starters_list_and_use(app: Flask, client: FlaskClient, csrf: CsrfHelper
     assert (
         client.post("/api/library/starters/nope/use", headers=csrf.headers()).status_code == 404
     )
+
+
+def test_folder_color(app: Flask, client: FlaskClient, csrf: CsrfHelper) -> None:
+    _seed_format_and_login(app, client, csrf)
+    resp = client.post(
+        "/api/folders", json={"name": "Kolorowy", "color": "#e11d48"}, headers=csrf.headers()
+    )
+    assert resp.status_code == 201
+    fid = resp.get_json()["folder"]["id"]
+    assert resp.get_json()["folder"]["color"] == "#e11d48"
+
+    # patch color only (name untouched), then clear it with explicit null
+    patched = client.patch(
+        f"/api/folders/{fid}", json={"color": "#2563eb"}, headers=csrf.headers()
+    ).get_json()["folder"]
+    assert patched == {**patched, "name": "Kolorowy", "color": "#2563eb"}
+    cleared = client.patch(
+        f"/api/folders/{fid}", json={"color": None}, headers=csrf.headers()
+    ).get_json()["folder"]
+    assert cleared["color"] is None
+
+    # invalid color rejected
+    assert (
+        client.post(
+            "/api/folders", json={"name": "Zly", "color": "red"}, headers=csrf.headers()
+        ).status_code
+        == 400
+    )
+
+
+def _upload_png(client: FlaskClient, csrf: CsrfHelper) -> int:
+    import io
+
+    from PIL import Image
+
+    buf = io.BytesIO()
+    Image.new("RGB", (10, 10), "red").save(buf, format="PNG")
+    buf.seek(0)
+    resp = client.post(
+        "/api/assets/images",
+        data={"file": (buf, "thumb.png", "image/png")},
+        headers=csrf.headers(),
+        content_type="multipart/form-data",
+    )
+    assert resp.status_code == 201, resp.get_json()
+    body = resp.get_json()
+    return body.get("id") or body.get("asset", {}).get("id")
+
+
+def test_featured_image_set_view_and_clone(
+    app: Flask, client: FlaskClient, csrf: CsrfHelper, tmp_path, monkeypatch
+) -> None:
+    monkeypatch.setenv("ASSETS_DIR", str(tmp_path))
+    fmt_id = _seed_format_and_login(app, client, csrf)
+    tid = _mk_template(client, csrf, fmt_id, "Z grafiką")
+    asset_id = _upload_png(client, csrf)
+
+    # set featured image
+    assert (
+        client.put(
+            f"/api/templates/{tid}", json={"featured_asset_id": asset_id}, headers=csrf.headers()
+        ).status_code
+        == 200
+    )
+    img = client.get(f"/api/templates/{tid}/featured-image")
+    assert img.status_code == 200
+    assert img.mimetype == "image/png"
+
+    # someone else's asset can't be attached; share + second user can view + clone
+    client.put(f"/api/templates/{tid}", json={"is_shared": True}, headers=csrf.headers())
+    _login_second_user(app, client, csrf)
+    my_tid = _mk_template(client, csrf, fmt_id, "Cudzy asset")
+    assert (
+        client.put(
+            f"/api/templates/{my_tid}",
+            json={"featured_asset_id": asset_id},
+            headers=csrf.headers(),
+        ).status_code
+        == 400
+    )
+    # viewer reads the shared template's thumbnail through the template route
+    assert client.get(f"/api/templates/{tid}/featured-image").status_code == 200
+    # clone copies the featured image into the cloner's account
+    cloned = client.post(f"/api/templates/{tid}/clone", headers=csrf.headers()).get_json()
+    assert cloned["featured_asset_id"] is not None
+    assert cloned["featured_asset_id"] != asset_id
+    assert client.get(f"/api/templates/{cloned['id']}/featured-image").status_code == 200
+
+
+def test_featured_image_unset(app: Flask, client: FlaskClient, csrf: CsrfHelper, tmp_path, monkeypatch) -> None:
+    monkeypatch.setenv("ASSETS_DIR", str(tmp_path))
+    fmt_id = _seed_format_and_login(app, client, csrf)
+    tid = _mk_template(client, csrf, fmt_id, "Bez grafiki")
+    asset_id = _upload_png(client, csrf)
+    client.put(f"/api/templates/{tid}", json={"featured_asset_id": asset_id}, headers=csrf.headers())
+    client.put(f"/api/templates/{tid}", json={"featured_asset_id": None}, headers=csrf.headers())
+    assert client.get(f"/api/templates/{tid}/featured-image").status_code == 404

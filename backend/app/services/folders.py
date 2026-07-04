@@ -37,8 +37,8 @@ def get_owned_folder(session: Session, folder_id: int, *, owner_id: int) -> Fold
     return folder
 
 
-def create_folder(session: Session, *, owner_id: int, name: str) -> Folder:
-    folder = Folder(owner_id=owner_id, name=name)
+def create_folder(session: Session, *, owner_id: int, name: str, color: str | None = None) -> Folder:
+    folder = Folder(owner_id=owner_id, name=name, color=color)
     session.add(folder)
     try:
         session.commit()
@@ -49,14 +49,25 @@ def create_folder(session: Session, *, owner_id: int, name: str) -> Folder:
     return folder
 
 
-def rename_folder(session: Session, folder_id: int, *, owner_id: int, name: str) -> Folder:
+def update_folder(
+    session: Session,
+    folder_id: int,
+    *,
+    owner_id: int,
+    name: str | None = None,
+    color: str | None = None,
+    color_set: bool = False,
+) -> Folder:
     folder = get_owned_folder(session, folder_id, owner_id=owner_id)
-    folder.name = name
+    if name is not None:
+        folder.name = name
+    if color_set:
+        folder.color = color
     try:
         session.commit()
     except IntegrityError as exc:
         session.rollback()
-        raise FolderNameTakenError(name) from exc
+        raise FolderNameTakenError(name or folder.name) from exc
     session.refresh(folder)
     return folder
 

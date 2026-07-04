@@ -10,6 +10,7 @@ from sqlalchemy.dialects.postgresql import JSONB
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from app.db.base import Base
+from app.models.asset import Asset  # noqa: F401 — FK target must be mapped first
 from app.models.folder import Folder  # noqa: F401 — FK target must be mapped first
 from app.models.label_format import LabelFormat
 from app.models.user import User
@@ -53,6 +54,13 @@ class Template(Base):
     # into "no folder" rather than deleting them.
     folder_id: Mapped[int | None] = mapped_column(
         ForeignKey("folders.id", ondelete="SET NULL"), nullable=True, index=True
+    )
+
+    # Optional user-uploaded card thumbnail (featured image). Viewers of a
+    # shared template read it through /api/templates/:id/featured-image,
+    # which checks template access rather than asset ownership.
+    featured_asset_id: Mapped[int | None] = mapped_column(
+        ForeignKey("assets.id", ondelete="SET NULL"), nullable=True
     )
 
     created_at: Mapped[datetime] = mapped_column(

@@ -72,6 +72,32 @@ def list_templates() -> ResponseReturnValue:
     )
 
 
+@templates_bp.get("/templates/<int:template_id>/featured-image")
+@login_required
+def featured_image(template_id: int) -> ResponseReturnValue:
+    """Stream the template's featured image. Access follows the TEMPLATE
+    (own or shared) rather than the asset's owner, so library viewers can
+    see thumbnails of shared templates."""
+    from flask import send_file
+
+    from app.services import assets as assets_svc
+
+    session = get_session()
+    try:
+        tpl = tpl_svc.get(session, template_id, requesting_user_id=current_user.id)
+    except (tpl_svc.TemplateNotFoundError, tpl_svc.TemplateAccessError):
+        return jsonify({"error": "template_not_found"}), 404
+    if tpl.featured_asset_id is None:
+        return jsonify({"error": "no_featured_image"}), 404
+    asset = assets_svc.get_asset(session, tpl.featured_asset_id)
+    if asset is None:
+        return jsonify({"error": "no_featured_image"}), 404
+    path = assets_svc.assets_dir() / asset.storage_filename
+    if not path.is_file():
+        return jsonify({"error": "no_featured_image"}), 404
+    return send_file(path, mimetype=asset.mime_type, max_age=300)
+
+
 @templates_bp.post("/templates/<int:template_id>/clone")
 @login_required
 def clone_template(template_id: int) -> ResponseReturnValue:
@@ -148,6 +174,8 @@ def update_template(template_id: int) -> ResponseReturnValue:
             height_mm=payload.height_mm,
             folder_id=payload.folder_id,
             folder_id_set="folder_id" in payload.model_fields_set,
+            featured_asset_id=payload.featured_asset_id,
+            featured_asset_id_set="featured_asset_id" in payload.model_fields_set,
         )
     except tpl_svc.TemplateNotFoundError:
         return jsonify({"error": "template_not_found"}), 404
@@ -155,6 +183,8 @@ def update_template(template_id: int) -> ResponseReturnValue:
         return jsonify({"error": "forbidden"}), 403
     except FolderNotFoundError:
         return jsonify({"error": "folder_not_found"}), 400
+    except ValueError as exc:
+        return jsonify({"error": "asset_not_found", "detail": str(exc)}), 400
 
     return jsonify(TemplatePublic.model_validate(tpl).model_dump(mode="json"))
 

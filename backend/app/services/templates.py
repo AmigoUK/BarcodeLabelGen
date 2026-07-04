@@ -42,20 +42,44 @@ def list_library(session: Session) -> list[Template]:
     return list(session.execute(stmt).scalars().all())
 
 
+def _copy_asset_to_user(session: Session, asset_id: int, *, user_id: int) -> int | None:
+    """Duplicate another owner's asset into `user_id`'s library, reusing an
+    existing byte-identical upload (sha256). Returns the new asset id, or
+    None when the source asset no longer exists."""
+    from app.services import assets as assets_svc
+
+    src_asset = assets_svc.get_asset(session, asset_id)
+    if src_asset is None:
+        return None
+    if src_asset.owner_id == user_id:
+        return src_asset.id
+    if src_asset.sha256:
+        existing = assets_svc.find_by_sha256(session, owner_id=user_id, sha256=src_asset.sha256)
+        if existing is not None:
+            return existing.id
+    raw = (assets_svc.assets_dir() / src_asset.storage_filename).read_bytes()
+    copied = assets_svc.save_image_from_bytes(
+        session,
+        owner_id=user_id,
+        original_filename=src_asset.original_filename,
+        raw=raw,
+        declared_mime=src_asset.mime_type,
+    )
+    return copied.id
+
+
 def clone(session: Session, template_id: int, *, requesting_user_id: int) -> Template:
     """\"Użyj\": copy an accessible template (own or shared) into the caller's
-    templates. Assets are owner-scoped, so image objects get their binaries
-    copied into the caller's library (deduped by sha256 against what the
-    caller already has)."""
+    templates. Assets are owner-scoped, so image objects (and the featured
+    image) get their binaries copied into the caller's library."""
     from copy import deepcopy
-
-    from app.services import assets as assets_svc
 
     src = get(session, template_id, requesting_user_id=requesting_user_id)
     canvas = deepcopy(src.canvas_data)
+    featured_id = src.featured_asset_id
 
     if src.owner_id != requesting_user_id:
-        remap: dict[int, int] = {}
+        remap: dict[int, int | None] = {}
         for obj in canvas.get("objects", []) or []:
             if obj.get("type") != "image":
                 continue
@@ -63,29 +87,13 @@ def clone(session: Session, template_id: int, *, requesting_user_id: int) -> Tem
             if not isinstance(asset_id, int):
                 continue
             if asset_id not in remap:
-                src_asset = assets_svc.get_asset(session, asset_id)
-                if src_asset is None:
-                    continue
-                existing = (
-                    assets_svc.find_by_sha256(
-                        session, owner_id=requesting_user_id, sha256=src_asset.sha256
-                    )
-                    if src_asset.sha256
-                    else None
+                remap[asset_id] = _copy_asset_to_user(
+                    session, asset_id, user_id=requesting_user_id
                 )
-                if existing is not None:
-                    remap[asset_id] = existing.id
-                else:
-                    raw = (assets_svc.assets_dir() / src_asset.storage_filename).read_bytes()
-                    copied = assets_svc.save_image_from_bytes(
-                        session,
-                        owner_id=requesting_user_id,
-                        original_filename=src_asset.original_filename,
-                        raw=raw,
-                        declared_mime=src_asset.mime_type,
-                    )
-                    remap[asset_id] = copied.id
-            obj["assetId"] = remap[asset_id]
+            if remap[asset_id] is not None:
+                obj["assetId"] = remap[asset_id]
+        if featured_id is not None:
+            featured_id = _copy_asset_to_user(session, featured_id, user_id=requesting_user_id)
 
     tpl = Template(
         owner_id=requesting_user_id,
@@ -95,6 +103,7 @@ def clone(session: Session, template_id: int, *, requesting_user_id: int) -> Tem
         width_mm=src.width_mm,
         height_mm=src.height_mm,
         canvas_data=canvas,
+        featured_asset_id=featured_id,
     )
     session.add(tpl)
     session.commit()
@@ -162,12 +171,23 @@ def update(
     height_mm: float | None = None,
     folder_id: int | None = None,
     folder_id_set: bool = False,
+    featured_asset_id: int | None = None,
+    featured_asset_id_set: bool = False,
 ) -> Template:
     tpl = session.get(Template, template_id)
     if tpl is None:
         raise TemplateNotFoundError(template_id)
     if tpl.owner_id != requesting_user_id:
         raise TemplateAccessError(template_id)
+
+    if featured_asset_id_set:
+        if featured_asset_id is not None:
+            from app.services import assets as assets_svc
+
+            asset = assets_svc.get_asset(session, featured_asset_id)
+            if asset is None or asset.owner_id != requesting_user_id:
+                raise ValueError(f"asset {featured_asset_id} not found")
+        tpl.featured_asset_id = featured_asset_id
 
     if folder_id_set:
         if folder_id is not None:

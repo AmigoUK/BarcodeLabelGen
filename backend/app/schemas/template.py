@@ -34,6 +34,7 @@ class TemplateSummary(BaseModel):
     is_shared: bool
     version: int
     folder_id: int | None = None
+    featured_asset_id: int | None = None
     # Filled only in library listings — who shared this template.
     owner_email: str | None = None
     created_at: datetime
@@ -70,6 +71,8 @@ class UpdateTemplateRequest(BaseModel):
     # Explicit null moves the template out of its folder; absent = no change
     # (distinguished via model_fields_set in the route).
     folder_id: int | None = None
+    # Explicit null removes the featured image; absent = no change.
+    featured_asset_id: int | None = None
 
 
 class AssetPublic(BaseModel):
