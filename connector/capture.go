@@ -84,8 +84,8 @@ func (c *Capturer) handleConn(conn net.Conn) {
 		log.Printf("capture dropped: job exceeds %d bytes", captureMaxBytes)
 		return
 	}
-	if !strings.Contains(string(data), "^XA") {
-		log.Printf("capture dropped: %d bytes without ^XA (non-ZPL driver?)", len(data))
+	if ok, reason := looksLikeZPL(data); !ok {
+		log.Printf("capture dropped (%d bytes): %s", len(data), reason)
 		return
 	}
 

@@ -369,3 +369,42 @@ func TestDefaultSpoolDirIsUserScoped(t *testing.T) {
 		t.Errorf("default spool in shared temp without uid suffix: %s", dir)
 	}
 }
+
+func TestLooksLikeZPL(t *testing.T) {
+	cases := []struct {
+		payload string
+		ok      bool
+	}{
+		{"^XA^FDok^FS^XZ", true},
+		{"  ^XA^FD1^FS^XZ\n^XA^FD2^FS^XZ\n", true},
+		{"", false},
+		{"<!doctype html><h1>500</h1>", false},
+		{"%PDF-1.7", false},
+		{"^FOfragment^FS", false},
+		{"^XA never closed", false},
+		{"^XZ before ^XA", false},
+	}
+	for _, c := range cases {
+		ok, reason := looksLikeZPL([]byte(c.payload))
+		if ok != c.ok {
+			t.Errorf("looksLikeZPL(%q) = %v (%s), want %v", c.payload, ok, reason, c.ok)
+		}
+		if !ok && reason == "" {
+			t.Errorf("looksLikeZPL(%q): missing reason", c.payload)
+		}
+	}
+}
+
+func TestLocalAPIPrintRejectsNonZPL(t *testing.T) {
+	cfg := &Config{
+		ServerURL: "https://app.example.com",
+		Printers:  []Printer{{Name: "spool", Host: "file://" + t.TempDir()}},
+	}
+	srv := httptest.NewServer(NewLocalAPI(cfg).Handler())
+	defer srv.Close()
+	resp, _ := http.Post(srv.URL+"/print", "application/json",
+		strings.NewReader(`{"printer":"spool","zpl":"<!doctype html>"}`))
+	if resp.StatusCode != http.StatusUnprocessableEntity {
+		t.Errorf("non-ZPL print: HTTP %d, want 422", resp.StatusCode)
+	}
+}

@@ -132,8 +132,9 @@ func (a *LocalAPI) handlePrint(w http.ResponseWriter, r *http.Request) {
 		writeJSON(w, http.StatusBadRequest, map[string]any{"error": "bad_json"})
 		return
 	}
-	if req.Zpl == "" {
-		writeJSON(w, http.StatusBadRequest, map[string]any{"error": "zpl_required"})
+	if ok, reason := looksLikeZPL([]byte(req.Zpl)); !ok {
+		writeJSON(w, http.StatusUnprocessableEntity,
+			map[string]any{"error": "invalid_zpl", "detail": reason})
 		return
 	}
 	if req.Copies < 1 {
