@@ -139,9 +139,9 @@ Zwykłe aplikacje (Word, przeglądarka) drukują PostScript — agent je odrzuci
    `lpadmin -p BarcodeLabelGen-Capture -E -v socket://127.0.0.1:9101 -m raw`.
    Skrypt nie wywołuje `sudo` sam — jeśli `lpadmin` zgłosi brak uprawnień,
    uruchom go przez `sudo` lub dodaj się do grupy `lpadmin`/`_lpadmin`.
-3. Drukuj ZPL na kolejkę: `lp -d BarcodeLabelGen-Capture etykieta.zpl` —
-   zadanie pojawi się w Inboxie. Kolejkę usuniesz przez
-   `lpadmin -x BarcodeLabelGen-Capture`.
+3. Drukuj ZPL na kolejkę: `lp -d BarcodeLabelGen-Capture -o raw etykieta.zpl`
+   (`-o raw` gwarantuje przekazanie bajtów bez filtra) — zadanie pojawi się
+   w Inboxie. Kolejkę usuniesz przez `lpadmin -x BarcodeLabelGen-Capture`.
 
 > **Uwaga o „raw queues":** nowsze CUPS wypisują ostrzeżenie
 > `Raw queues are deprecated and will stop working in a future version of CUPS`
