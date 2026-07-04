@@ -346,7 +346,9 @@
     "done": "Wydrukowano.",
     "failed": "Druk nie powiódł się.",
     "deviceOfflineHint": "To urządzenie jest offline — zadanie poczeka w kolejce, aż agent się połączy.",
-    "noDevices": "Nie masz jeszcze żadnego urządzenia konektora. Dodaj je na stronie:"
+    "noDevices": "Nie masz jeszcze żadnego urządzenia konektora. Dodaj je na stronie:",
+    "localDevice": "Ten komputer — druk natychmiastowy (agent {{version}})",
+    "localHint": "Wykryto konektor na tym komputerze — etykieta pójdzie prosto na drukarkę, bez kolejki serwera."
   },
   "captures": {
     "title": "Inbox — przechwycone etykiety",

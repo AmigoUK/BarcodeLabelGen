@@ -3,6 +3,7 @@
  * it for a device, then watch the job until the agent reports done/error.
  */
 
+import { useQuery } from "@tanstack/react-query";
 import { useEffect, useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { Link } from "react-router-dom";
@@ -14,8 +15,12 @@ import { useDevices } from "../hooks/useDevices";
 import { ApiError } from "../lib/api";
 import { useCreatePrintJob, usePrintJobs } from "../hooks/usePrintJobs";
 import { useGenerateZpl } from "../hooks/useZpl";
+import { fetchLocalPrinters, printLocal, probeLocalAgent } from "../lib/localAgent";
 import type { Device } from "../lib/types";
 import type { CanvasData } from "./types";
+
+/** Select value for the loopback fast path — not a real device id. */
+const LOCAL = "local" as const;
 
 const ONLINE_WINDOW_MS = 60_000;
 
@@ -36,31 +41,57 @@ export function PrintModal({ open, onClose, canvas }: Props) {
   const generateZpl = useGenerateZpl();
   const createJob = useCreatePrintJob();
 
-  const [deviceId, setDeviceId] = useState<number | "">("");
+  const [deviceId, setDeviceId] = useState<number | "" | typeof LOCAL>("");
   const [printer, setPrinter] = useState("");
   const [copies, setCopies] = useState(1);
   const [dpi, setDpi] = useState(203);
   const [watchedJobId, setWatchedJobId] = useState<number | null>(null);
+  const [localOutcome, setLocalOutcome] = useState<"done" | string | null>(null);
   const [submitError, setSubmitError] = useState<string | null>(null);
 
+  // F21 fast path: is a connector running on THIS machine? Probe once per
+  // dialog open; any failure (no agent, browser policy) means queue-only.
+  const localAgent = useQuery({
+    queryKey: ["local-agent"],
+    queryFn: probeLocalAgent,
+    enabled: open,
+    staleTime: 10_000,
+    retry: false,
+  });
+  const localAvailable = !!localAgent.data;
+  const localPrinters = useQuery({
+    queryKey: ["local-agent", "printers"],
+    queryFn: fetchLocalPrinters,
+    enabled: open && localAvailable,
+    retry: false,
+  });
+
   const selectedDevice = useMemo(
-    () => devices?.find((d) => d.id === deviceId) ?? null,
+    () => (typeof deviceId === "number" ? (devices?.find((d) => d.id === deviceId) ?? null) : null),
     [devices, deviceId],
   );
 
-  // Preselect the first online device (or the first one at all).
+  // Preselect: the local agent when present, else the first online device.
   useEffect(() => {
-    if (!open || deviceId !== "" || !devices || devices.length === 0) return;
+    if (!open || deviceId !== "") return;
+    if (localAvailable) {
+      setDeviceId(LOCAL);
+      return;
+    }
+    if (localAgent.isPending) return; // wait for the probe before defaulting
+    if (!devices || devices.length === 0) return;
     const preferred = devices.find(isOnline) ?? devices[0];
     setDeviceId(preferred.id);
-  }, [open, devices, deviceId]);
+  }, [open, devices, deviceId, localAvailable, localAgent.isPending]);
 
-  // Keep the printer choice in sync with what the device reported.
+  // Keep the printer choice in sync with the selected target's printer list.
   useEffect(() => {
-    if (!selectedDevice) return;
-    const names = selectedDevice.printers.map((p) => p.name);
+    const names =
+      deviceId === LOCAL
+        ? (localPrinters.data?.map((p) => p.name) ?? [])
+        : (selectedDevice?.printers.map((p) => p.name) ?? []);
     if (names.length > 0 && !names.includes(printer)) setPrinter(names[0]);
-  }, [selectedDevice, printer]);
+  }, [deviceId, selectedDevice, localPrinters.data, printer]);
 
   const { data: jobs } = usePrintJobs({ watch: watchedJobId !== null });
   const watchedJob = watchedJobId !== null ? jobs?.find((j) => j.id === watchedJobId) : undefined;
@@ -68,6 +99,7 @@ export function PrintModal({ open, onClose, canvas }: Props) {
 
   const close = () => {
     setWatchedJobId(null);
+    setLocalOutcome(null);
     setSubmitError(null);
     generateZpl.reset();
     createJob.reset();
@@ -79,6 +111,16 @@ export function PrintModal({ open, onClose, canvas }: Props) {
     setSubmitError(null);
     try {
       const { zpl } = await generateZpl.mutateAsync({ canvas_data: canvas, dpi });
+      if (deviceId === LOCAL) {
+        // Fast path: straight to the loopback agent, no server round-trip.
+        try {
+          await printLocal(printer.trim(), zpl, copies);
+          setLocalOutcome("done");
+        } catch (err) {
+          setLocalOutcome(err instanceof Error ? err.message : String(err));
+        }
+        return;
+      }
       const job = await createJob.mutateAsync({
         device_id: deviceId,
         printer: printer.trim(),
@@ -96,6 +138,27 @@ export function PrintModal({ open, onClose, canvas }: Props) {
   };
 
   if (!open) return null;
+
+  // --- local fast-path result ---------------------------------------------
+  if (localOutcome !== null) {
+    return (
+      <Modal
+        open
+        onClose={close}
+        title={t("print.title")}
+        footer={<Button onClick={close}>{t("common.close")}</Button>}
+      >
+        {localOutcome === "done" ? (
+          <p className="text-sm text-emerald-400">✓ {t("print.done")}</p>
+        ) : (
+          <div className="space-y-1 text-sm text-rose-300">
+            <p>✗ {t("print.failed")}</p>
+            <code className="block rounded bg-slate-950 p-2 text-xs">{localOutcome}</code>
+          </div>
+        )}
+      </Modal>
+    );
+  }
 
   // --- watching a submitted job ------------------------------------------
   if (watchedJobId !== null) {
@@ -128,8 +191,11 @@ export function PrintModal({ open, onClose, canvas }: Props) {
   }
 
   // --- form ----------------------------------------------------------------
-  const noDevices = devices !== undefined && devices.length === 0;
-  const reportedPrinters = selectedDevice?.printers ?? [];
+  const noDevices = devices !== undefined && devices.length === 0 && !localAvailable;
+  const reportedPrinters =
+    deviceId === LOCAL
+      ? (localPrinters.data?.map((p) => ({ name: p.name, host: p.host })) ?? [])
+      : (selectedDevice?.printers ?? []);
   const submitting = generateZpl.isPending || createJob.isPending;
 
   return (
@@ -165,16 +231,24 @@ export function PrintModal({ open, onClose, canvas }: Props) {
               label={t("print.device")}
               value={deviceId}
               onChange={(e) => {
-                setDeviceId(Number(e.target.value));
+                setDeviceId(e.target.value === LOCAL ? LOCAL : Number(e.target.value));
                 setPrinter("");
               }}
             >
+              {localAvailable && (
+                <option value={LOCAL}>
+                  ⚡ {t("print.localDevice", { version: localAgent.data?.version })}
+                </option>
+              )}
               {devices?.map((d) => (
                 <option key={d.id} value={d.id}>
                   {d.name} {isOnline(d) ? `● ${t("devices.online")}` : `○ ${t("devices.offline")}`}
                 </option>
               ))}
             </Select>
+            {deviceId === LOCAL && (
+              <p className="text-xs text-emerald-400">{t("print.localHint")}</p>
+            )}
             {selectedDevice && !isOnline(selectedDevice) && (
               <p className="text-xs text-amber-400">{t("print.deviceOfflineHint")}</p>
             )}

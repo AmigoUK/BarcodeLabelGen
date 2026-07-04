@@ -346,7 +346,9 @@
     "done": "Printed.",
     "failed": "Printing failed.",
     "deviceOfflineHint": "This device is offline — the job will wait in the queue until the agent connects.",
-    "noDevices": "You don't have a connector device yet. Add one on the page:"
+    "noDevices": "You don't have a connector device yet. Add one on the page:",
+    "localDevice": "This computer — instant print (agent {{version}})",
+    "localHint": "Connector detected on this computer — the label goes straight to the printer, skipping the server queue."
   },
   "captures": {
     "title": "Inbox — captured labels",
