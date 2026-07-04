@@ -76,3 +76,31 @@ def test_generate_batch_requires_dataset(
     )
     assert resp.status_code == 400
     assert resp.get_json()["error"] == "batch_requires_template_and_dataset"
+
+
+def test_parse_rejects_non_zpl_with_readable_error(
+    app: Flask, client: FlaskClient, csrf: CsrfHelper
+) -> None:
+    _login(app, client, csrf)
+    resp = client.post(
+        "/api/zpl/parse",
+        json={"zpl": "%PDF-1.7 definitely not a label", "dpi": 203},
+        headers=csrf.headers(),
+    )
+    assert resp.status_code == 422
+    body = resp.get_json()
+    assert body["error"] == "invalid_zpl"
+    assert body["reason"] == "wrong_format"
+
+
+def test_parse_rejects_fragment_without_envelope(
+    app: Flask, client: FlaskClient, csrf: CsrfHelper
+) -> None:
+    _login(app, client, csrf)
+    resp = client.post(
+        "/api/zpl/parse",
+        json={"zpl": "^FO10,10^FDfragment^FS", "dpi": 203},
+        headers=csrf.headers(),
+    )
+    assert resp.status_code == 422
+    assert resp.get_json()["reason"] == "no_start"

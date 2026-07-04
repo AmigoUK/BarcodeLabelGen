@@ -28,6 +28,7 @@ from app.schemas.device import (
 )
 from app.services import captures as cap_svc
 from app.services import print_jobs as pj_svc
+from app.services.zpl import InvalidZplError, validate_zpl
 
 agent_bp = Blueprint("agent", __name__)
 
@@ -79,10 +80,12 @@ def upload_capture() -> ResponseReturnValue:
     # Drivers emit ASCII/hex graphics (^GFA); binary-mode ^GFB bytes that
     # aren't valid UTF-8 get replaced — documented limitation.
     zpl = raw.decode("utf-8", errors="replace")
-    if "^XA" not in zpl:
-        # Sanity gate (F29 minimum): whatever hit the virtual printer
-        # wasn't ZPL — don't fill the inbox with PCL/PostScript/noise.
-        return jsonify({"error": "not_zpl", "detail": "payload contains no ^XA"}), 422
+    try:
+        # F29: whatever hit the virtual printer must plausibly be ZPL —
+        # don't fill the inbox with PCL/PostScript/HTML noise.
+        validate_zpl(zpl)
+    except InvalidZplError as exc:
+        return jsonify({"error": "invalid_zpl", "reason": exc.reason, "detail": exc.detail}), 422
 
     session = get_session()
     capture = cap_svc.add_capture(session, device_id=current_device().id, zpl=zpl)

@@ -12,6 +12,7 @@ from app.db.session import get_session
 from app.schemas.device import PrintJobCreateRequest, PrintJobPublic
 from app.services import devices as dev_svc
 from app.services import print_jobs as pj_svc
+from app.services.zpl import InvalidZplError, validate_zpl
 
 print_jobs_bp = Blueprint("print_jobs", __name__)
 
@@ -23,6 +24,13 @@ def create_print_job() -> ResponseReturnValue:
         payload = PrintJobCreateRequest.model_validate(request.get_json(silent=True) or {})
     except ValidationError as exc:
         return validation_error_response(exc)
+
+    try:
+        # F29: never queue something a printer can't print — a mispasted
+        # HTML error page or PDF gets a readable rejection instead.
+        validate_zpl(payload.zpl)
+    except InvalidZplError as exc:
+        return jsonify({"error": "invalid_zpl", "reason": exc.reason, "detail": exc.detail}), 422
 
     session = get_session()
     try:

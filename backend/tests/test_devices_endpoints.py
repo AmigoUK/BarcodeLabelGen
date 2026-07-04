@@ -101,3 +101,17 @@ def test_print_job_rejects_foreign_device(
         headers=csrf.headers(),
     )
     assert resp.status_code == 404
+
+
+def test_print_job_rejects_non_zpl(app: Flask, client: FlaskClient, csrf: CsrfHelper) -> None:
+    _login(app, client, csrf, email="zplval@example.com")
+    device_id = _create_device(client, csrf, "Walidacja")["device"]["id"]
+    resp = client.post(
+        "/api/print-jobs",
+        json={"device_id": device_id, "printer": "Zebra-1", "zpl": "<!doctype html><h1>500</h1>"},
+        headers=csrf.headers(),
+    )
+    assert resp.status_code == 422
+    body = resp.get_json()
+    assert body["error"] == "invalid_zpl"
+    assert "HTML" in body["detail"]

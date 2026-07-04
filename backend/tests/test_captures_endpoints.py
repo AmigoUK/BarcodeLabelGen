@@ -70,7 +70,7 @@ def test_upload_rejects_non_zpl(app: Flask, client: FlaskClient, csrf: CsrfHelpe
         headers=_bearer(token),
     )
     assert resp.status_code == 422
-    assert resp.get_json()["error"] == "not_zpl"
+    assert resp.get_json()["error"] == "invalid_zpl"
 
 
 def test_upload_rejects_bad_base64(app: Flask, client: FlaskClient, csrf: CsrfHelper) -> None:

@@ -29,7 +29,14 @@ from app.services import datasets as ds_svc
 from app.services import jobs as jobs_svc
 from app.services import templates as tpl_svc
 from app.services.placeholders import substitute_dates_in_canvas
-from app.services.zpl import detect_dpi, dpmm_for_dpi, generate_zpl, parse_zpl
+from app.services.zpl import (
+    InvalidZplError,
+    detect_dpi,
+    dpmm_for_dpi,
+    generate_zpl,
+    parse_zpl,
+    validate_zpl,
+)
 from app.services.zpl.batch import render_batch_zpl
 
 zpl_bp = Blueprint("zpl", __name__)
@@ -63,6 +70,11 @@ def parse_endpoint() -> ResponseReturnValue:
         payload = ZplParseRequest.model_validate(request.get_json(silent=True) or {})
     except ValidationError as exc:
         return validation_error_response(exc)
+
+    try:
+        validate_zpl(payload.zpl)
+    except InvalidZplError as exc:
+        return jsonify({"error": "invalid_zpl", "reason": exc.reason, "detail": exc.detail}), 422
 
     if payload.dpi == "auto":
         dpi = detect_dpi(
