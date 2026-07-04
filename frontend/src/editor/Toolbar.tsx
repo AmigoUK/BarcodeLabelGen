@@ -20,6 +20,7 @@ type Props = {
   onImportZpl: () => void;
   onExportZpl: () => void;
   onLabelSize: () => void;
+  onPrint: () => void;
 };
 
 export function Toolbar({
@@ -34,6 +35,7 @@ export function Toolbar({
   onImportZpl,
   onExportZpl,
   onLabelSize,
+  onPrint,
 }: Props) {
   const { t } = useTranslation();
   const dirty = useEditorStore((s) => s.dirty);
@@ -135,6 +137,9 @@ export function Toolbar({
         </Button>
         <Button variant="ghost" onClick={onExportZpl} title={t("zpl.exportTooltip")}>
           {t("zpl.export")}
+        </Button>
+        <Button variant="ghost" onClick={onPrint} title={t("print.tooltip")}>
+          🖨 {t("print.button")}
         </Button>
         <Button
           variant="secondary"

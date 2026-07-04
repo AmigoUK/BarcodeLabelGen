@@ -35,3 +35,17 @@ export type CreateDeviceResponse = {
   device: Device;
   token: string;
 };
+
+export type PrintJobStatus = "pending" | "sent" | "done" | "error";
+
+export type PrintJob = {
+  id: number;
+  device_id: number;
+  printer: string;
+  copies: number;
+  status: PrintJobStatus;
+  error: string | null;
+  created_at: string;
+  sent_at: string | null;
+  finished_at: string | null;
+};

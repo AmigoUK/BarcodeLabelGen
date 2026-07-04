@@ -328,5 +328,23 @@
     "errors": {
       "nameTaken": "Masz już urządzenie o tej nazwie."
     }
+  },
+  "print": {
+    "title": "Drukuj przez konektor",
+    "button": "Drukuj",
+    "tooltip": "Wyślij etykietę (ZPL) do drukarki przez lokalny konektor",
+    "device": "Urządzenie (konektor)",
+    "printer": "Drukarka",
+    "printerPlaceholder": "np. Zebra-1",
+    "printerManualHint": "Agent nie zgłosił jeszcze listy drukarek — wpisz nazwę z jego config.yaml.",
+    "copies": "Kopie",
+    "submit": "Drukuj",
+    "submitting": "Wysyłanie…",
+    "queued": "Zadanie w kolejce — czekam aż agent je odbierze…",
+    "sentToAgent": "Agent odebrał zadanie — drukowanie…",
+    "done": "Wydrukowano.",
+    "failed": "Druk nie powiódł się.",
+    "deviceOfflineHint": "To urządzenie jest offline — zadanie poczeka w kolejce, aż agent się połączy.",
+    "noDevices": "Nie masz jeszcze żadnego urządzenia konektora. Dodaj je na stronie:"
   }
 }

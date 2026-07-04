@@ -328,5 +328,23 @@
     "errors": {
       "nameTaken": "You already have a device with this name."
     }
+  },
+  "print": {
+    "title": "Print via connector",
+    "button": "Print",
+    "tooltip": "Send the label (ZPL) to a printer through the local connector",
+    "device": "Device (connector)",
+    "printer": "Printer",
+    "printerPlaceholder": "e.g. Zebra-1",
+    "printerManualHint": "The agent hasn't reported its printer list yet — type the name from its config.yaml.",
+    "copies": "Copies",
+    "submit": "Print",
+    "submitting": "Submitting…",
+    "queued": "Job queued — waiting for the agent to pick it up…",
+    "sentToAgent": "Agent picked up the job — printing…",
+    "done": "Printed.",
+    "failed": "Printing failed.",
+    "deviceOfflineHint": "This device is offline — the job will wait in the queue until the agent connects.",
+    "noDevices": "You don't have a connector device yet. Add one on the page:"
   }
 }

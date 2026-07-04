@@ -6,6 +6,7 @@ import { AlignmentBar } from "../editor/AlignmentBar";
 import { Canvas } from "../editor/Canvas";
 import { ExportZplModal } from "../editor/ExportZplModal";
 import { ImportZplModal } from "../editor/ImportZplModal";
+import { PrintModal } from "../editor/PrintModal";
 import { LabelSettingsModal } from "../editor/LabelSettingsModal";
 import { LeftPanel } from "../editor/LeftPanel";
 import { RightPanel } from "../editor/RightPanel";
@@ -154,6 +155,7 @@ export function EditorPage() {
   const [showImportZpl, setShowImportZpl] = useState(false);
   const [showExportZpl, setShowExportZpl] = useState(false);
   const [showLabelSize, setShowLabelSize] = useState(false);
+  const [showPrint, setShowPrint] = useState(false);
 
   if (template.isLoading) {
     return <div className="p-6 text-slate-400">{t("common.loading")}</div>;
@@ -182,6 +184,7 @@ export function EditorPage() {
         onImportZpl={() => setShowImportZpl(true)}
         onExportZpl={() => setShowExportZpl(true)}
         onLabelSize={() => setShowLabelSize(true)}
+        onPrint={() => setShowPrint(true)}
       />
       <AlignmentBar />
       <div className="flex min-h-0 flex-1">
@@ -220,6 +223,7 @@ export function EditorPage() {
             heightMm={canvas.stage.height_mm}
             onApply={(w, h) => setStageSize(w, h)}
           />
+          <PrintModal open={showPrint} onClose={() => setShowPrint(false)} canvas={canvas} />
         </>
       )}
     </div>
