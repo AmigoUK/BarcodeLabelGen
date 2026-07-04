@@ -390,6 +390,12 @@ From the Inbox you can also copy the raw ZPL code or delete an entry. The app ke
 
 ---
 
+## 7c. Generated-file history
+
+Menu → **History**. Every generation — a single label (**Download PDF**) and a series (PDF or batch ZPL) — is added to a list: template name, type, label count, size, date. Click **Download** to fetch the file again, or **Delete** to remove the entry. Files stay available for **30 days**, after which they are deleted automatically.
+
+---
+
 ## 8. Administration (admin only)
 
 Left menu → **Administration → Users**.

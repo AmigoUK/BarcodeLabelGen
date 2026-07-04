@@ -138,6 +138,13 @@ Testy oznaczone 🔴 są **blokujące** dla decyzji o prod; 🟡 — ważne, ale
   nie dorzuca wersji do listy.
   Wynik: ..................................................
 
+## I. Historia wygenerowanych plików (v0.15.0)
+
+- [ ] 🟡 **I1. Historia i ponowne pobranie.** Wygeneruj pojedynczą etykietę i serię;
+  otwórz **Historia**, pobierz oba ponownie. *Oczekiwane:* pliki na liście z poprawnym
+  typem/rozmiarem; ponowne pobranie daje ten sam plik.
+  Wynik: ..................................................
+
 ---
 
 ## Decyzja

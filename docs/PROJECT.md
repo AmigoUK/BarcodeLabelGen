@@ -55,7 +55,7 @@ Pracownicy biurowi nie mają obecnie narzędzia, które pozwoliłoby im samodzie
 | F15 | Katalogi szablonów + tagi + wyszukiwanie tekstowe — **foldery + wyszukiwanie zrealizowane w v0.11.0 (F31); tagi porzucone na rzecz folderów** | P0.5 |
 | F16 | Współdzielenie szablonów między użytkownikami / w zespole (read-only lub clone) — **zrealizowane w v0.11.0 (F31): Biblioteka, read-only + klon** | P1 |
 | F17 | Wersjonowanie szablonów (każdy save = nowa wersja, możliwość przywrócenia) — **zrealizowane w v0.14.0** (migawki przy ręcznym zapisie); spec: `docs/superpowers/specs/2026-07-04-template-versioning-design.md` | P1 |
-| F18 | Historia wygenerowanych PDF (lista, ponowne pobranie do 30 dni) | P1 |
+| F18 | Historia wygenerowanych PDF (lista, ponowne pobranie do 30 dni) — **zrealizowane w v0.15.0**; spec: `docs/superpowers/specs/2026-07-04-generated-files-history-design.md` | P1 |
 | F19 | Export/import szablonów (JSON) | P1 |
 | F20 | Print preview (podgląd PDF w przeglądarce przed pobraniem) | P1 |
 | F21 | Integracja Zebra Browser Print (bezpośredni druk ZPL) — **zrealizowane w v0.10.0** własnym konektorem: szybka ścieżka localhost w dialogu druku | P1 |

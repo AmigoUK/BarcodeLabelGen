@@ -390,6 +390,12 @@ Z Inboxa możesz też skopiować surowy kod ZPL albo usunąć wpis. Program prze
 
 ---
 
+## 7c. Historia wygenerowanych plików
+
+Menu → **Historia**. Każde wygenerowanie — pojedyncza etykieta (**Pobierz PDF**) i seria (PDF lub wsadowy ZPL) — trafia na listę: nazwa szablonu, typ, liczba etykiet, rozmiar, data. Kliknij **Pobierz**, aby pobrać plik ponownie, albo **Usuń**, aby skasować wpis. Pliki są dostępne przez **30 dni**, potem są automatycznie usuwane.
+
+---
+
 ## 8. Administracja (tylko admin)
 
 Lewe menu → **Administracja → Użytkownicy**.

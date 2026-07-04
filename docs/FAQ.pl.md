@@ -270,6 +270,9 @@ Bo zostałbyś zablokowany na zewnątrz aplikacji bez możliwości naprawy. Drug
 
 ---
 
+### Gdzie znajdę wcześniej wygenerowane PDF-y?
+Menu → **Historia**. Trzymamy tam wszystkie wygenerowane pliki (pojedyncze i serie, PDF oraz wsadowy ZPL) przez 30 dni — kliknij **Pobierz**, aby ściągnąć ponownie bez generowania od nowa.
+
 ## Problemy techniczne
 
 ### "Sesja wygasła — odśwież stronę"

@@ -9,6 +9,20 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 _Nothing yet._
 
+## [0.15.0] — 2026-07-04
+
+### Added
+- **Generated-file history (F18).** New History page lists every
+  generation — single labels, batch PDFs and batch ZPL — with template
+  name, type, label count, size and time, re-downloadable for 30 days.
+  Single-label PDFs now also persist to the pdfs volume (alongside the
+  inline download); batch entries are recorded up-front and hidden from
+  the list until their file exists, so in-flight or failed jobs never
+  appear. Endpoints: `GET /api/history`, `GET /api/history/:id/download`
+  (410 if gone), `DELETE`. Lazy 30-day retention with orphan pruning on
+  every write — the project's first time-based cleanup, no cron. Table
+  `generated_files` (alembic 0012).
+
 ## [0.14.0] — 2026-07-04
 
 ### Added
@@ -300,7 +314,8 @@ _Nothing yet._
   label formats, dataset upload (CSV/XLSX/SQLite) with `{{column}}`
   mail-merge, and PDF single-label + batch generation via ReportLab.
 
-[Unreleased]: https://github.com/AmigoUK/BarcodeLabelGen/compare/v0.14.0...HEAD
+[Unreleased]: https://github.com/AmigoUK/BarcodeLabelGen/compare/v0.15.0...HEAD
+[0.15.0]: https://github.com/AmigoUK/BarcodeLabelGen/releases/tag/v0.15.0
 [0.14.0]: https://github.com/AmigoUK/BarcodeLabelGen/releases/tag/v0.14.0
 [0.13.0]: https://github.com/AmigoUK/BarcodeLabelGen/releases/tag/v0.13.0
 [0.12.1]: https://github.com/AmigoUK/BarcodeLabelGen/releases/tag/v0.12.1

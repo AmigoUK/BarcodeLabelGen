@@ -268,7 +268,8 @@ Ask an admin for a reset (Administration → Users → **Reset password**). You'
 ### Why can't I deactivate my own account?
 Because you'd lock yourself out with no way to undo it. A second administrator can deactivate another administrator.
 
----
+### Where do I find previously generated PDFs?
+Menu → **History**. It keeps every generated file (single labels and series, PDF as well as batch ZPL) for 30 days — click **Download** to fetch it again without regenerating from scratch.
 
 ## Technical issues
 
