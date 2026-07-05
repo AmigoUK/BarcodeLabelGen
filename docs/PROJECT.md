@@ -74,6 +74,7 @@ Pracownicy biurowi nie mają obecnie narzędzia, które pozwoliłoby im samodzie
 | F34 | Konektor desktop macOS + Linux: binarki (Intel/ARM/Pi), ścieżka configu na macOS, uruchomienie jako usługa (launchd/systemd) — czyste Go, kompiluje się bez zmian; plan: `docs/superpowers/specs/2026-07-04-connector-cross-platform-plan.md` — **zrealizowane w v0.17.0** (`connector/build-all.sh`, `defaultConfigPath()` per-OS, launchd w README) | P1 |
 | F35 | Konektor: wirtualna drukarka na macOS/Linux (CUPS raw backend → nasłuch JetDirect agenta), odpowiednik windowsowego przechwytywania — **zrealizowane w v0.18.0** (`connector/install-capture-cups.sh` + README; sterownik Zebry dla zwykłych aplikacji poza zakresem) | P2 |
 | F36 | Konektor Android: osobna aplikacja mobilna (polling kolejki + druk ZPL po TCP 9100 do drukarki w WiFi); bez fast-path/wirtualnej drukarki — **rdzeń zrealizowany w v0.19.0** (`connector/mobilecore/` + testy; powłoka Kotlin/AAR udokumentowana w `connector/android/README.md`, build i test na urządzeniu poza tą sesją) | P2 |
+| F37 | Pomoc przyjazna dla osoby nietechnicznej: przepisać `docs/HELP.{pl,en}.md` + `docs/FAQ.{pl,en}.md` prostym językiem, bez żargonu (trudne pojęcia — np. „placeholder", „ZPL", „DPI", „konektor" — tłumaczone jednym zdaniem po ludzku), krok po kroku, z **osobnym zrzutem ekranu ilustrującym każdy krok** (rozbudować `docs/screenshots/help/` przez `tools/capture-help-screenshots.py`); zachować parytet PL/EN; renderowane w `HelpPage.tsx` | P1 |
 
 ### 2.3 User Stories (wybrane kluczowe)
 
