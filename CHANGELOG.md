@@ -9,6 +9,19 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 _Nothing yet._
 
+## [0.19.0] — 2026-07-05
+
+### Added
+- **Android connector core (F36).** New `connector/mobilecore/` — a
+  gomobile-friendly Go package (`NewAgent` / `RunOnce` / `ReportState`) that
+  polls the job queue with a device token and prints ZPL over RAW TCP 9100,
+  mirroring the desktop agent's contract. Fully unit-tested (poll parsing,
+  Bearer auth, 401 handling, TCP print with copies/newline, printer-name
+  match, non-ZPL rejection, end-to-end RunOnce summary). The Kotlin
+  foreground-service shell and the `gomobile bind` AAR build are documented in
+  `connector/android/README.md` for a machine with the Android toolchain — the
+  APK is built and verified on-device in a later step (not in this release).
+
 ## [0.18.0] — 2026-07-04
 
 ### Added
@@ -358,7 +371,8 @@ _Nothing yet._
   label formats, dataset upload (CSV/XLSX/SQLite) with `{{column}}`
   mail-merge, and PDF single-label + batch generation via ReportLab.
 
-[Unreleased]: https://github.com/AmigoUK/BarcodeLabelGen/compare/v0.18.0...HEAD
+[Unreleased]: https://github.com/AmigoUK/BarcodeLabelGen/compare/v0.19.0...HEAD
+[0.19.0]: https://github.com/AmigoUK/BarcodeLabelGen/releases/tag/v0.19.0
 [0.18.0]: https://github.com/AmigoUK/BarcodeLabelGen/releases/tag/v0.18.0
 [0.17.0]: https://github.com/AmigoUK/BarcodeLabelGen/releases/tag/v0.17.0
 [0.16.0]: https://github.com/AmigoUK/BarcodeLabelGen/releases/tag/v0.16.0

@@ -73,7 +73,7 @@ Pracownicy biurowi nie mają obecnie narzędzia, które pozwoliłoby im samodzie
 | F33 | Grafika wyróżniająca (featured image) szablonu: upload własnego obrazka podglądowego pokazywanego na kafelku listy Szablonów i w Bibliotece (krok w stronę miniatur odłożonych w F31) — **zrealizowane w v0.12.0** | P2 |
 | F34 | Konektor desktop macOS + Linux: binarki (Intel/ARM/Pi), ścieżka configu na macOS, uruchomienie jako usługa (launchd/systemd) — czyste Go, kompiluje się bez zmian; plan: `docs/superpowers/specs/2026-07-04-connector-cross-platform-plan.md` — **zrealizowane w v0.17.0** (`connector/build-all.sh`, `defaultConfigPath()` per-OS, launchd w README) | P1 |
 | F35 | Konektor: wirtualna drukarka na macOS/Linux (CUPS raw backend → nasłuch JetDirect agenta), odpowiednik windowsowego przechwytywania — **zrealizowane w v0.18.0** (`connector/install-capture-cups.sh` + README; sterownik Zebry dla zwykłych aplikacji poza zakresem) | P2 |
-| F36 | Konektor Android: osobna aplikacja mobilna (polling kolejki + druk ZPL po TCP 9100 do drukarki w WiFi); bez fast-path/wirtualnej drukarki — wymaga własnej sesji brainstormingu | P2 |
+| F36 | Konektor Android: osobna aplikacja mobilna (polling kolejki + druk ZPL po TCP 9100 do drukarki w WiFi); bez fast-path/wirtualnej drukarki — **rdzeń zrealizowany w v0.19.0** (`connector/mobilecore/` + testy; powłoka Kotlin/AAR udokumentowana w `connector/android/README.md`, build i test na urządzeniu poza tą sesją) | P2 |
 
 ### 2.3 User Stories (wybrane kluczowe)
 
