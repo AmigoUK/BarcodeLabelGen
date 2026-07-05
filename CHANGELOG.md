@@ -9,6 +9,19 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 _Nothing yet._
 
+## [0.20.0] — 2026-07-05
+
+### Added
+- **TSPL export for TSC / desktop Toshiba printers (F22).** A new "Export
+  TSPL" action in the editor renders the label as TSPL/TSPL2 (SIZE/GAP/
+  DIRECTION/CLS … PRINT) — text, barcodes (Code 128, GS1-128, EAN-13, QR),
+  rectangles, lines and tables; images are skipped with a warning. New
+  `app/services/tspl/` generator (reusing the ZPL mm→dots math) and
+  `POST /api/tspl/generate` endpoint mirroring ZPL's single-label export.
+  Font sizing and GAP are documented approximations (TSPL bitmap fonts vs
+  the editor's TrueType); actual printing is verified on a physical TSC
+  printer. TPCL, agent-printing and batch TSPL remain out of scope.
+
 ## [0.19.1] — 2026-07-05
 
 ### Fixed
@@ -383,7 +396,8 @@ _Nothing yet._
   label formats, dataset upload (CSV/XLSX/SQLite) with `{{column}}`
   mail-merge, and PDF single-label + batch generation via ReportLab.
 
-[Unreleased]: https://github.com/AmigoUK/BarcodeLabelGen/compare/v0.19.1...HEAD
+[Unreleased]: https://github.com/AmigoUK/BarcodeLabelGen/compare/v0.20.0...HEAD
+[0.20.0]: https://github.com/AmigoUK/BarcodeLabelGen/releases/tag/v0.20.0
 [0.19.1]: https://github.com/AmigoUK/BarcodeLabelGen/releases/tag/v0.19.1
 [0.19.0]: https://github.com/AmigoUK/BarcodeLabelGen/releases/tag/v0.19.0
 [0.18.0]: https://github.com/AmigoUK/BarcodeLabelGen/releases/tag/v0.18.0

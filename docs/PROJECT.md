@@ -59,7 +59,7 @@ Pracownicy biurowi nie mają obecnie narzędzia, które pozwoliłoby im samodzie
 | F19 | Export/import szablonów (JSON) | P1 |
 | F20 | Print preview (podgląd PDF w przeglądarce przed pobraniem) — **zrealizowane w v0.16.0** (osadzony podgląd pojedynczej etykiety); spec: `docs/superpowers/specs/2026-07-04-print-preview-design.md` | P1 |
 | F21 | Integracja Zebra Browser Print (bezpośredni druk ZPL) — **zrealizowane w v0.10.0** własnym konektorem: szybka ścieżka localhost w dialogu druku | P1 |
-| F22 | Integracja Toshiba (TSPL przez agenta lub Browser Print) | P2 |
+| F22 | Integracja Toshiba (TSPL przez agenta lub Browser Print) — **zrealizowane w v0.20.0** (eksport TSPL z edytora; druk przez agenta i TPCL poza zakresem) | P2 |
 | F23 | Dodatkowe języki UI (DE, ES, FR — tłumaczenie społecznościowe) | P2 |
 | F24 | Placeholdery dynamicznej daty `{{date±Nd/m/y:FORMAT}}` obliczane przy generowaniu (PDF/ZPL) | P0 |
 | F25 | Konektor lokalny (Go): print server — druk ZPL bezpośrednio na drukarki sieciowe (rozszerza F21) — **zrealizowane w v0.7.0** | P1 |
