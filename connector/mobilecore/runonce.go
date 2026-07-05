@@ -31,8 +31,15 @@ func (s runSummary) json() string {
 func (a *Agent) RunOnce(printerName, printerHost string, printerPort int) (string, error) {
 	jobs, err := a.pollJobs()
 	if err != nil {
-		s := runSummary{AuthError: errors.Is(err, errUnauthorized)}
-		return s.json(), err
+		// A rejected token (401) is a permanent, actionable state: surface it
+		// via the summary's authError with a NIL error, so the gomobile binding
+		// returns the JSON string (a non-nil error would throw in Java/Kotlin
+		// and discard it, hiding authError). Transient/network poll failures
+		// keep returning the error so the shell can retry.
+		if errors.Is(err, errUnauthorized) {
+			return runSummary{AuthError: true}.json(), nil
+		}
+		return runSummary{}.json(), err
 	}
 	s := runSummary{Polled: len(jobs)}
 	for _, j := range jobs {

@@ -91,9 +91,11 @@ func TestRunOnceAuthError(t *testing.T) {
 	defer srv.Close()
 
 	a := NewAgent(srv.URL, "bad", "0.1.0")
+	// A 401 must NOT return an error (that would throw across the gomobile
+	// boundary and hide authError); it is reported via the summary instead.
 	out, err := a.RunOnce("Zebra-1", "127.0.0.1", 9100)
-	if err == nil {
-		t.Fatal("expected error")
+	if err != nil {
+		t.Fatalf("401 should return nil error, got %v", err)
 	}
 	var s runSummary
 	json.Unmarshal([]byte(out), &s)
@@ -102,5 +104,55 @@ func TestRunOnceAuthError(t *testing.T) {
 	}
 	if s.Messages == nil {
 		t.Fatal("messages marshalled to null")
+	}
+}
+
+func TestRunOnceTransientPollError(t *testing.T) {
+	// Point at a closed port so the poll fails with a network error (not 401).
+	a := NewAgent("http://127.0.0.1:1", "t", "0.1.0")
+	out, err := a.RunOnce("Zebra-1", "127.0.0.1", 9100)
+	if err == nil {
+		t.Fatal("transient poll failure should return a non-nil error")
+	}
+	var s runSummary
+	json.Unmarshal([]byte(out), &s)
+	if s.AuthError {
+		t.Fatal("transient error must not set authError")
+	}
+	if s.Messages == nil {
+		t.Fatal("messages marshalled to null")
+	}
+}
+
+func TestRunOncePrintFailure(t *testing.T) {
+	// One valid job for our printer, but the printer address is unreachable
+	// (loopback port 1 refuses) → the print-failure branch runs.
+	var status string
+	srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		if r.URL.Path == "/api/agent/jobs" {
+			io.WriteString(w, `{"jobs":[{"id":5,"printer":"Zebra-1","copies":1,"zpl":"^XA^XZ"}]}`)
+			return
+		}
+		var b map[string]any
+		json.NewDecoder(r.Body).Decode(&b)
+		status, _ = b["status"].(string)
+	}))
+	defer srv.Close()
+
+	a := NewAgent(srv.URL, "t", "0.1.0")
+	out, err := a.RunOnce("Zebra-1", "127.0.0.1", 1)
+	if err != nil {
+		t.Fatal(err)
+	}
+	var s runSummary
+	json.Unmarshal([]byte(out), &s)
+	if s.Polled != 1 || s.Printed != 0 || s.Failed != 1 {
+		t.Fatalf("summary = %+v", s)
+	}
+	if status != "error" {
+		t.Fatalf("job 5 status = %q, want error", status)
+	}
+	if len(s.Messages) == 0 {
+		t.Fatal("expected a failure message")
 	}
 }
