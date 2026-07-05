@@ -9,6 +9,18 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 _Nothing yet._
 
+## [0.19.1] — 2026-07-05
+
+### Fixed
+- **F36 core: `RunOnce` now returns a nil error on a rejected token (401).**
+  gomobile binds a Go `(string, error)` return so that a non-nil error throws
+  in Java/Kotlin and discards the string — which would have hidden the
+  `authError` flag and made the Android shell loop "offline" forever on a bad
+  token. The 401 case is now carried only via `authError:true` in the summary
+  (nil error); transient/network poll failures still return an error so the
+  shell retries. Adds print-failure and transient-poll-error tests. Found in
+  the whole-branch review before any APK was built.
+
 ## [0.19.0] — 2026-07-05
 
 ### Added
@@ -371,7 +383,8 @@ _Nothing yet._
   label formats, dataset upload (CSV/XLSX/SQLite) with `{{column}}`
   mail-merge, and PDF single-label + batch generation via ReportLab.
 
-[Unreleased]: https://github.com/AmigoUK/BarcodeLabelGen/compare/v0.19.0...HEAD
+[Unreleased]: https://github.com/AmigoUK/BarcodeLabelGen/compare/v0.19.1...HEAD
+[0.19.1]: https://github.com/AmigoUK/BarcodeLabelGen/releases/tag/v0.19.1
 [0.19.0]: https://github.com/AmigoUK/BarcodeLabelGen/releases/tag/v0.19.0
 [0.18.0]: https://github.com/AmigoUK/BarcodeLabelGen/releases/tag/v0.18.0
 [0.17.0]: https://github.com/AmigoUK/BarcodeLabelGen/releases/tag/v0.17.0
