@@ -75,6 +75,7 @@ Pracownicy biurowi nie mają obecnie narzędzia, które pozwoliłoby im samodzie
 | F35 | Konektor: wirtualna drukarka na macOS/Linux (CUPS raw backend → nasłuch JetDirect agenta), odpowiednik windowsowego przechwytywania — **zrealizowane w v0.18.0** (`connector/install-capture-cups.sh` + README; sterownik Zebry dla zwykłych aplikacji poza zakresem) | P2 |
 | F36 | Konektor Android: osobna aplikacja mobilna (polling kolejki + druk ZPL po TCP 9100 do drukarki w WiFi); bez fast-path/wirtualnej drukarki — **rdzeń zrealizowany w v0.19.0** (`connector/mobilecore/` + testy; powłoka Kotlin/AAR udokumentowana w `connector/android/README.md`, build i test na urządzeniu poza tą sesją) | P2 |
 | F37 | Pomoc przyjazna dla osoby nietechnicznej: przepisać `docs/HELP.{pl,en}.md` + `docs/FAQ.{pl,en}.md` prostym językiem, bez żargonu (trudne pojęcia — np. „placeholder", „ZPL", „DPI", „konektor" — tłumaczone jednym zdaniem po ludzku), krok po kroku, z **osobnym zrzutem ekranu ilustrującym każdy krok** (rozbudować `docs/screenshots/help/` przez `tools/capture-help-screenshots.py`); zachować parytet PL/EN; renderowane w `HelpPage.tsx` | P1 |
+| F38 | Kreator „Podłącz drukarkę": prowadzony, nietechniczny setup konektora z poziomu aplikacji (auto-wykrycie systemu, gotowy `config.yaml` do pobrania, jedna komenda, wykrywanie „połączono" na żywo) — **zrealizowane w v0.21.0**; spec: `docs/superpowers/specs/2026-07-05-f38-connect-printer-wizard-design.md` | P1 |
 
 ### 2.3 User Stories (wybrane kluczowe)
 

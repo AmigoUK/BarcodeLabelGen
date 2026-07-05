@@ -9,6 +9,19 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 _Nothing yet._
 
+## [0.21.0] — 2026-07-05
+
+### Added
+- **"Connect a printer" wizard (F38).** A guided, non-technical setup flow on
+  the Devices page: it detects the user's OS, creates the device + token,
+  generates a ready-to-run `config.yaml` (no manual editing, no quotes, no
+  terminal heredocs), gives one copy-paste run command (with the macOS
+  quarantine/chmod folded in), and detects the connection live ("waiting… →
+  connected ✅"). Test-printer mode by default; real printer IP is an optional
+  post-success step. Frontend-only — reuses the existing devices API; the
+  token never appears in a URL. Built from the real friction of setting the
+  connector up by hand.
+
 ## [0.20.1] — 2026-07-05
 
 ### Fixed
@@ -413,7 +426,8 @@ _Nothing yet._
   label formats, dataset upload (CSV/XLSX/SQLite) with `{{column}}`
   mail-merge, and PDF single-label + batch generation via ReportLab.
 
-[Unreleased]: https://github.com/AmigoUK/BarcodeLabelGen/compare/v0.20.1...HEAD
+[Unreleased]: https://github.com/AmigoUK/BarcodeLabelGen/compare/v0.21.0...HEAD
+[0.21.0]: https://github.com/AmigoUK/BarcodeLabelGen/releases/tag/v0.21.0
 [0.20.1]: https://github.com/AmigoUK/BarcodeLabelGen/releases/tag/v0.20.1
 [0.20.0]: https://github.com/AmigoUK/BarcodeLabelGen/releases/tag/v0.20.0
 [0.19.1]: https://github.com/AmigoUK/BarcodeLabelGen/releases/tag/v0.19.1
