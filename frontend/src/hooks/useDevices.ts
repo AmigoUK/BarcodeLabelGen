@@ -36,3 +36,19 @@ export function useDeleteDevice() {
     },
   });
 }
+
+// Polls the devices list fast (every 3s) while the connect wizard waits for a
+// specific device to come online. Mirrors the 60s window used elsewhere.
+export function useDeviceOnline(deviceId: number | null, enabled: boolean) {
+  return useQuery({
+    queryKey: ["device-online", deviceId] as const,
+    queryFn: () => api<{ devices: Device[] }>("/api/devices").then((r) => r.devices),
+    enabled: enabled && deviceId != null,
+    refetchInterval: enabled ? 3000 : false,
+    select: (devices: Device[]) => {
+      const d = devices.find((x) => x.id === deviceId);
+      if (!d?.last_seen_at) return false;
+      return Date.now() - new Date(d.last_seen_at).getTime() < 60_000;
+    },
+  });
+}
