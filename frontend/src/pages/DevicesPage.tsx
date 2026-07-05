@@ -16,6 +16,7 @@ import { useCreateTemplate, useLabelFormats } from "../hooks/useTemplates";
 import { useParseZpl } from "../hooks/useZpl";
 import { ApiError } from "../lib/api";
 import type { Capture, Device } from "../lib/types";
+import { ConnectPrinterWizard } from "./ConnectPrinterWizard";
 
 const ONLINE_WINDOW_MS = 60_000;
 
@@ -34,12 +35,18 @@ export function DevicesPage() {
   const { data: devices, isLoading } = useDevices();
   const deleteDevice = useDeleteDevice();
   const [showCreate, setShowCreate] = useState(false);
+  const [showWizard, setShowWizard] = useState(false);
 
   return (
     <div className="space-y-6">
       <header className="flex items-center justify-between">
         <h1 className="text-2xl font-bold">{t("devices.title")}</h1>
-        <Button onClick={() => setShowCreate(true)}>+ {t("devices.create")}</Button>
+        <div className="flex items-center gap-3">
+          <button className="text-sm text-slate-400 hover:text-slate-200" onClick={() => setShowCreate(true)}>
+            {t("devices.createAdvanced")}
+          </button>
+          <Button onClick={() => setShowWizard(true)}>🖨 {t("wizard.connectButton")}</Button>
+        </div>
       </header>
 
       <p className="max-w-3xl text-sm text-slate-400">{t("devices.intro")}</p>
@@ -113,6 +120,7 @@ export function DevicesPage() {
       )}
 
       <CreateDeviceModal open={showCreate} onClose={() => setShowCreate(false)} />
+      <ConnectPrinterWizard open={showWizard} onClose={() => setShowWizard(false)} />
 
       <CapturesInbox devices={devices ?? []} />
     </div>
