@@ -4,6 +4,7 @@ import { useParams } from "react-router-dom";
 import { AppFooter } from "../components/AppFooter";
 import { AlignmentBar } from "../editor/AlignmentBar";
 import { Canvas } from "../editor/Canvas";
+import { ExportTsplModal } from "../editor/ExportTsplModal";
 import { ExportZplModal } from "../editor/ExportZplModal";
 import { ImportZplModal } from "../editor/ImportZplModal";
 import { PrintModal } from "../editor/PrintModal";
@@ -160,6 +161,7 @@ export function EditorPage() {
   const [showWizard, setShowWizard] = useState(false);
   const [showImportZpl, setShowImportZpl] = useState(false);
   const [showExportZpl, setShowExportZpl] = useState(false);
+  const [showExportTspl, setShowExportTspl] = useState(false);
   const [showLabelSize, setShowLabelSize] = useState(false);
   const [showPrint, setShowPrint] = useState(false);
   const [showHistory, setShowHistory] = useState(false);
@@ -192,6 +194,7 @@ export function EditorPage() {
         seriesDisabled={dirty}
         onImportZpl={() => setShowImportZpl(true)}
         onExportZpl={() => setShowExportZpl(true)}
+        onExportTspl={() => setShowExportTspl(true)}
         onLabelSize={() => setShowLabelSize(true)}
         onPrint={() => setShowPrint(true)}
         onHistory={() => setShowHistory(true)}
@@ -230,6 +233,12 @@ export function EditorPage() {
             onClose={() => setShowExportZpl(false)}
             canvas={canvas}
             templateId={template.data.id}
+            templateName={template.data.name}
+          />
+          <ExportTsplModal
+            open={showExportTspl}
+            onClose={() => setShowExportTspl(false)}
+            canvas={canvas}
             templateName={template.data.name}
           />
           <LabelSettingsModal

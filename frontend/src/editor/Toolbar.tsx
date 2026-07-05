@@ -19,6 +19,7 @@ type Props = {
   seriesDisabled: boolean;
   onImportZpl: () => void;
   onExportZpl: () => void;
+  onExportTspl: () => void;
   onLabelSize: () => void;
   onPrint: () => void;
   onHistory: () => void;
@@ -36,6 +37,7 @@ export function Toolbar({
   seriesDisabled,
   onImportZpl,
   onExportZpl,
+  onExportTspl,
   onLabelSize,
   onPrint,
   onHistory,
@@ -141,6 +143,9 @@ export function Toolbar({
         </Button>
         <Button variant="ghost" onClick={onExportZpl} title={t("zpl.exportTooltip")}>
           {t("zpl.export")}
+        </Button>
+        <Button variant="ghost" onClick={onExportTspl} title={t("tspl.exportTooltip")}>
+          {t("tspl.export")}
         </Button>
         <Button variant="ghost" onClick={onPrint} title={t("print.tooltip")}>
           🖨 {t("print.button")}

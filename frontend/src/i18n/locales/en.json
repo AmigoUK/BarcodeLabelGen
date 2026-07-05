@@ -46,6 +46,16 @@
     "generating": "Generating…",
     "invalidZpl": "This doesn't look like ZPL. A label must contain ^XA at the start and ^XZ at the end — check that you didn't paste e.g. an HTML page or a PDF file."
   },
+  "tspl": {
+    "export": "⤒ TSPL",
+    "exportTooltip": "Export this label as TSPL for TSC / Toshiba printers",
+    "exportTitle": "Export TSPL",
+    "exportHelp": "Live TSPL for the current label, generated for TSC / Toshiba-compatible printers.",
+    "dpi": "Printer DPI",
+    "copy": "Copy",
+    "copied": "Copied!",
+    "download": "Download .txt"
+  },
   "labelSize": {
     "title": "Label size",
     "tooltip": "Change the label dimensions",
