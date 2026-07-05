@@ -51,6 +51,7 @@ export function ConnectPrinterWizard({
   const [name, setName] = useState("");
   const [created, setCreated] = useState<CreateDeviceResponse | null>(null);
   const [waitedOut, setWaitedOut] = useState(false);
+  const [recheckNonce, setRecheckNonce] = useState(0);
   const [printerMode, setPrinterMode] = useState<"test" | "ip">("test");
   const [printerIp, setPrinterIp] = useState("");
 
@@ -82,7 +83,7 @@ export function ConnectPrinterWizard({
     setWaitedOut(false);
     const h = setTimeout(() => setWaitedOut(true), WAIT_TIMEOUT_MS);
     return () => clearTimeout(h);
-  }, [step, created]);
+  }, [step, created, recheckNonce]);
 
   const serverUrl = window.location.origin;
   const asset = os ? assetFor(os) : "";
@@ -96,7 +97,7 @@ export function ConnectPrinterWizard({
   }, [os, created, serverUrl, printerMode, printerIp]);
 
   async function createAndAdvance() {
-    const res = await create.mutateAsync(name.trim() || "Mój komputer");
+    const res = await create.mutateAsync(name.trim() || t("wizard.namePlaceholder"));
     setCreated(res);
     setStep("download");
   }
@@ -218,7 +219,9 @@ export function ConnectPrinterWizard({
                 <Button variant="secondary" onClick={() => { setCreated(null); setStep("name"); }}>
                   {t("wizard.startOver")}
                 </Button>
-                <Button onClick={() => setWaitedOut(false)}>{t("wizard.keepChecking")} ↻</Button>
+                <Button onClick={() => { setWaitedOut(false); setRecheckNonce((n) => n + 1); }}>
+                  {t("wizard.keepChecking")} ↻
+                </Button>
               </div>
             </div>
           )}

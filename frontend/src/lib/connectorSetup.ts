@@ -72,15 +72,19 @@ export function buildConfigYaml(opts: {
     opts.printer.mode === "ip"
       ? { name: "drukarka", host: opts.printer.ip, port: opts.printer.port ?? 9100 }
       : { name: "test-plik", host: testPath, port: 9100 };
+  // JSON.stringify yields a valid double-quoted YAML scalar (quotes/backslashes
+  // escaped), so a stray character in the user-typed printer IP can't produce a
+  // malformed config.yaml.
+  const q = (s: string) => JSON.stringify(s);
   return [
-    `server_url: "${opts.serverUrl}"`,
-    `token: "${opts.token}"`,
+    `server_url: ${q(opts.serverUrl)}`,
+    `token: ${q(opts.token)}`,
     "poll_interval_seconds: 5",
     "heartbeat_interval_seconds: 20",
     'listen: "127.0.0.1:9110"',
     "printers:",
-    `  - name: "${printer.name}"`,
-    `    host: "${printer.host}"`,
+    `  - name: ${q(printer.name)}`,
+    `    host: ${q(printer.host)}`,
     `    port: ${printer.port}`,
     "",
   ].join("\n");

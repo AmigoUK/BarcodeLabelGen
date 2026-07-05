@@ -9,6 +9,17 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 _Nothing yet._
 
+## [0.21.1] — 2026-07-05
+
+### Fixed
+- **Connect-a-printer wizard polish (F38).** `buildConfigYaml` now escapes the
+  values it writes (via a double-quoted YAML scalar), so an unusual character in
+  the printer-IP field can't produce a malformed `config.yaml`. The waiting
+  screen's "Keep checking" now re-arms its timeout, so the troubleshooting tips
+  reappear if a computer still hasn't connected. The blank-name fallback uses
+  the localized placeholder instead of a hardcoded string. Found in the
+  whole-branch review.
+
 ## [0.21.0] — 2026-07-05
 
 ### Added
@@ -426,7 +437,8 @@ _Nothing yet._
   label formats, dataset upload (CSV/XLSX/SQLite) with `{{column}}`
   mail-merge, and PDF single-label + batch generation via ReportLab.
 
-[Unreleased]: https://github.com/AmigoUK/BarcodeLabelGen/compare/v0.21.0...HEAD
+[Unreleased]: https://github.com/AmigoUK/BarcodeLabelGen/compare/v0.21.1...HEAD
+[0.21.1]: https://github.com/AmigoUK/BarcodeLabelGen/releases/tag/v0.21.1
 [0.21.0]: https://github.com/AmigoUK/BarcodeLabelGen/releases/tag/v0.21.0
 [0.20.1]: https://github.com/AmigoUK/BarcodeLabelGen/releases/tag/v0.20.1
 [0.20.0]: https://github.com/AmigoUK/BarcodeLabelGen/releases/tag/v0.20.0
