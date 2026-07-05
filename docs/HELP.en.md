@@ -20,13 +20,13 @@ If something's missing here, check the [FAQ](FAQ.en.md) or write to **dev@attv.u
 
 4. If this is your **first** login, the app will ask you to set your own password (minimum 10 characters). This only happens once — on future logins you'll go straight to your panel.
 
-![SCREENSHOT: the forced password-change screen shown on first login — two fields (new password / confirm password), the "minimum 10 characters" hint, and a "Set password" button.](screenshots/help/en/TODO-set-new-password.png)
+![the forced password-change screen shown on first login — two fields (new password / confirm password), the "minimum 10 characters" hint, and a "Set password" button.](screenshots/help/en/set-new-password.png)
 
 ### The dashboard — your starting screen
 
 After signing in you land on the **Dashboard**. It's just a welcome screen — there's nothing to set up here. To start working, click **Templates** in the menu on the left.
 
-![SCREENSHOT: the Dashboard right after login, with the left sidebar visible; the "Templates" menu item highlighted with an arrow to show where to click next.](screenshots/help/en/TODO-dashboard-empty.png)
+![the Dashboard right after login, with the left sidebar visible; the "Templates" menu item highlighted with an arrow to show where to click next.](screenshots/help/en/dashboard-empty.png)
 
 ### Creating your first template
 
@@ -35,14 +35,14 @@ A **template** is your label design — you build it once, then reuse it as many
 1. Click **Templates** in the left menu.
 2. Click the **New template** button in the top-right corner.
 
-![SCREENSHOT: the Templates page with the "New template" button in the top-right corner clearly highlighted.](screenshots/help/en/TODO-new-template-button.png)
+![the Templates page with the "New template" button in the top-right corner clearly highlighted.](screenshots/help/en/new-template-button.png)
 
 3. Type a name for the template, e.g. "Product price tags".
 4. Pick a label format:
    - **Predefined** — ready-made, common sizes (A4, Zebra 2×1″, etc.). Pick this if you're not sure exactly what size you need.
    - **Custom size** — type width and height in millimetres and pick an orientation (portrait/landscape). Pick this if your labels are a non-standard size.
 
-![SCREENSHOT: the "New template" dialog with the name field filled in and the choice between "Predefined" and "Custom size" visible; with "Custom size" selected, the width/height (mm) fields are shown.](screenshots/help/en/TODO-new-template-dialog.png)
+![the "New template" dialog with the name field filled in and the choice between "Predefined" and "Custom size" visible; with "Custom size" selected, the width/height (mm) fields are shown.](screenshots/help/en/new-template-dialog.png)
 
 5. Click **Create**. The editor opens — you can start designing your label right away.
 
@@ -88,7 +88,7 @@ When you open a template you'll see five areas of the screen:
 - **Layer** — changes which object sits in front and which sits behind (more in section 4).
 - **Distribute** — equal spacing between objects, horizontally or vertically (needs at least 3 selected).
 
-![SCREENSHOT: close-up of the alignment bar above the canvas with the four button groups — Page, Selection, Layer, Distribute — each labelled with an arrow.](screenshots/help/en/TODO-alignment-bar-groups.png)
+![close-up of the alignment bar above the canvas with the four button groups — Page, Selection, Layer, Distribute — each labelled with an arrow.](screenshots/help/en/alignment-bar-groups.png)
 
 Every icon has a tooltip — hover over it with your mouse to see what it does.
 
@@ -100,16 +100,16 @@ Every icon has a tooltip — hover over it with your mouse to see what it does.
 
 On the **Templates** page, on the left, there's a folder rail: **All**, your folders (with a count of templates in each), and **No folder**. Folders are **private** — every user only sees their own.
 
-![SCREENSHOT: the folder rail on the left side of the Templates page — "All", two example folders with coloured dots and counters, "No folder", and the "New folder" button at the bottom.](screenshots/help/en/TODO-folder-rail.png)
+![the folder rail on the left side of the Templates page — "All", two example folders with coloured dots and counters, "No folder", and the "New folder" button at the bottom.](screenshots/help/en/folder-rail.png)
 
 1. To create a new folder, click **New folder** at the bottom of the rail.
 2. To move a template into a folder: hover over its card, click the **⚙** icon, pick a folder from the list, and click **Save**.
 
-![SCREENSHOT: a template card with its ⚙ menu open, showing the list of folders to choose from and a "Save" button.](screenshots/help/en/TODO-folder-menu.png)
+![a template card with its ⚙ menu open, showing the list of folders to choose from and a "Save" button.](screenshots/help/en/folder-menu.png)
 
 3. To rename a folder or change its colour, click the **✎** icon next to it. You can pick from 8 colours — a coloured dot then appears next to the folder in the rail and on its template cards.
 
-![SCREENSHOT: the folder edit (✎) dialog with a name field and an 8-colour swatch picker.](screenshots/help/en/TODO-folder-edit.png)
+![the folder edit (✎) dialog with a name field and an 8-colour swatch picker.](screenshots/help/en/folder-edit.png)
 
 4. Deleting a folder (the **✕** icon) **does not delete its templates** — they simply move back to "No folder".
 
@@ -120,7 +120,7 @@ The **Library** menu item has two sections:
 - **Ready-made projects** — built-in starters: a product label with an EAN code and a date, a shipping address, a shelf price, a best-before date, a warehouse label with a QR code, an asset sticker.
 - **From users** — templates that other users have shared (you can see who the author is).
 
-![SCREENSHOT: the Library page with two sections — "Ready-made projects" at the top and "From users" below — each tile with a "Use" button.](screenshots/help/en/TODO-library-page.png)
+![the Library page with two sections — "Ready-made projects" at the top and "From users" below — each tile with a "Use" button.](screenshots/help/en/library-page.png)
 
 The **"Use"** button always creates **your own copy** and opens it in the editor right away — you can't accidentally break the original.
 
@@ -132,7 +132,7 @@ Want colleagues to be able to reuse your template? Share it in the Library:
 2. Tick **"Share in the Library"**.
 3. Optionally upload a **featured image** — a preview picture that will show up on the list card and in the Library.
 
-![SCREENSHOT: the ⚙ menu of a template card with the "Share in the Library" checkbox ticked and the featured-image upload control visible.](screenshots/help/en/TODO-share-template.png)
+![the ⚙ menu of a template card with the "Share in the Library" checkbox ticked and the featured-image upload control visible.](screenshots/help/en/share-template.png)
 
 From that moment every logged-in user can see the template in the Library and clone it — but **only you can edit the original**. A shared template shows a 📚 icon in the list. Untick the box to withdraw it from the Library.
 
@@ -152,7 +152,7 @@ Everything below lives in the **left panel**, in the *Add* section. Each button 
 2. Select the new object on the canvas.
 3. Type the content into the field in the right panel.
 
-![SCREENSHOT: canvas with a Text object selected; right panel showing the Content field with sample text.](screenshots/help/en/TODO-object-text.png)
+![canvas with a Text object selected; right panel showing the Content field with sample text.](screenshots/help/en/object-text.png)
 
 ### ¶ — Text block
 
@@ -163,7 +163,7 @@ Everything below lives in the **left panel**, in the *Add* section. Each button 
 1. Click **¶ Text block**.
 2. In the right panel, tick **Auto-fit** and set a minimum and maximum font size.
 
-![SCREENSHOT: canvas with a Text block object selected; right panel showing the Auto-fit checkbox ticked and the min/max font size fields.](screenshots/help/en/TODO-object-textblock.png)
+![canvas with a Text block object selected; right panel showing the Auto-fit checkbox ticked and the min/max font size fields.](screenshots/help/en/object-textblock.png)
 
 ### ▭ — Rectangle, ╱ — Line
 
@@ -174,7 +174,7 @@ Everything below lives in the **left panel**, in the *Add* section. Each button 
 2. Drag on the canvas to set its size.
 3. In the right panel, set the fill and stroke colour.
 
-![SCREENSHOT: canvas with a drawn rectangle and a line; right panel showing fill and stroke colour pickers.](screenshots/help/en/TODO-object-shapes.png)
+![canvas with a drawn rectangle and a line; right panel showing fill and stroke colour pickers.](screenshots/help/en/object-shapes.png)
 
 ### ▤ — Barcode
 
@@ -186,7 +186,7 @@ Everything below lives in the **left panel**, in the *Add* section. Each button 
 2. In the right panel, pick the barcode type (EAN-13, Code128, etc.).
 3. Enter the data — or type `{{sku}}` to have the value pulled automatically from a spreadsheet (see section 6).
 
-![SCREENSHOT: canvas with a Barcode object selected; right panel showing the barcode type list (EAN-13, Code128) and a Data field with an example value.](screenshots/help/en/TODO-object-barcode.png)
+![canvas with a Barcode object selected; right panel showing the barcode type list (EAN-13, Code128) and a Data field with an example value.](screenshots/help/en/object-barcode.png)
 
 ### ▦ — Table
 
@@ -199,7 +199,7 @@ Everything below lives in the **left panel**, in the *Add* section. Each button 
 4. Set the column widths (in mm), the font, and the border.
 5. Tick **Bold header** if you want to emphasise the first row.
 
-![SCREENSHOT: canvas with a Table object selected; right panel showing row/column count fields, a cell being edited that contains `{{column}}`, and the Bold header checkbox ticked.](screenshots/help/en/TODO-object-table.png)
+![canvas with a Table object selected; right panel showing row/column count fields, a cell being edited that contains `{{column}}`, and the Bold header checkbox ticked.](screenshots/help/en/object-table.png)
 
 **Good to know about printing:** the table prints correctly both in the PDF and in a ZPL export (see section 7a). One limitation: a rotated table is not supported in ZPL — it exports without rotation.
 
@@ -212,7 +212,7 @@ Everything below lives in the **left panel**, in the *Add* section. Each button 
 1. Click **🖼 Image**.
 2. Pick a file from your computer (up to 5 MB).
 
-![SCREENSHOT: canvas with an uploaded logo as an Image object; right panel showing basic file info.](screenshots/help/en/TODO-object-image.png)
+![canvas with an uploaded logo as an Image object; right panel showing basic file info.](screenshots/help/en/object-image.png)
 
 ### 🌄 — Background (reference)
 
@@ -224,7 +224,7 @@ Everything below lives in the **left panel**, in the *Add* section. Each button 
 2. Pick a file. The background drops to the very bottom of the object stack and is locked — it has no handles for moving.
 3. To change it: select it, then in the right panel uncheck **Lock position**, or check **Print in PDF** if you actually want it to print after all.
 
-![SCREENSHOT: canvas with a Background image filling the entire label, looking locked/dimmed; right panel showing the Lock position and Print in PDF checkboxes near the top.](screenshots/help/en/TODO-object-background.png)
+![canvas with a Background image filling the entire label, looking locked/dimmed; right panel showing the Lock position and Print in PDF checkboxes near the top.](screenshots/help/en/object-background.png)
 
 ---
 
@@ -236,7 +236,7 @@ Everything below lives in the **left panel**, in the *Add* section. Each button 
 - **Shift + click** = add another object to the selection (multi-select — selecting several at once).
 - **Ctrl/Cmd + A** = select every object on the label.
 
-![SCREENSHOT: canvas with three objects selected at the same time (blue selection outlines), demonstrating multi-select via Shift+click.](screenshots/help/en/TODO-multiselect.png)
+![canvas with three objects selected at the same time (blue selection outlines), demonstrating multi-select via Shift+click.](screenshots/help/en/multiselect.png)
 
 ### Moving and resizing
 
@@ -244,7 +244,7 @@ Everything below lives in the **left panel**, in the *Add* section. Each button 
 - The corner handles resize it; the handle above the object rotates it.
 - A **locked** object has no handles — but you can still select it and unlock it from the right panel.
 
-![SCREENSHOT: a selected object on the canvas with visible corner resize handles and a rotate handle above it.](screenshots/help/en/TODO-resize-handles.png)
+![a selected object on the canvas with visible corner resize handles and a rotate handle above it.](screenshots/help/en/resize-handles.png)
 
 ### Undoing changes
 
@@ -253,7 +253,7 @@ Everything below lives in the **left panel**, in the *Add* section. Each button 
 
 One operation is one history step — e.g. aligning 5 objects at once undoes with a single Ctrl+Z.
 
-![SCREENSHOT: close-up of the Undo and Redo buttons in the toolbar.](screenshots/help/en/TODO-undo-redo-buttons.png)
+![close-up of the Undo and Redo buttons in the toolbar.](screenshots/help/en/undo-redo-buttons.png)
 
 ### Duplicating (making copies)
 
@@ -262,7 +262,7 @@ Two quick ways to copy the selected object (or a whole multi-selection):
 - **Alt + drag** — hold **Alt** (on Mac: **Option**) and drag a selected object. The original stays in place; the copy lands wherever you release the mouse.
 - **Ctrl/Cmd + D** — creates a copy "in place", offset by 5 mm right and down. The selection jumps to the new copy right away, so a follow-up Ctrl+D builds a staircase of copies.
 
-![SCREENSHOT: canvas mid-drag with Alt held down — the original object visible at its starting position and a copy being created under the cursor.](screenshots/help/en/TODO-duplicate-altdrag.png)
+![canvas mid-drag with Alt held down — the original object visible at its starting position and a copy being created under the cursor.](screenshots/help/en/duplicate-altdrag.png)
 
 The copy inherits everything: font, colour, rotation, the *Lock* and *Print in PDF* settings. Images share the same source file, so they don't take up extra space.
 
@@ -275,7 +275,7 @@ In the **alignment bar**, **Layer** group:
 - ↑ **Bring forward** — moves it up by one position.
 - ⤒ **Bring to front** — puts the object above everything else.
 
-![SCREENSHOT: close-up of the Layer group in the alignment bar with the four icons each labelled by an arrow.](screenshots/help/en/TODO-layer-buttons.png)
+![close-up of the Layer group in the alignment bar with the four icons each labelled by an arrow.](screenshots/help/en/layer-buttons.png)
 
 ### Lock and printing (right panel)
 
@@ -284,7 +284,7 @@ At the very top of the right panel, every object has two checkboxes:
 - **🔒 Lock position** — disables dragging and resizing (you can still edit its font, colour, etc.).
 - **🖨 Print in PDF** — checked by default. If you uncheck it, the object stays visible only in the editor and won't appear in the generated PDF. Such objects appear faded on the canvas, so you can spot at a glance that they won't print.
 
-![SCREENSHOT: top of the right panel showing the 🔒 Lock position and 🖨 Print in PDF checkboxes; Print in PDF unchecked, with the matching object faded on the canvas.](screenshots/help/en/TODO-lock-print-checkboxes.png)
+![top of the right panel showing the 🔒 Lock position and 🖨 Print in PDF checkboxes; Print in PDF unchecked, with the matching object faded on the canvas.](screenshots/help/en/lock-print-checkboxes.png)
 
 ### Autosave
 
@@ -294,7 +294,7 @@ The editor saves your work on its own every few seconds. The status shows in the
 - **Autosaving…** — currently sending.
 - **Autosaved at 12:34** — last successful save.
 
-![SCREENSHOT: close-up of the autosave status area in the toolbar, showing the three states in sequence: "Unsaved changes", "Autosaving…", "Autosaved at 12:34".](screenshots/help/en/TODO-autosave-status.png)
+![close-up of the autosave status area in the toolbar, showing the three states in sequence: "Unsaved changes", "Autosaving…", "Autosaved at 12:34".](screenshots/help/en/autosave-status.png)
 
 You can also click **Save** manually at any time.
 
@@ -306,7 +306,7 @@ Every **manual** save (the **Save** button or **Ctrl+S**) creates a new **versio
 2. You'll see a list of versions: number, date and author.
 3. Click **Restore** next to the one you want to go back to.
 
-![SCREENSHOT: the History panel open, listing a few versions (number, date, author) with a Restore button next to one of them.](screenshots/help/en/TODO-version-history.png)
+![the History panel open, listing a few versions (number, date, author) with a Restore button next to one of them.](screenshots/help/en/version-history.png)
 
 Restoring saves the current state as a new version, so nothing is ever lost for good — the app keeps the last 30 versions per template.
 
@@ -330,13 +330,13 @@ Objects are **not rescaled** — they keep their positions in millimetres. If yo
 
 Want to see the result first? Click **👁 Preview** — the PDF shows up embedded in the app together with a **Download PDF** button.
 
-![SCREENSHOT: the in-app PDF preview window with the rendered label and a Download PDF button underneath.](screenshots/help/en/TODO-preview-pdf.png)
+![the in-app PDF preview window with the rendered label and a Download PDF button underneath.](screenshots/help/en/preview-pdf.png)
 
 Or click **Download PDF** in the toolbar directly — the file starts downloading after a few seconds.
 
 If any text didn't fit its block, you'll see an **"N warnings"** chip in the toolbar. Hover over it to see the details.
 
-![SCREENSHOT: toolbar showing the "N warnings" chip with an open tooltip listing the details of the clipped text.](screenshots/help/en/TODO-warnings-chip.png)
+![toolbar showing the "N warnings" chip with an open tooltip listing the details of the clipped text.](screenshots/help/en/warnings-chip.png)
 
 Note: column placeholders (`{{name}}` — a placeholder, meaning a spot where the app will automatically insert data from your spreadsheet) stay as plain text in a single PDF — the real data is only substituted during **series generation** (section 6). Date placeholders (`{{date+14d}}`, section 7), on the other hand, are calculated right away, here too.
 
@@ -364,7 +364,7 @@ Every occurrence gets replaced with the value from the matching column.
 1. Click **Generate Series** in the toolbar.
 2. In Step 1, pick the file with your data.
 
-![SCREENSHOT: Step 1 of the Generate Series wizard with a file picker/drop area and a table of accepted formats.](screenshots/help/en/TODO-series-step1-upload.png)
+![Step 1 of the Generate Series wizard with a file picker/drop area and a table of accepted formats.](screenshots/help/en/series-step1-upload.png)
 
 Accepted formats:
 
@@ -378,7 +378,7 @@ Accepted formats:
 
 The file uploads to the server and is read right away. You'll see the detected columns and the row count.
 
-![SCREENSHOT: preview after uploading a CSV file — the detected columns shown as a small table, the row count, and a "Next" button.](screenshots/help/en/TODO-series-csv-preview.png)
+![preview after uploading a CSV file — the detected columns shown as a small table, the row count, and a "Next" button.](screenshots/help/en/series-csv-preview.png)
 
 Click **Next**.
 
@@ -390,7 +390,7 @@ Click **Next**.
 2. Pick the table that has the data you need.
 3. Click **Use this source**.
 
-![SCREENSHOT: the list of tables after uploading a SQLite file, sorted by row count, with a "Use this source" button on one of the rows.](screenshots/help/en/TODO-series-sqlite-tables.png)
+![the list of tables after uploading a SQLite file, sorted by row count, with a "Use this source" button on one of the rows.](screenshots/help/en/series-sqlite-tables.png)
 
 If you need a narrower selection of data (e.g. only products in one category), expand **Show advanced** and write a SELECT query — a database-language command that tells the app exactly what data to fetch, e.g.:
 
@@ -400,7 +400,7 @@ FROM products
 WHERE category = 'labels' AND price > 0
 ```
 
-![SCREENSHOT: the expanded "Show advanced" panel with a SQL query typed into a text box and a "Use this source" button.](screenshots/help/en/TODO-series-sqlite-sql.png)
+![the expanded "Show advanced" panel with a SQL query typed into a text box and a "Use this source" button.](screenshots/help/en/series-sqlite-sql.png)
 
 **Data safety:** the database connection is read-only. The app only accepts data-reading commands (SELECT) — nothing that could change or delete anything will ever run. The result can contain at most 1,000 rows.
 
@@ -419,7 +419,7 @@ If you don't want to print every row from the spreadsheet, you can filter them o
 1. Pick a column, a condition (e.g. "greater than"), and a value.
 2. Click **Test filter** to see how many rows match.
 
-![SCREENSHOT: Step 3 Filter screen with a column, condition and value selected (e.g. price > 10) and the result after clicking "Test filter" showing the number of matching rows.](screenshots/help/en/TODO-series-filter.png)
+![Step 3 Filter screen with a column, condition and value selected (e.g. price > 10) and the result after clicking "Test filter" showing the number of matching rows.](screenshots/help/en/series-filter.png)
 
 You can also skip this step if you want to generate labels for every row.
 
@@ -427,11 +427,11 @@ You can also skip this step if you want to generate labels for every row.
 
 Click **Generate PDF**. The app starts working in the background, and a progress bar shows how much is left. Once it's done, the PDF starts downloading automatically.
 
-![SCREENSHOT: Step 4 with a progress bar mid-generation and a status message.](screenshots/help/en/TODO-series-progress.png)
+![Step 4 with a progress bar mid-generation and a status message.](screenshots/help/en/series-progress.png)
 
 If some labels had text that didn't fit its block, you'll see a list of warnings — which rows, which objects. The PDF is still generated for every label regardless.
 
-![SCREENSHOT: the warnings list shown after series generation, listing specific rows and objects with clipped text.](screenshots/help/en/TODO-series-warnings-list.png)
+![the warnings list shown after series generation, listing specific rows and objects with clipped text.](screenshots/help/en/series-warnings-list.png)
 
 ---
 
@@ -515,29 +515,59 @@ Pick the DPI that matches your printer (usually 203 or 300).
 3. You'll see a live preview of the generated code.
 4. Click **Copy** or **Download .txt**.
 
-![SCREENSHOT: the "Export TSPL" dialog with a DPI choice (203/300), a live preview of the generated TSPL code, and Copy / Download .txt buttons.](screenshots/help/en/TODO-tspl-export.png)
+![the "Export TSPL" dialog with a DPI choice (203/300), a live preview of the generated TSPL code, and Copy / Download .txt buttons.](screenshots/help/en/tspl-export.png)
 
 TSPL export only works for a single label (there's no Batch mode yet) and there isn't an import in the other direction yet — this feature is at an earlier stage than ZPL.
 
-### Direct printing — the connector
+### Easiest: the "Connect a printer" wizard
 
-Instead of downloading a file, you can print **straight from the editor** (this applies to ZPL — not TSPL) thanks to the **connector** — a small program installed on a computer on the same network as your printers, which links the app to the printer.
+Don't want to create a settings file or paste codes by hand? The app has a **wizard** that walks you through everything step by step — it downloads the right program for you, prepares a ready-made settings file, and gives you one command to copy. Go to **Devices** and click **🖨 Connect a printer**.
+
+1. **Pick your computer.** The wizard detects your system (Mac / Windows / Linux) — confirm with one click.
+
+![wizard step 1 — the question "Which computer is the printer connected to?" with Mac, Windows, Linux and Linux (ARM) tiles.](screenshots/help/en/connect-wizard-os.png)
+
+2. **Name this computer** (e.g. "Office computer") — it's just a label so you recognise it in the list.
+
+![wizard step 2 — the "Name this computer" field with an example name.](screenshots/help/en/connect-wizard-name.png)
+
+3. **Download two files** — the connector program and a ready-made settings file (the server address and your code are already filled in; nothing to edit).
+
+![wizard step 3 — two download buttons: the program and the settings file, with a note about keeping the key private.](screenshots/help/en/connect-wizard-download.png)
+
+4. **Run the program** — copy one ready command and paste it into Terminal (on a Mac the wizard hides the system-block removal inside it). Leave that window open.
+
+![wizard step 4 — a box with the command to copy, a Copy button and a reminder to "leave the window open".](screenshots/help/en/connect-wizard-run.png)
+
+5. **Wait for the connection** — the wizard detects when your computer checks in and shows "Connected".
+
+![wizard step 5 — the message "Waiting for your computer to check in…" with a waiting indicator.](screenshots/help/en/connect-wizard-waiting.png)
+
+6. **Point to your printer (optional)** — enter the printer's IP address, or leave test mode (prints saved to a file) to check everything first.
+
+![wizard step 6 — "Where is your printer?" with an IP address field and a test-mode option.](screenshots/help/en/connect-wizard-printer.png)
+
+Once the computer shows as **Online**, you print from the editor exactly as described below.
+
+### Advanced: manual connector setup
+
+If you'd rather do it by hand (or you're automating many stations), you can print **straight from the editor** (this applies to ZPL — not TSPL) thanks to the **connector** — a small program installed on a computer on the same network as your printers, which links the app to the printer.
 
 1. Install the **blg-connector** agent on a computer connected to the network your printers are on (the download is in the Assets section of every GitHub release; setup instructions: `connector/README.md`).
 2. In the app, go to **Devices → Add device**.
 
-![SCREENSHOT: the "Add device" dialog with a generated token (access code) to copy into the agent's config.yaml file.](screenshots/help/en/TODO-connector-add-device.png)
+![the "Add device" dialog with a generated token (access code) to copy into the agent's config.yaml file.](screenshots/help/en/connector-add-device.png)
 
 3. Copy the generated **token** (a unique access code) into the agent's `config.yaml` file. The device switches to **Online** and reports its list of connected printers.
 4. In the editor, click **🖨 Print**, pick the device, the printer, the number of copies and the DPI, then click **Print**.
 
-![SCREENSHOT: the print dialog in the editor with device, printer, copies and DPI selections, a "Print" button, and a visible progress bar (queued → picked up by agent → printed).](screenshots/help/en/TODO-connector-print-dialog.png)
+![the print dialog in the editor with device, printer, copies and DPI selections, a "Print" button, and a visible progress bar (queued → picked up by agent → printed).](screenshots/help/en/connector-print-dialog.png)
 
 The dialog shows live progress: *queued → picked up by the agent → printed* (or an error with the reason).
 
 **Fast path:** if the connector is running **on the same computer** where your browser is open, the app detects it automatically and offers a **⚡ This computer — instant print** option. The label then goes straight to the printer, skipping the round trip through the server.
 
-![SCREENSHOT: the print dialog with the "⚡ This computer — instant print" option pre-selected by default.](screenshots/help/en/TODO-connector-fastpath.png)
+![the print dialog with the "⚡ This computer — instant print" option pre-selected by default.](screenshots/help/en/connector-fastpath.png)
 
 Date placeholders are calculated at print time; column placeholders stay in the code (this prints a single label, not a series).
 
@@ -549,7 +579,7 @@ The connector can also work **the other way round**: it pretends to be an ordina
 2. Print something from any application to that virtual printer.
 3. Go to **Devices → Inbox** and click **Open in editor** — the label becomes a regular template: size detected from the code, texts and barcodes editable right away.
 
-![SCREENSHOT: the Devices → Inbox page with a list of a few captured labels (thumbnails, timestamps) and an "Open in editor" button.](screenshots/help/en/TODO-devices-inbox.png)
+![the Devices → Inbox page with a list of a few captured labels (thumbnails, timestamps) and an "Open in editor" button.](screenshots/help/en/devices-inbox.png)
 
 From the Inbox you can also copy the raw ZPL code or delete an entry. The app keeps at most the 200 most recent captures per device.
 
@@ -559,7 +589,7 @@ From the Inbox you can also copy the raw ZPL code or delete an entry. The app ke
 
 Click **History** in the menu. Every generation — a single label (**Download PDF**) and a whole series (PDF or batch ZPL) — is added to a list: template name, type, label count, size, date.
 
-![SCREENSHOT: the History page with a list of generated files — columns for template name, type, label count, size, date — and Download and Delete buttons on each row.](screenshots/help/en/TODO-generated-history.png)
+![the History page with a list of generated files — columns for template name, type, label count, size, date — and Download and Delete buttons on each row.](screenshots/help/en/generated-history.png)
 
 Click **Download** to fetch the file again without regenerating it, or **Delete** to remove the entry. Files stay available for **30 days**, after which they are deleted automatically.
 
@@ -582,7 +612,7 @@ Left menu → **Administration → Users**.
    - **Editor** — creates and edits their own templates and datasets.
    - **Viewer** — can open and view, but doesn't save changes.
 
-![SCREENSHOT: the "Create account" dialog with Email, temporary password (with a "Generate" button), and a Role dropdown (Administrator/Editor/Viewer).](screenshots/help/en/TODO-admin-create-user.png)
+![the "Create account" dialog with Email, temporary password (with a "Generate" button), and a Role dropdown (Administrator/Editor/Viewer).](screenshots/help/en/admin-create-user.png)
 
 4. After clicking **Create**, the app shows the temporary password **once** — pass it to the new user right away.
 
@@ -591,7 +621,7 @@ Left menu → **Administration → Users**.
 1. Click **Reset password** next to the user's account.
 2. The app generates a new temporary password — hand it over to the user.
 
-![SCREENSHOT: a user row with "Reset password" clicked, and a dialog showing the newly generated temporary password, displayed only once.](screenshots/help/en/TODO-admin-reset-password.png)
+![a user row with "Reset password" clicked, and a dialog showing the newly generated temporary password, displayed only once.](screenshots/help/en/admin-reset-password.png)
 
 The user will be asked to set their own password at their next login.
 
@@ -599,7 +629,7 @@ The user will be asked to set their own password at their next login.
 
 The **Active** toggle in a user's row switches account access on or off. You can't deactivate your own account — a safeguard against accidentally locking yourself out.
 
-![SCREENSHOT: close-up of the "Active" toggle in a user row, switched on (green); for the current user's own row the toggle is greyed out/disabled.](screenshots/help/en/TODO-admin-active-toggle.png)
+![close-up of the "Active" toggle in a user row, switched on (green); for the current user's own row the toggle is greyed out/disabled.](screenshots/help/en/admin-active-toggle.png)
 
 ---
 
@@ -614,7 +644,7 @@ You have two options:
 - On the **Templates** page: hover over a template's card and click the **⬇** icon in the bottom-right corner.
 - In the editor: click **⬇ Export** in the toolbar (next to *Download PDF*).
 
-![SCREENSHOT: close-up of the ⬇ Export button in the editor toolbar, next to the Download PDF button.](screenshots/help/en/TODO-editor-export-button.png)
+![close-up of the ⬇ Export button in the editor toolbar, next to the Download PDF button.](screenshots/help/en/editor-export-button.png)
 
 This downloads a `<name>.blg-template.json` file — keep it in a backup folder for safety.
 
@@ -624,7 +654,7 @@ On the **Templates** page, click **⬆ Import** — a 2-step dialog opens:
 
 1. **Pick a file** — choose your `.blg-template.json` file. The app validates it and shows a preview.
 
-![SCREENSHOT: Step 1 of the import dialog with a .blg-template.json file selected, a validity checkmark, and a content preview.](screenshots/help/en/TODO-import-step1.png)
+![Step 1 of the import dialog with a .blg-template.json file selected, a validity checkmark, and a content preview.](screenshots/help/en/import-step1.png)
 
 2. **Configure** — here you can:
    - change the new template's name (default is the name from the file; on a naming clash the app adds a "(copy)" suffix),
@@ -632,7 +662,7 @@ On the **Templates** page, click **⬆ Import** — a 2-step dialog opens:
    - uncheck objects you don't want to import (a checklist with a type icon and a content preview for each one),
    - for every duplicate image, choose: **Reuse existing** (saves space) or **Create new copy**.
 
-![SCREENSHOT: Step 2 of the import dialog with a name field, width/height override fields, an object checklist with checkboxes, and the Reuse existing / Create new copy choice for a duplicate image.](screenshots/help/en/TODO-import-step2.png)
+![Step 2 of the import dialog with a name field, width/height override fields, an object checklist with checkboxes, and the Reuse existing / Create new copy choice for a duplicate image.](screenshots/help/en/import-step2.png)
 
 3. Click **Import** — the app creates a new template and opens it in the editor.
 

@@ -20,13 +20,13 @@ Jeśli czegoś tu zabraknie, zajrzyj też do [FAQ](FAQ.pl.md) albo napisz na **d
 
 4. Jeśli logujesz się **pierwszy raz**, program poprosi Cię o ustawienie własnego hasła (minimum 10 znaków). To zdarza się tylko raz — przy kolejnych logowaniach od razu zobaczysz swój panel.
 
-![SCREENSHOT: ekran wymuszonej zmiany hasła po pierwszym logowaniu — dwa pola (nowe hasło / powtórz hasło), informacja „minimum 10 znaków" i przycisk „Ustaw hasło".](screenshots/help/pl/TODO-set-new-password.png)
+![ekran wymuszonej zmiany hasła po pierwszym logowaniu — dwa pola (nowe hasło / powtórz hasło), informacja „minimum 10 znaków" i przycisk „Ustaw hasło".](screenshots/help/pl/set-new-password.png)
 
 ### Pulpit — ekran startowy
 
 Po zalogowaniu widzisz **Pulpit**. To tylko ekran powitalny — nie musisz tu nic ustawiać. Żeby zacząć pracę, kliknij **Szablony** w menu po lewej stronie.
 
-![SCREENSHOT: Pulpit tuż po zalogowaniu z lewym menu bocznym; pozycja „Szablony" w menu wyróżniona strzałką jako miejsce, w które trzeba kliknąć.](screenshots/help/pl/TODO-dashboard-empty.png)
+![Pulpit tuż po zalogowaniu z lewym menu bocznym; pozycja „Szablony" w menu wyróżniona strzałką jako miejsce, w które trzeba kliknąć.](screenshots/help/pl/dashboard-empty.png)
 
 ### Tworzenie pierwszego szablonu
 
@@ -35,14 +35,14 @@ Po zalogowaniu widzisz **Pulpit**. To tylko ekran powitalny — nie musisz tu ni
 1. Kliknij **Szablony** w lewym menu.
 2. Kliknij przycisk **Nowy szablon** w prawym górnym rogu.
 
-![SCREENSHOT: strona Szablony z przyciskiem „Nowy szablon" w prawym górnym rogu, wyraźnie podświetlonym/zaznaczonym.](screenshots/help/pl/TODO-new-template-button.png)
+![strona Szablony z przyciskiem „Nowy szablon" w prawym górnym rogu, wyraźnie podświetlonym/zaznaczonym.](screenshots/help/pl/new-template-button.png)
 
 3. Wpisz nazwę szablonu, np. „Cennik produktów".
 4. Wybierz format etykiety:
    - **Predefiniowane** — gotowe, popularne rozmiary (A4, Zebra 2×1″ itd.). Wybierz to, jeśli nie masz pewności, jakiego rozmiaru potrzebujesz.
    - **Własny rozmiar** — wpisz szerokość i wysokość w milimetrach i wybierz orientację (pionowa/pozioma). Wybierz to, jeśli Twoje etykiety mają niestandardowy rozmiar.
 
-![SCREENSHOT: okno „Nowy szablon" z wypełnioną nazwą i widocznym wyborem między „Predefiniowane" a „Własny rozmiar"; przy zaznaczonej opcji „Własny rozmiar" widoczne pola szerokość/wysokość w mm.](screenshots/help/pl/TODO-new-template-dialog.png)
+![okno „Nowy szablon" z wypełnioną nazwą i widocznym wyborem między „Predefiniowane" a „Własny rozmiar"; przy zaznaczonej opcji „Własny rozmiar" widoczne pola szerokość/wysokość w mm.](screenshots/help/pl/new-template-dialog.png)
 
 5. Kliknij **Utwórz**. Otworzy się edytor — możesz od razu zacząć projektować etykietę.
 
@@ -88,7 +88,7 @@ Po otwarciu szablonu zobaczysz pięć obszarów ekranu:
 - **Warstwa** — zmienia, który obiekt jest z przodu, a który z tyłu (więcej w sekcji 4).
 - **Rozłóż** — równe odstępy między obiektami w poziomie lub w pionie (potrzeba co najmniej 3 zaznaczonych).
 
-![SCREENSHOT: zbliżenie na pasek wyrównania nad canvasem z czterema grupami przycisków — Strona, Zaznaczenie, Warstwa, Rozłóż — każda podpisana strzałką.](screenshots/help/pl/TODO-alignment-bar-groups.png)
+![zbliżenie na pasek wyrównania nad canvasem z czterema grupami przycisków — Strona, Zaznaczenie, Warstwa, Rozłóż — każda podpisana strzałką.](screenshots/help/pl/alignment-bar-groups.png)
 
 Każda ikona ma podpowiedź — najedź na nią myszką, a zobaczysz, co robi.
 
@@ -100,16 +100,16 @@ Każda ikona ma podpowiedź — najedź na nią myszką, a zobaczysz, co robi.
 
 Na stronie **Szablony**, po lewej stronie, masz pasek folderów: **Wszystkie**, Twoje foldery (z liczbą szablonów w każdym) i **Bez folderu**. Foldery są **prywatne** — każdy użytkownik widzi tylko swoje.
 
-![SCREENSHOT: pasek folderów po lewej stronie strony Szablony — pozycje „Wszystkie", dwa przykładowe foldery z kolorowymi kropkami i licznikami, „Bez folderu" oraz przycisk „Nowy folder" na dole.](screenshots/help/pl/TODO-folder-rail.png)
+![pasek folderów po lewej stronie strony Szablony — pozycje „Wszystkie", dwa przykładowe foldery z kolorowymi kropkami i licznikami, „Bez folderu" oraz przycisk „Nowy folder" na dole.](screenshots/help/pl/folder-rail.png)
 
 1. Aby założyć nowy folder, kliknij **Nowy folder** na dole paska.
 2. Aby przenieść szablon do folderu: najedź myszką na jego kafelek, kliknij ikonę **⚙**, wybierz folder z listy i kliknij **Zapisz**.
 
-![SCREENSHOT: kafelek szablonu z otwartym menu ⚙, widoczna lista folderów do wyboru i przycisk „Zapisz".](screenshots/help/pl/TODO-folder-menu.png)
+![kafelek szablonu z otwartym menu ⚙, widoczna lista folderów do wyboru i przycisk „Zapisz".](screenshots/help/pl/folder-menu.png)
 
 3. Aby zmienić nazwę lub kolor folderu, kliknij ikonę **✎** przy folderze. Do wyboru masz 8 kolorów — kolorowa kropka pojawi się przy folderze na pasku i na kafelkach jego szablonów.
 
-![SCREENSHOT: okno edycji folderu (✎) z polem nazwy i paletą 8 kolorowych kropek do wyboru.](screenshots/help/pl/TODO-folder-edit.png)
+![okno edycji folderu (✎) z polem nazwy i paletą 8 kolorowych kropek do wyboru.](screenshots/help/pl/folder-edit.png)
 
 4. Usunięcie folderu (ikona **✕**) **nie kasuje szablonów** — po prostu wracają do „Bez folderu".
 
@@ -120,7 +120,7 @@ Pozycja **Biblioteka** w menu ma dwie sekcje:
 - **Gotowe projekty** — przygotowane wzory na start: etykieta produktu z kodem EAN i datą, adres wysyłki, cena półkowa, termin przydatności, etykieta magazynowa z kodem QR, naklejka inwentarzowa.
 - **Od użytkowników** — szablony, które udostępnili inni użytkownicy (widzisz, kto jest autorem).
 
-![SCREENSHOT: strona Biblioteka z dwiema sekcjami — „Gotowe projekty" u góry i „Od użytkowników" niżej — każda pozycja z przyciskiem „Użyj".](screenshots/help/pl/TODO-library-page.png)
+![strona Biblioteka z dwiema sekcjami — „Gotowe projekty" u góry i „Od użytkowników" niżej — każda pozycja z przyciskiem „Użyj".](screenshots/help/pl/library-page.png)
 
 Przycisk **„Użyj"** zawsze tworzy **Twoją własną kopię** i od razu otwiera ją w edytorze — nie da się przypadkiem zepsuć oryginału.
 
@@ -132,7 +132,7 @@ Chcesz, żeby inni w firmie mogli skorzystać z Twojego szablonu? Udostępnij go
 2. Zaznacz **„Udostępnij w Bibliotece"**.
 3. Opcjonalnie wgraj **grafikę wyróżniającą** — to obrazek podglądowy, który będzie widoczny na kafelku listy i w Bibliotece.
 
-![SCREENSHOT: menu ⚙ kafelka szablonu z zaznaczonym polem „Udostępnij w Bibliotece" i widocznym polem do wgrania grafiki wyróżniającej.](screenshots/help/pl/TODO-share-template.png)
+![menu ⚙ kafelka szablonu z zaznaczonym polem „Udostępnij w Bibliotece" i widocznym polem do wgrania grafiki wyróżniającej.](screenshots/help/pl/share-template.png)
 
 Od tej chwili wszyscy zalogowani użytkownicy widzą szablon w Bibliotece i mogą go sklonować — ale **edytować oryginał możesz tylko Ty**. Udostępniony szablon ma na liście ikonę 📚. Odznacz pole, aby wycofać go z Biblioteki.
 
@@ -152,7 +152,7 @@ Wszystko poniżej znajdziesz w **lewym panelu**, w sekcji *Dodaj*. Każdy przyci
 2. Zaznacz nowy obiekt na canvasie.
 3. W prawym panelu wpisz treść w polu tekstowym.
 
-![SCREENSHOT: canvas z zaznaczonym obiektem Tekst; prawy panel z polem Treść i przykładowym tekstem.](screenshots/help/pl/TODO-object-text.png)
+![canvas z zaznaczonym obiektem Tekst; prawy panel z polem Treść i przykładowym tekstem.](screenshots/help/pl/object-text.png)
 
 ### ¶ — Blok tekstu
 
@@ -163,7 +163,7 @@ Wszystko poniżej znajdziesz w **lewym panelu**, w sekcji *Dodaj*. Każdy przyci
 1. Kliknij **¶ Blok tekstu**.
 2. W prawym panelu zaznacz **Auto-skalowanie** i ustaw minimalny oraz maksymalny rozmiar fontu.
 
-![SCREENSHOT: canvas z zaznaczonym Blokiem tekstu; prawy panel z zaznaczonym checkboxem Auto-skalowanie oraz polami min/max font.](screenshots/help/pl/TODO-object-textblock.png)
+![canvas z zaznaczonym Blokiem tekstu; prawy panel z zaznaczonym checkboxem Auto-skalowanie oraz polami min/max font.](screenshots/help/pl/object-textblock.png)
 
 ### ▭ — Prostokąt, ╱ — Linia
 
@@ -174,7 +174,7 @@ Wszystko poniżej znajdziesz w **lewym panelu**, w sekcji *Dodaj*. Każdy przyci
 2. Przeciągnij na canvasie, żeby ustawić rozmiar.
 3. W prawym panelu ustaw kolor wypełnienia i obrysu.
 
-![SCREENSHOT: canvas z narysowanym prostokątem i linią; prawy panel z wyborem koloru wypełnienia i obrysu.](screenshots/help/pl/TODO-object-shapes.png)
+![canvas z narysowanym prostokątem i linią; prawy panel z wyborem koloru wypełnienia i obrysu.](screenshots/help/pl/object-shapes.png)
 
 ### ▤ — Kod kreskowy
 
@@ -186,7 +186,7 @@ Wszystko poniżej znajdziesz w **lewym panelu**, w sekcji *Dodaj*. Każdy przyci
 2. W prawym panelu wybierz typ kodu (EAN-13, Code128 itd.).
 3. Wpisz dane — możesz też wpisać `{{sku}}`, żeby wartość była pobierana automatycznie z arkusza (patrz sekcja 6).
 
-![SCREENSHOT: canvas z zaznaczonym obiektem Kod kreskowy; prawy panel z listą typów kodu (EAN-13, Code128) i polem Dane z przykładową wartością.](screenshots/help/pl/TODO-object-barcode.png)
+![canvas z zaznaczonym obiektem Kod kreskowy; prawy panel z listą typów kodu (EAN-13, Code128) i polem Dane z przykładową wartością.](screenshots/help/pl/object-barcode.png)
 
 ### ▦ — Tabela
 
@@ -199,7 +199,7 @@ Wszystko poniżej znajdziesz w **lewym panelu**, w sekcji *Dodaj*. Każdy przyci
 4. Ustaw szerokości kolumn (w mm), font i ramkę.
 5. Zaznacz **Pogrubiony nagłówek**, jeśli chcesz wyróżnić pierwszy wiersz.
 
-![SCREENSHOT: canvas z zaznaczoną Tabelą; prawy panel z polami liczby wierszy/kolumn, edytowaną komórką zawierającą `{{kolumna}}` i zaznaczonym checkboxem Pogrubiony nagłówek.](screenshots/help/pl/TODO-object-table.png)
+![canvas z zaznaczoną Tabelą; prawy panel z polami liczby wierszy/kolumn, edytowaną komórką zawierającą `{{kolumna}}` i zaznaczonym checkboxem Pogrubiony nagłówek.](screenshots/help/pl/object-table.png)
 
 **Warto wiedzieć o druku:** tabela drukuje się poprawnie zarówno w PDF, jak i przy eksporcie do ZPL (patrz sekcja 7a). Jedno ograniczenie: obrócona tabela nie jest wspierana w ZPL — przy eksporcie wraca do pozycji bez obrotu.
 
@@ -212,7 +212,7 @@ Wszystko poniżej znajdziesz w **lewym panelu**, w sekcji *Dodaj*. Każdy przyci
 1. Kliknij **🖼 Obraz**.
 2. Wybierz plik z komputera (maksymalnie 5 MB).
 
-![SCREENSHOT: canvas z wgranym logo jako obiekt Obraz; prawy panel z podstawowymi informacjami o pliku.](screenshots/help/pl/TODO-object-image.png)
+![canvas z wgranym logo jako obiekt Obraz; prawy panel z podstawowymi informacjami o pliku.](screenshots/help/pl/object-image.png)
 
 ### 🌄 — Tło (referencja)
 
@@ -224,7 +224,7 @@ Wszystko poniżej znajdziesz w **lewym panelu**, w sekcji *Dodaj*. Każdy przyci
 2. Wybierz plik. Tło ląduje na samym dole stosu obiektów i jest zablokowane — nie ma uchwytów do przesuwania.
 3. Żeby je zmienić: zaznacz je, potem w prawym panelu odznacz **Zablokuj pozycję** albo zaznacz **Drukuj w PDF**, jeśli jednak chcesz, żeby się wydrukowało.
 
-![SCREENSHOT: canvas z wgranym Tłem wypełniającym całą etykietę, wyglądającym na zablokowane/przygaszone; prawy panel z checkboxami Zablokuj pozycję i Drukuj w PDF blisko góry.](screenshots/help/pl/TODO-object-background.png)
+![canvas z wgranym Tłem wypełniającym całą etykietę, wyglądającym na zablokowane/przygaszone; prawy panel z checkboxami Zablokuj pozycję i Drukuj w PDF blisko góry.](screenshots/help/pl/object-background.png)
 
 ---
 
@@ -236,7 +236,7 @@ Wszystko poniżej znajdziesz w **lewym panelu**, w sekcji *Dodaj*. Każdy przyci
 - **Shift + klik** = dodaj kolejny obiekt do zaznaczenia (tzw. multi-select — zaznaczenie kilku naraz).
 - **Ctrl/Cmd + A** = zaznacz wszystkie obiekty na etykiecie.
 
-![SCREENSHOT: canvas z trzema zaznaczonymi obiektami naraz (niebieskie obwódki zaznaczenia), pokazujący zaznaczenie wielokrotne przez Shift+klik.](screenshots/help/pl/TODO-multiselect.png)
+![canvas z trzema zaznaczonymi obiektami naraz (niebieskie obwódki zaznaczenia), pokazujący zaznaczenie wielokrotne przez Shift+klik.](screenshots/help/pl/multiselect.png)
 
 ### Przesuwanie i skalowanie
 
@@ -244,7 +244,7 @@ Wszystko poniżej znajdziesz w **lewym panelu**, w sekcji *Dodaj*. Każdy przyci
 - Uchwyty na rogach służą do zmiany rozmiaru; uchwyt nad obiektem służy do obrotu.
 - Obiekt **zablokowany** nie ma uchwytów — ale wciąż możesz go zaznaczyć i odblokować w prawym panelu.
 
-![SCREENSHOT: zaznaczony obiekt na canvasie z widocznymi uchwytami do zmiany rozmiaru na rogach i uchwytem obrotu nad obiektem.](screenshots/help/pl/TODO-resize-handles.png)
+![zaznaczony obiekt na canvasie z widocznymi uchwytami do zmiany rozmiaru na rogach i uchwytem obrotu nad obiektem.](screenshots/help/pl/resize-handles.png)
 
 ### Cofanie zmian
 
@@ -253,7 +253,7 @@ Wszystko poniżej znajdziesz w **lewym panelu**, w sekcji *Dodaj*. Każdy przyci
 
 Jedna operacja to jeden krok historii — np. wyrównanie 5 obiektów naraz cofniesz jednym Ctrl+Z.
 
-![SCREENSHOT: zbliżenie na przyciski Cofnij i Ponów w pasku narzędzi.](screenshots/help/pl/TODO-undo-redo-buttons.png)
+![zbliżenie na przyciski Cofnij i Ponów w pasku narzędzi.](screenshots/help/pl/undo-redo-buttons.png)
 
 ### Duplikowanie (robienie kopii)
 
@@ -262,7 +262,7 @@ Dwa szybkie sposoby na skopiowanie zaznaczonego obiektu (albo całego zaznaczeni
 - **Alt + przeciąganie** — przytrzymaj **Alt** (na Mac: **Option**) i przeciągnij zaznaczony obiekt. Oryginał zostaje na miejscu, a kopia ląduje tam, gdzie puścisz myszkę.
 - **Ctrl/Cmd + D** — tworzy kopię „w miejscu", przesuniętą o 5 mm w prawo i w dół. Zaznaczenie od razu przeskakuje na nową kopię, więc kolejne Ctrl+D buduje schodek kopii.
 
-![SCREENSHOT: canvas w trakcie przeciągania z wciśniętym Alt — widoczny oryginalny obiekt w miejscu startowym i tworzona kopia pod kursorem.](screenshots/help/pl/TODO-duplicate-altdrag.png)
+![canvas w trakcie przeciągania z wciśniętym Alt — widoczny oryginalny obiekt w miejscu startowym i tworzona kopia pod kursorem.](screenshots/help/pl/duplicate-altdrag.png)
 
 Kopia dziedziczy wszystko: font, kolor, obrót, ustawienia *Zablokuj* i *Drukuj w PDF*. Obrazy współdzielą ten sam plik źródłowy, więc nie zajmują dodatkowego miejsca.
 
@@ -275,7 +275,7 @@ W **pasku wyrównania**, w grupie **Warstwa**:
 - ↑ **Wyżej** — przesuwa o jedną pozycję w górę.
 - ⤒ **Na sam wierzch** — stawia obiekt nad wszystkimi innymi.
 
-![SCREENSHOT: zbliżenie na grupę Warstwa w pasku wyrównania z czterema ikonami podpisanymi strzałkami.](screenshots/help/pl/TODO-layer-buttons.png)
+![zbliżenie na grupę Warstwa w pasku wyrównania z czterema ikonami podpisanymi strzałkami.](screenshots/help/pl/layer-buttons.png)
 
 ### Blokada i drukowanie (prawy panel)
 
@@ -284,7 +284,7 @@ Na samej górze prawego panelu każdy obiekt ma dwa pola wyboru:
 - **🔒 Zablokuj pozycję** — wyłącza przesuwanie i zmianę rozmiaru (nadal można edytować font, kolor itd.).
 - **🖨 Drukuj w PDF** — domyślnie zaznaczone. Jeśli je odznaczysz, obiekt będzie widoczny tylko w edytorze i nie pojawi się w wygenerowanym PDF. Takie obiekty są wyblakłe na canvasie, żebyś od razu widziała/widział, że nie wydrukują się.
 
-![SCREENSHOT: góra prawego panelu z checkboxami 🔒 Zablokuj pozycję i 🖨 Drukuj w PDF; Drukuj w PDF odznaczone, a odpowiadający obiekt na canvasie wyblakły.](screenshots/help/pl/TODO-lock-print-checkboxes.png)
+![góra prawego panelu z checkboxami 🔒 Zablokuj pozycję i 🖨 Drukuj w PDF; Drukuj w PDF odznaczone, a odpowiadający obiekt na canvasie wyblakły.](screenshots/help/pl/lock-print-checkboxes.png)
 
 ### Autozapis
 
@@ -294,7 +294,7 @@ Edytor sam zapisuje Twoją pracę co kilka sekund. Status widzisz w pasku narzę
 - **Autozapis…** — trwa wysyłanie.
 - **Autozapisano 12:34** — ostatni udany zapis.
 
-![SCREENSHOT: zbliżenie na obszar statusu autozapisu w pasku narzędzi, pokazujące kolejno trzy stany: „Niezapisane zmiany", „Autozapis…", „Autozapisano 12:34".](screenshots/help/pl/TODO-autosave-status.png)
+![zbliżenie na obszar statusu autozapisu w pasku narzędzi, pokazujące kolejno trzy stany: „Niezapisane zmiany", „Autozapis…", „Autozapisano 12:34".](screenshots/help/pl/autosave-status.png)
 
 Możesz też w każdej chwili kliknąć **Zapisz** ręcznie.
 
@@ -306,7 +306,7 @@ Każdy **ręczny** zapis (przycisk **Zapisz** albo **Ctrl+S**) tworzy nową **we
 2. Zobaczysz listę wersji: numer, datę i autora.
 3. Kliknij **Przywróć** przy tej, do której chcesz wrócić.
 
-![SCREENSHOT: panel Historia otwarty, z listą kilku wersji (numer, data, autor) i przyciskiem Przywróć przy jednej z nich.](screenshots/help/pl/TODO-version-history.png)
+![panel Historia otwarty, z listą kilku wersji (numer, data, autor) i przyciskiem Przywróć przy jednej z nich.](screenshots/help/pl/version-history.png)
 
 Przywrócenie zapisuje bieżący stan jako nową wersję, więc niczego nie tracisz bezpowrotnie — program trzyma 30 ostatnich wersji na szablon.
 
@@ -330,13 +330,13 @@ Obiekty **nie są przeskalowywane** — zachowują swoje pozycje w milimetrach. 
 
 Chcesz najpierw zobaczyć wynik? Kliknij **👁 Podgląd** — PDF pojawi się w oknie aplikacji razem z przyciskiem **Pobierz PDF**.
 
-![SCREENSHOT: okno podglądu PDF w aplikacji z wyrenderowaną etykietą i przyciskiem Pobierz PDF pod spodem.](screenshots/help/pl/TODO-preview-pdf.png)
+![okno podglądu PDF w aplikacji z wyrenderowaną etykietą i przyciskiem Pobierz PDF pod spodem.](screenshots/help/pl/preview-pdf.png)
 
 Możesz też od razu kliknąć **Pobierz PDF** w pasku narzędzi — plik zacznie się ściągać po kilku sekundach.
 
 Jeśli jakiś tekst nie zmieścił się w swoim bloku, zobaczysz w pasku narzędzi chip **„N ostrzeżeń"**. Najedź na niego myszką, żeby zobaczyć szczegóły.
 
-![SCREENSHOT: pasek narzędzi z widocznym chipem „N ostrzeżeń" i otwartym dymkiem podpowiedzi ze szczegółami przycięcia tekstu.](screenshots/help/pl/TODO-warnings-chip.png)
+![pasek narzędzi z widocznym chipem „N ostrzeżeń" i otwartym dymkiem podpowiedzi ze szczegółami przycięcia tekstu.](screenshots/help/pl/warnings-chip.png)
 
 Uwaga: placeholdery kolumn (`{{name}}` — miejsce, w które program sam wstawi dane z arkusza) w pojedynczym PDF zostają jako zwykły tekst — prawdziwe dane podstawia dopiero **generowanie serii** (sekcja 6). Placeholdery daty (`{{date+14d}}`, sekcja 7) są natomiast obliczane od razu, także tutaj.
 
@@ -364,7 +364,7 @@ Każde takie wystąpienie zostanie podmienione wartością z odpowiedniej kolumn
 1. W pasku narzędzi kliknij **Generuj serię**.
 2. W Kroku 1 wybierz plik z danymi.
 
-![SCREENSHOT: Krok 1 kreatora Generuj serię z polem do wyboru/przeciągnięcia pliku i tabelką dopuszczalnych formatów.](screenshots/help/pl/TODO-series-step1-upload.png)
+![Krok 1 kreatora Generuj serię z polem do wyboru/przeciągnięcia pliku i tabelką dopuszczalnych formatów.](screenshots/help/pl/series-step1-upload.png)
 
 Akceptowane formaty:
 
@@ -378,7 +378,7 @@ Akceptowane formaty:
 
 Plik trafia na serwer i od razu jest odczytywany. Zobaczysz listę wykrytych kolumn i liczbę wierszy.
 
-![SCREENSHOT: podgląd po wgraniu pliku CSV — lista wykrytych kolumn jako mała tabelka, liczba wierszy i przycisk „Dalej".](screenshots/help/pl/TODO-series-csv-preview.png)
+![podgląd po wgraniu pliku CSV — lista wykrytych kolumn jako mała tabelka, liczba wierszy i przycisk „Dalej".](screenshots/help/pl/series-csv-preview.png)
 
 Kliknij **Dalej**.
 
@@ -390,7 +390,7 @@ Kliknij **Dalej**.
 2. Wybierz tabelę, która zawiera dane, których potrzebujesz.
 3. Kliknij **Użyj tego źródła**.
 
-![SCREENSHOT: lista tabel po wgraniu pliku SQLite, posortowana według liczby wierszy, z przyciskiem „Użyj tego źródła" przy jednej z pozycji.](screenshots/help/pl/TODO-series-sqlite-tables.png)
+![lista tabel po wgraniu pliku SQLite, posortowana według liczby wierszy, z przyciskiem „Użyj tego źródła" przy jednej z pozycji.](screenshots/help/pl/series-sqlite-tables.png)
 
 Jeśli potrzebujesz węższego wyboru danych (np. tylko produkty z jednej kategorii), rozwiń **Pokaż zaawansowane** i wpisz zapytanie SELECT — to polecenie języka baz danych, które mówi programowi dokładnie, jakie dane pobrać, np.:
 
@@ -400,7 +400,7 @@ FROM products
 WHERE category = 'labels' AND price > 0
 ```
 
-![SCREENSHOT: rozwinięty panel „Pokaż zaawansowane" z wpisanym zapytaniem SQL w polu tekstowym i przyciskiem „Użyj tego źródła".](screenshots/help/pl/TODO-series-sqlite-sql.png)
+![rozwinięty panel „Pokaż zaawansowane" z wpisanym zapytaniem SQL w polu tekstowym i przyciskiem „Użyj tego źródła".](screenshots/help/pl/series-sqlite-sql.png)
 
 **Bezpieczeństwo danych:** połączenie z bazą jest tylko do odczytu. Program przyjmuje wyłącznie polecenia odczytujące dane (SELECT) — żadne polecenie mogące coś zmienić lub skasować nie zostanie wykonane. Wynik może mieć maksymalnie 1000 wierszy.
 
@@ -419,7 +419,7 @@ Jeśli nie chcesz drukować wszystkich wierszy z arkusza, możesz je odsiać, np
 1. Wybierz kolumnę, warunek (np. „większe niż") i wartość.
 2. Kliknij **Sprawdź filtr**, żeby zobaczyć, ile wierszy się załapie.
 
-![SCREENSHOT: Krok 3 Filtr z wybraną kolumną, warunkiem i wartością (np. price > 10) oraz wynikiem po kliknięciu „Sprawdź filtr" pokazującym liczbę pasujących wierszy.](screenshots/help/pl/TODO-series-filter.png)
+![Krok 3 Filtr z wybraną kolumną, warunkiem i wartością (np. price > 10) oraz wynikiem po kliknięciu „Sprawdź filtr" pokazującym liczbę pasujących wierszy.](screenshots/help/pl/series-filter.png)
 
 Możesz też pominąć ten krok, jeśli chcesz wygenerować etykiety dla wszystkich wierszy.
 
@@ -427,11 +427,11 @@ Możesz też pominąć ten krok, jeśli chcesz wygenerować etykiety dla wszystk
 
 Kliknij **Generuj PDF**. Program zaczyna pracować w tle, a pasek postępu pokazuje, ile zostało. Po zakończeniu PDF zaczyna się pobierać automatycznie.
 
-![SCREENSHOT: Krok 4 z paskiem postępu generowania w trakcie pracy i statusem tekstowym.](screenshots/help/pl/TODO-series-progress.png)
+![Krok 4 z paskiem postępu generowania w trakcie pracy i statusem tekstowym.](screenshots/help/pl/series-progress.png)
 
 Jeśli w niektórych etykietach tekst nie zmieścił się w swoim bloku, zobaczysz listę ostrzeżeń — które wiersze, które obiekty. PDF i tak zostanie wygenerowany dla wszystkich etykiet.
 
-![SCREENSHOT: lista ostrzeżeń po wygenerowaniu serii, z wyszczególnieniem konkretnych wierszy i obiektów z przyciętym tekstem.](screenshots/help/pl/TODO-series-warnings-list.png)
+![lista ostrzeżeń po wygenerowaniu serii, z wyszczególnieniem konkretnych wierszy i obiektów z przyciętym tekstem.](screenshots/help/pl/series-warnings-list.png)
 
 ---
 
@@ -515,29 +515,59 @@ Wybierz DPI zgodne z Twoją drukarką (zwykle 203 lub 300).
 3. Zobaczysz na bieżąco podgląd wygenerowanego kodu.
 4. Kliknij **Kopiuj** albo **Pobierz .txt**.
 
-![SCREENSHOT: okno „Export TSPL" z wyborem DPI (203/300), podglądem wygenerowanego kodu TSPL i przyciskami Kopiuj / Pobierz .txt.](screenshots/help/pl/TODO-tspl-export.png)
+![okno „Export TSPL" z wyborem DPI (203/300), podglądem wygenerowanego kodu TSPL i przyciskami Kopiuj / Pobierz .txt.](screenshots/help/pl/tspl-export.png)
 
 Eksport TSPL działa tylko dla pojedynczej etykiety (bez trybu Wsad) i nie ma jeszcze importu w drugą stronę — to funkcja na wcześniejszym etapie rozwoju niż ZPL.
 
-### Druk bezpośredni — konektor
+### Najprościej: kreator „Podłącz drukarkę"
 
-Zamiast pobierać plik, możesz drukować **prosto z edytora** (dotyczy ZPL — nie TSPL) dzięki **konektorowi** — małemu programowi instalowanemu na komputerze w tej samej sieci co drukarki, który łączy aplikację z drukarką.
+Nie chcesz ręcznie tworzyć pliku ustawień ani przeklejać kodów? Aplikacja ma **kreator**, który przeprowadzi Cię przez wszystko krok po kroku — sam pobierze właściwy program, przygotuje gotowy plik ustawień i poda jedną komendę do skopiowania. Wejdź w **Urządzenia** i kliknij **🖨 Podłącz drukarkę**.
+
+1. **Wybierz swój komputer.** Kreator sam wykrywa system (Mac / Windows / Linux) — potwierdź jednym kliknięciem.
+
+![krok 1 kreatora — pytanie „Na jakim komputerze podłączasz drukarkę?" z kafelkami Mac, Windows, Linux i Linux (ARM).](screenshots/help/pl/connect-wizard-os.png)
+
+2. **Nazwij ten komputer** (np. „Komputer w biurze") — to tylko etykieta, żebyś rozpoznał go na liście.
+
+![krok 2 kreatora — pole „Nazwij ten komputer" z przykładową nazwą.](screenshots/help/pl/connect-wizard-name.png)
+
+3. **Pobierz dwa pliki** — program łączący oraz gotowy plik ustawień (adres serwera i Twój kod są już w nim wpisane; nic nie trzeba edytować).
+
+![krok 3 kreatora — dwa przyciski pobierania: program i plik ustawień, z notką o prywatności klucza.](screenshots/help/pl/connect-wizard-download.png)
+
+4. **Uruchom program** — skopiuj jedną gotową komendę i wklej ją w Terminalu (na Macu kreator chowa w niej zdjęcie systemowej blokady). Zostaw to okno otwarte.
+
+![krok 4 kreatora — pole z komendą do skopiowania, przycisk Kopiuj i przypomnienie „zostaw okno otwarte".](screenshots/help/pl/connect-wizard-run.png)
+
+5. **Poczekaj na połączenie** — kreator sam wykryje, gdy komputer się zgłosi, i pokaże „Połączono".
+
+![krok 5 kreatora — komunikat „Czekam, aż Twój komputer się zgłosi…" ze wskaźnikiem oczekiwania.](screenshots/help/pl/connect-wizard-waiting.png)
+
+6. **Wskaż drukarkę (opcjonalnie)** — podaj adres IP drukarki albo zostaw tryb testowy (wydruki zapisywane do pliku), żeby najpierw wszystko sprawdzić.
+
+![krok 6 kreatora — „Gdzie jest Twoja drukarka?" z polem na adres IP i opcją trybu testowego.](screenshots/help/pl/connect-wizard-printer.png)
+
+Gdy komputer pokaże się jako **Online**, drukujesz z edytora dokładnie tak, jak opisano niżej.
+
+### Sposób zaawansowany: ręczna konfiguracja konektora
+
+Jeśli wolisz zrobić to ręcznie (albo automatyzujesz wiele stanowisk), możesz drukować **prosto z edytora** (dotyczy ZPL — nie TSPL) dzięki **konektorowi** — małemu programowi instalowanemu na komputerze w tej samej sieci co drukarki, który łączy aplikację z drukarką.
 
 1. Zainstaluj agenta **blg-connector** na komputerze podłączonym do sieci z drukarkami (plik do pobrania w sekcji Assets każdego wydania na GitHubie; instrukcja konfiguracji: `connector/README.md`).
 2. W aplikacji przejdź do **Urządzenia → Dodaj urządzenie**.
 
-![SCREENSHOT: okno „Dodaj urządzenie" z wygenerowanym tokenem (kodem) do skopiowania do pliku config.yaml agenta.](screenshots/help/pl/TODO-connector-add-device.png)
+![okno „Dodaj urządzenie" z wygenerowanym tokenem (kodem) do skopiowania do pliku config.yaml agenta.](screenshots/help/pl/connector-add-device.png)
 
 3. Skopiuj wygenerowany **token** (unikalny kod dostępu) do pliku `config.yaml` agenta. Urządzenie przejdzie w stan **Online** i zgłosi listę podłączonych drukarek.
 4. W edytorze kliknij **🖨 Drukuj**, wybierz urządzenie, drukarkę, liczbę kopii i DPI, a potem kliknij **Drukuj**.
 
-![SCREENSHOT: okno druku w edytorze z wyborem urządzenia, drukarki, liczby kopii i DPI, przyciskiem „Drukuj" oraz widocznym paskiem postępu (w kolejce → agent odebrał → wydrukowano).](screenshots/help/pl/TODO-connector-print-dialog.png)
+![okno druku w edytorze z wyborem urządzenia, drukarki, liczby kopii i DPI, przyciskiem „Drukuj" oraz widocznym paskiem postępu (w kolejce → agent odebrał → wydrukowano).](screenshots/help/pl/connector-print-dialog.png)
 
 Okno pokaże na żywo postęp: *w kolejce → agent odebrał → wydrukowano* (albo błąd wraz z powodem).
 
 **Szybka ścieżka:** jeśli konektor działa **na tym samym komputerze**, na którym masz otwartą przeglądarkę, program wykryje go automatycznie i zaproponuje opcję **⚡ Ten komputer — druk natychmiastowy**. Etykieta idzie wtedy prosto na drukarkę, bez rundy przez serwer.
 
-![SCREENSHOT: okno druku z zaznaczoną domyślnie opcją „⚡ Ten komputer — druk natychmiastowy".](screenshots/help/pl/TODO-connector-fastpath.png)
+![okno druku z zaznaczoną domyślnie opcją „⚡ Ten komputer — druk natychmiastowy".](screenshots/help/pl/connector-fastpath.png)
 
 Placeholdery daty są obliczane w momencie druku; placeholdery kolumn zostają w kodzie (bo to druk pojedynczej etykiety, nie serii).
 
@@ -549,7 +579,7 @@ Konektor potrafi działać też **w drugą stronę**: udaje zwykłą drukarkę s
 2. Wydrukuj coś z dowolnej aplikacji na tę wirtualną drukarkę.
 3. Przejdź do **Urządzenia → Inbox** i kliknij **Otwórz w edytorze** — etykieta staje się zwykłym szablonem: rozmiar wykryty z kodu, teksty i kody kreskowe od razu edytowalne.
 
-![SCREENSHOT: strona Urządzenia → Inbox z listą kilku przechwyconych etykiet (miniatury, znaczniki czasu) i przyciskiem „Otwórz w edytorze".](screenshots/help/pl/TODO-devices-inbox.png)
+![strona Urządzenia → Inbox z listą kilku przechwyconych etykiet (miniatury, znaczniki czasu) i przyciskiem „Otwórz w edytorze".](screenshots/help/pl/devices-inbox.png)
 
 Z Inboxa możesz też skopiować surowy kod ZPL albo usunąć wpis. Program przechowuje maksymalnie 200 ostatnich przechwyceń na urządzenie.
 
@@ -559,7 +589,7 @@ Z Inboxa możesz też skopiować surowy kod ZPL albo usunąć wpis. Program prze
 
 W menu kliknij **Historia**. Każde wygenerowanie — pojedyncza etykieta (**Pobierz PDF**) i cała seria (PDF albo wsadowy ZPL) — trafia na listę: nazwa szablonu, typ, liczba etykiet, rozmiar, data.
 
-![SCREENSHOT: strona Historia z listą wygenerowanych plików — kolumny nazwa szablonu, typ, liczba etykiet, rozmiar, data — i przyciskami Pobierz oraz Usuń w wierszu.](screenshots/help/pl/TODO-generated-history.png)
+![strona Historia z listą wygenerowanych plików — kolumny nazwa szablonu, typ, liczba etykiet, rozmiar, data — i przyciskami Pobierz oraz Usuń w wierszu.](screenshots/help/pl/generated-history.png)
 
 Kliknij **Pobierz**, aby pobrać plik ponownie bez generowania go od nowa, albo **Usuń**, aby skasować wpis. Pliki są dostępne przez **30 dni**, potem są automatycznie usuwane.
 
@@ -582,7 +612,7 @@ Lewe menu → **Administracja → Użytkownicy**.
    - **Edytor** — tworzy i edytuje własne szablony oraz zestawy danych.
    - **Tylko podgląd** — może otwierać i oglądać, ale nie zapisuje zmian.
 
-![SCREENSHOT: okno „Utwórz konto" z polami Email, hasło tymczasowe (z przyciskiem „Generuj") i rozwijaną listą Rola (Administrator/Edytor/Tylko podgląd).](screenshots/help/pl/TODO-admin-create-user.png)
+![okno „Utwórz konto" z polami Email, hasło tymczasowe (z przyciskiem „Generuj") i rozwijaną listą Rola (Administrator/Edytor/Tylko podgląd).](screenshots/help/pl/admin-create-user.png)
 
 4. Po kliknięciu **Utwórz** program pokaże hasło tymczasowe **tylko raz** — od razu przekaż je nowemu użytkownikowi.
 
@@ -591,7 +621,7 @@ Lewe menu → **Administracja → Użytkownicy**.
 1. Przy koncie użytkownika kliknij **Resetuj hasło**.
 2. Program wygeneruje nowe hasło tymczasowe — przekaż je użytkownikowi.
 
-![SCREENSHOT: wiersz użytkownika z kliknietym przyciskiem „Resetuj hasło" i oknem pokazującym nowo wygenerowane hasło tymczasowe, wyświetlone tylko raz.](screenshots/help/pl/TODO-admin-reset-password.png)
+![wiersz użytkownika z kliknietym przyciskiem „Resetuj hasło" i oknem pokazującym nowo wygenerowane hasło tymczasowe, wyświetlone tylko raz.](screenshots/help/pl/admin-reset-password.png)
 
 Przy następnym logowaniu użytkownik zostanie poproszony o ustawienie własnego hasła.
 
@@ -599,7 +629,7 @@ Przy następnym logowaniu użytkownik zostanie poproszony o ustawienie własnego
 
 Przełącznik **Aktywne** w wierszu użytkownika włącza lub wyłącza dostęp do konta. Nie możesz dezaktywować własnego konta — to zabezpieczenie przed przypadkowym zablokowaniem samej/samego siebie.
 
-![SCREENSHOT: zbliżenie na przełącznik „Aktywne" w wierszu użytkownika, włączony (zielony); dla wiersza własnego konta przełącznik wyszarzony/nieaktywny.](screenshots/help/pl/TODO-admin-active-toggle.png)
+![zbliżenie na przełącznik „Aktywne" w wierszu użytkownika, włączony (zielony); dla wiersza własnego konta przełącznik wyszarzony/nieaktywny.](screenshots/help/pl/admin-active-toggle.png)
 
 ---
 
@@ -614,7 +644,7 @@ Masz dwie możliwości:
 - Na stronie **Szablony**: najedź myszką na kafelek szablonu i kliknij ikonę **⬇** w prawym dolnym rogu.
 - W edytorze: w pasku narzędzi kliknij **⬇ Eksportuj** (obok *Pobierz PDF*).
 
-![SCREENSHOT: zbliżenie na przycisk ⬇ Eksportuj w pasku narzędzi edytora, obok przycisku Pobierz PDF.](screenshots/help/pl/TODO-editor-export-button.png)
+![zbliżenie na przycisk ⬇ Eksportuj w pasku narzędzi edytora, obok przycisku Pobierz PDF.](screenshots/help/pl/editor-export-button.png)
 
 Pobierze się plik `<nazwa>.blg-template.json` — najlepiej trzymaj go w folderze z backupami.
 
@@ -624,7 +654,7 @@ Na stronie **Szablony** kliknij **⬆ Importuj** — otworzy się okno w dwóch 
 
 1. **Wybór pliku** — wskaż plik `.blg-template.json`. Program sprawdzi jego poprawność i pokaże podgląd.
 
-![SCREENSHOT: Krok 1 okna importu z wybranym plikiem .blg-template.json, znacznikiem poprawności i podglądem zawartości.](screenshots/help/pl/TODO-import-step1.png)
+![Krok 1 okna importu z wybranym plikiem .blg-template.json, znacznikiem poprawności i podglądem zawartości.](screenshots/help/pl/import-step1.png)
 
 2. **Konfiguracja** — możesz tu:
    - zmienić nazwę nowego szablonu (domyślnie ta z pliku; przy powtórzeniu nazwy program doda dopisek „(kopia)"),
@@ -632,7 +662,7 @@ Na stronie **Szablony** kliknij **⬆ Importuj** — otworzy się okno w dwóch 
    - odznaczyć obiekty, których nie chcesz importować (lista z ikoną typu i podglądem treści przy każdym),
    - dla każdego powtarzającego się obrazka wybrać: **Użyj istniejącego** (oszczędza miejsce) albo **Utwórz nową kopię**.
 
-![SCREENSHOT: Krok 2 okna importu z polem nazwy, polami nadpisania szerokości/wysokości, listą obiektów z checkboxami i wyborem Użyj istniejącego / Utwórz nową kopię przy zdublowanym obrazku.](screenshots/help/pl/TODO-import-step2.png)
+![Krok 2 okna importu z polem nazwy, polami nadpisania szerokości/wysokości, listą obiektów z checkboxami i wyborem Użyj istniejącego / Utwórz nową kopię przy zdublowanym obrazku.](screenshots/help/pl/import-step2.png)
 
 3. Kliknij **Importuj** — program tworzy nowy szablon i otwiera go w edytorze.
 
