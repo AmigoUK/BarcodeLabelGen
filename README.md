@@ -105,19 +105,19 @@
 
 ### 11 · Print preview before download
 
-![SCREENSHOT: Editor Print-preview modal — the single-label PDF embedded in a dialog, with any text-overflow warnings above it and Download / Close buttons](docs/screenshots/TODO-print-preview.png)
+![Editor Print-preview modal — the single-label PDF embedded in a dialog, with any text-overflow warnings above it and Download / Close buttons](docs/screenshots/print-preview.png)
 
 > The **👁 Preview** toolbar button renders the single-label PDF and embeds it right in the app — check the layout (and any wrapping warnings) before you download. The same generation is reused, so preview + download counts as one action in the history.
 
 ### 12 · TSPL export — TSC / desktop Toshiba
 
-![SCREENSHOT: Editor Export-TSPL modal — density selector (203/300 dpi), a read-only TSPL text preview starting with SIZE/GAP/DIRECTION/CLS, Copy and Download .txt buttons](docs/screenshots/TODO-tspl-export.png)
+![Editor Export-TSPL modal — density selector (203/300 dpi), a read-only TSPL text preview starting with SIZE/GAP/DIRECTION/CLS, Copy and Download .txt buttons](docs/screenshots/tspl-export.png)
 
 > Export the current label as TSPL/TSPL2 for TSC and desktop-Toshiba printers: pick the density, preview the generated commands (`SIZE`/`GAP`/`DIRECTION`/`CLS` … `PRINT`), then **Copy** or **Download .txt**. Text, barcodes, QR, rectangles, lines and tables map across; a warnings list flags approximated bitmap fonts or skipped images.
 
 ### 13 · Cross-platform connector + CUPS capture
 
-![SCREENSHOT: A macOS or Linux terminal running ./install-capture-cups.sh, showing the raw CUPS queue being created and pointed at the local connector on 127.0.0.1:9101](docs/screenshots/TODO-cups-capture.png)
+![A macOS or Linux terminal running ./install-capture-cups.sh, showing the raw CUPS queue being created and pointed at the local connector on 127.0.0.1:9101](docs/screenshots/cups-capture.png)
 
 > The connector ships as prebuilt binaries for Windows, macOS (Intel + Apple Silicon) and Linux (amd64/arm64/arm, incl. Raspberry Pi) — see [`connector/README.md`](connector/README.md). Virtual-printer capture works on macOS / Linux through a CUPS raw queue created by [`connector/install-capture-cups.sh`](connector/install-capture-cups.sh), routing another app's ZPL into the web app's Inbox.
 
