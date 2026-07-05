@@ -18,10 +18,12 @@
 - **Barcodes** — EAN-13, EAN-14, GTIN, Code 128, GS1-128, QR (with checksum validation).
 - **Series generation** — upload a CSV, Excel, or **SQLite** file, map placeholders to columns (or write a custom SELECT), optionally filter rows, get a single PDF with one label per row. Up to 1,000 labels per batch.
 - **ZPL / ZPL II round-trip** — paste an existing ZPL label, adjust element positions on the canvas, and export native ZPL back out (copy to clipboard or download `.zpl`) for use in external software. Single-brace `{VARIABLES}`, `^PQ{NoLabel}` quantity, resident fonts (`E:ARIxxx.TTF`) and native QR are preserved 1:1; a batch mode fills `{{column}}` values from a dataset. DPI is auto-detected from `^PW`/`^LL`.
+- **TSPL export (TSC / desktop Toshiba)** — export the same canvas as TSPL/TSPL2 (`SIZE`/`GAP`/`DIRECTION`/`CLS` … `PRINT`) for TSC and desktop-Toshiba printers: text, barcodes (Code 128, GS1-128, EAN-13, QR), rectangles, lines and tables. Copy to clipboard or download a `.txt`; warnings flag anything approximated (bitmap fonts) or skipped (images).
+- **Print preview** — hit 👁 Preview to render the single-label PDF and see it embedded in the app (with any text-overflow warnings) before committing to a download — the same generation is reused, so preview + download is one action.
 - **Editable label size** — resize a template (width × height in mm, with presets) at any time from the editor; undoable and persisted, so a label never has to be recreated just to change its dimensions.
 - **Date placeholders** — `{{date+14d}}`, `{{date+3m:YYYY-MM-DD}}` compute best-before / production dates at generation time (PDF and ZPL alike), with a live preview chip in the editor and month-end-safe arithmetic.
-- **Direct printing via the local connector** — a single-binary Go agent ([`connector/`](connector/README.md)) polls the server's print queue with a per-device Bearer token and forwards ZPL to label printers over RAW TCP 9100 (Zebra / JetDirect compatible). Register devices on the Devices page, then hit 🖨 Print in the editor; job status (queued → printing → done/error) reports back live.
-- **Virtual printer capture** — the same agent can pose as a network printer (JetDirect listener): anything another application prints to it (via the ZDesigner driver on Windows) lands in the web app's **Inbox**, one click away from becoming an editable template — the escape hatch from legacy label software.
+- **Direct printing via the local connector** — a single-binary Go agent ([`connector/`](connector/README.md)) polls the server's print queue with a per-device Bearer token and forwards ZPL to label printers over RAW TCP 9100 (Zebra / JetDirect compatible). Register devices on the Devices page, then hit 🖨 Print in the editor; job status (queued → printing → done/error) reports back live. Pure Go, zero cgo — prebuilt binaries ship for **Windows, macOS (Intel + Apple Silicon) and Linux (amd64/arm64/arm, incl. Raspberry Pi)** with launchd / systemd / service setup in the connector README. An Android connector core ([`connector/mobilecore/`](connector/android/README.md)) is in progress.
+- **Virtual printer capture** — the same agent can pose as a network printer (JetDirect listener): anything another application prints to it lands in the web app's **Inbox**, one click away from becoming an editable template — the escape hatch from legacy label software. On Windows via the ZDesigner driver + a Standard TCP/IP port; on **macOS / Linux via a CUPS raw queue** (one-command `connector/install-capture-cups.sh`).
 - **Template import / export** — every template is a single self-contained `.blg-template.json` (size, objects, embedded images). Cross-instance portable; partial import lets you skip objects + override the size.
 - **Multilingual UI + in-app docs** — Polish + English from day one, with HELP + FAQ rendered inside the app.
 - **Roles** — admin / editor / viewer; admin manages users + temporary password resets.
@@ -101,6 +103,24 @@
 
 > The size button (**📐 W×H**) in the toolbar opens a dialog to change the label's width × height in millimetres, with one-click presets (40×100, 50×30, 100×150, 105×148, 210×297). The change is undoable and saved to the template — object positions stay put.
 
+### 11 · Print preview before download
+
+![SCREENSHOT: Editor Print-preview modal — the single-label PDF embedded in a dialog, with any text-overflow warnings above it and Download / Close buttons](docs/screenshots/TODO-print-preview.png)
+
+> The **👁 Preview** toolbar button renders the single-label PDF and embeds it right in the app — check the layout (and any wrapping warnings) before you download. The same generation is reused, so preview + download counts as one action in the history.
+
+### 12 · TSPL export — TSC / desktop Toshiba
+
+![SCREENSHOT: Editor Export-TSPL modal — density selector (203/300 dpi), a read-only TSPL text preview starting with SIZE/GAP/DIRECTION/CLS, Copy and Download .txt buttons](docs/screenshots/TODO-tspl-export.png)
+
+> Export the current label as TSPL/TSPL2 for TSC and desktop-Toshiba printers: pick the density, preview the generated commands (`SIZE`/`GAP`/`DIRECTION`/`CLS` … `PRINT`), then **Copy** or **Download .txt**. Text, barcodes, QR, rectangles, lines and tables map across; a warnings list flags approximated bitmap fonts or skipped images.
+
+### 13 · Cross-platform connector + CUPS capture
+
+![SCREENSHOT: A macOS or Linux terminal running ./install-capture-cups.sh, showing the raw CUPS queue being created and pointed at the local connector on 127.0.0.1:9101](docs/screenshots/TODO-cups-capture.png)
+
+> The connector ships as prebuilt binaries for Windows, macOS (Intel + Apple Silicon) and Linux (amd64/arm64/arm, incl. Raspberry Pi) — see [`connector/README.md`](connector/README.md). Virtual-printer capture works on macOS / Linux through a CUPS raw queue created by [`connector/install-capture-cups.sh`](connector/install-capture-cups.sh), routing another app's ZPL into the web app's Inbox.
+
 ---
 
 ## Tech stack
@@ -113,7 +133,7 @@
 | Cache + sessions + job queue | Redis 7 |
 | Infrastructure | Docker + Docker Compose + nginx |
 | Deployment | Linux host fronted by Tailscale Serve |
-| Tests | pytest (backend, 203 tests) + tsc + eslint (frontend) |
+| Tests | pytest (backend) + tsc + eslint (frontend); Go `go test` for the connector |
 
 ---
 

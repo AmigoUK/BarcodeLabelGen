@@ -5,4 +5,4 @@ the Docker image installs dependencies with `--no-install-project`, so
 importlib.metadata can't see the package there.
 """
 
-APP_VERSION = "0.16.0"
+APP_VERSION = "0.20.1"

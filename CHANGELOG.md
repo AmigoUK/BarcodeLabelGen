@@ -9,6 +9,23 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 _Nothing yet._
 
+## [0.20.1] — 2026-07-05
+
+### Fixed
+- **App version was stuck at 0.16.0.** `app/version.py` (`APP_VERSION`, what
+  the health endpoint and editor footer report) is a hand-kept constant —
+  the runtime image ships no `pyproject.toml`, so it can't be read at
+  runtime — and it silently drifted from v0.16.0 through v0.20.0. Bumped to
+  match, and added `tests/test_version_sync.py` asserting `APP_VERSION` ==
+  `pyproject.toml [project] version` so the two can never drift unnoticed again.
+
+### Changed
+- **README** documents the features added since the ZPL/label-size docs:
+  print preview, TSPL export, the cross-platform connector (Windows / macOS /
+  Linux / Raspberry Pi) with CUPS capture, and the in-progress Android
+  connector core. New tour entries carry screenshot placeholders
+  (`docs/screenshots/TODO-*.png`) to be filled with real captures.
+
 ## [0.20.0] — 2026-07-05
 
 ### Added
@@ -396,7 +413,8 @@ _Nothing yet._
   label formats, dataset upload (CSV/XLSX/SQLite) with `{{column}}`
   mail-merge, and PDF single-label + batch generation via ReportLab.
 
-[Unreleased]: https://github.com/AmigoUK/BarcodeLabelGen/compare/v0.20.0...HEAD
+[Unreleased]: https://github.com/AmigoUK/BarcodeLabelGen/compare/v0.20.1...HEAD
+[0.20.1]: https://github.com/AmigoUK/BarcodeLabelGen/releases/tag/v0.20.1
 [0.20.0]: https://github.com/AmigoUK/BarcodeLabelGen/releases/tag/v0.20.0
 [0.19.1]: https://github.com/AmigoUK/BarcodeLabelGen/releases/tag/v0.19.1
 [0.19.0]: https://github.com/AmigoUK/BarcodeLabelGen/releases/tag/v0.19.0
