@@ -22,13 +22,14 @@ from app.routes.captures import captures_bp
 from app.routes.datasets import datasets_bp
 from app.routes.devices import devices_bp
 from app.routes.folders import folders_bp
-from app.routes.library import library_bp
 from app.routes.generate import generate_bp, jobs_bp
 from app.routes.health import health_bp
 from app.routes.history import history_bp
+from app.routes.library import library_bp
 from app.routes.me import me_bp
 from app.routes.print_jobs import print_jobs_bp
 from app.routes.templates import templates_bp
+from app.routes.tspl import tspl_bp
 from app.routes.zpl import zpl_bp
 
 
@@ -98,6 +99,7 @@ def create_app(
     app.register_blueprint(datasets_bp, url_prefix="/api")
     app.register_blueprint(jobs_bp, url_prefix="/api")
     app.register_blueprint(zpl_bp, url_prefix="/api")
+    app.register_blueprint(tspl_bp, url_prefix="/api")
     app.register_blueprint(devices_bp, url_prefix="/api")
     app.register_blueprint(print_jobs_bp, url_prefix="/api")
     app.register_blueprint(agent_bp, url_prefix="/api")
