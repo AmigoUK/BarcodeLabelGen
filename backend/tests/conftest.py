@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 from collections.abc import Iterator
+from pathlib import Path
 
 import pytest
 from flask import Flask
@@ -15,6 +16,13 @@ from app.auth.csrf import CSRF_COOKIE_NAME, CSRF_HEADER_NAME
 from app.config import Config
 from app.db.base import Base
 from app.factory import create_app
+
+
+@pytest.fixture(autouse=True)
+def _pdfs_dir_tmp(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+    """Point PDFS_DIR at a per-test tmp dir so no test can touch the real
+    volume — the default /app/pdfs doesn't exist on CI runners."""
+    monkeypatch.setenv("PDFS_DIR", str(tmp_path / "pdfs"))
 
 
 @pytest.fixture
