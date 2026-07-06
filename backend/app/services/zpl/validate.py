@@ -43,9 +43,7 @@ def validate_zpl(zpl: str) -> None:
     head = stripped[:64].lower()
     for prefix, name in _KNOWN_NOT_ZPL:
         if head.startswith(prefix):
-            raise InvalidZplError(
-                "wrong_format", f"payload looks like a {name}, not ZPL"
-            )
+            raise InvalidZplError("wrong_format", f"payload looks like a {name}, not ZPL")
 
     start = stripped.find("^XA")
     end = stripped.rfind("^XZ")

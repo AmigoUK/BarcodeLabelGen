@@ -52,9 +52,7 @@ def test_create_device_returns_token_once(
     assert "token_hash" not in listing["devices"][0]
 
 
-def test_duplicate_device_name_conflicts(
-    app: Flask, client: FlaskClient, csrf: CsrfHelper
-) -> None:
+def test_duplicate_device_name_conflicts(app: Flask, client: FlaskClient, csrf: CsrfHelper) -> None:
     _login(app, client, csrf)
     _create_device(client, csrf, "Biuro")
     resp = client.post("/api/devices", json={"name": "Biuro"}, headers=csrf.headers())

@@ -192,7 +192,10 @@ def test_export_owner_guard(app: Flask, client: FlaskClient, csrf: CsrfHelper) -
     client.post("/api/auth/logout", headers=csrf.headers())
     with app.app_context():
         create_user(
-            get_session(), email="other@example.com", plain_password="otherPass123", role=Role.EDITOR
+            get_session(),
+            email="other@example.com",
+            plain_password="otherPass123",
+            role=Role.EDITOR,
         )
     client.post(
         "/api/auth/login",
@@ -218,7 +221,10 @@ def test_preview_import_reports_objects_and_no_duplicates(
     client.post("/api/auth/logout", headers=csrf.headers())
     with app.app_context():
         create_user(
-            get_session(), email="fresh@example.com", plain_password="freshPass123", role=Role.EDITOR
+            get_session(),
+            email="fresh@example.com",
+            plain_password="freshPass123",
+            role=Role.EDITOR,
         )
     client.post(
         "/api/auth/login",
@@ -226,9 +232,7 @@ def test_preview_import_reports_objects_and_no_duplicates(
         headers=csrf.headers(),
     )
 
-    preview = client.post(
-        "/api/templates/import/preview", json=source, headers=csrf.headers()
-    )
+    preview = client.post("/api/templates/import/preview", json=source, headers=csrf.headers())
     assert preview.status_code == 200
     body = preview.get_json()
     assert body["template_name"] == "Tpl"
@@ -248,15 +252,21 @@ def test_preview_import_flags_duplicate_assets(
     asset_id = _upload_asset(client, csrf, raw=_png_bytes())
     canvas = _basic_canvas()
     canvas["objects"].append(
-        {"id": "img_1", "type": "image", "x": 0, "y": 0, "width": 30, "height": 20, "assetId": asset_id}
+        {
+            "id": "img_1",
+            "type": "image",
+            "x": 0,
+            "y": 0,
+            "width": 30,
+            "height": 20,
+            "assetId": asset_id,
+        }
     )
     tpl_id = _create_template(client, csrf, format_id=fmt_id, canvas=canvas)
     source = json.loads(client.get(f"/api/templates/{tpl_id}/export").data)
 
     # Same user importing back — the asset is byte-identical to one they own.
-    preview = client.post(
-        "/api/templates/import/preview", json=source, headers=csrf.headers()
-    )
+    preview = client.post("/api/templates/import/preview", json=source, headers=csrf.headers())
     assert preview.status_code == 200
     dups = preview.get_json()["asset_duplicates"]
     assert len(dups) == 1
@@ -311,7 +321,15 @@ def test_import_with_image_reuse_existing(
     asset_id = _upload_asset(client, csrf, raw=_png_bytes())
     canvas = _basic_canvas()
     canvas["objects"].append(
-        {"id": "img_1", "type": "image", "x": 0, "y": 0, "width": 30, "height": 20, "assetId": asset_id}
+        {
+            "id": "img_1",
+            "type": "image",
+            "x": 0,
+            "y": 0,
+            "width": 30,
+            "height": 20,
+            "assetId": asset_id,
+        }
     )
     tpl_id = _create_template(client, csrf, format_id=fmt_id, canvas=canvas)
     source = json.loads(client.get(f"/api/templates/{tpl_id}/export").data)
@@ -332,15 +350,21 @@ def test_import_with_image_reuse_existing(
     assert img_obj["assetId"] == asset_id
 
 
-def test_import_with_image_create_new(
-    app: Flask, client: FlaskClient, csrf: CsrfHelper
-) -> None:
+def test_import_with_image_create_new(app: Flask, client: FlaskClient, csrf: CsrfHelper) -> None:
     _login(app, client, csrf)
     fmt_id = _seed_formats(app)
     asset_id = _upload_asset(client, csrf, raw=_png_bytes())
     canvas = _basic_canvas()
     canvas["objects"].append(
-        {"id": "img_1", "type": "image", "x": 0, "y": 0, "width": 30, "height": 20, "assetId": asset_id}
+        {
+            "id": "img_1",
+            "type": "image",
+            "x": 0,
+            "y": 0,
+            "width": 30,
+            "height": 20,
+            "assetId": asset_id,
+        }
     )
     tpl_id = _create_template(client, csrf, format_id=fmt_id, canvas=canvas)
     source = json.loads(client.get(f"/api/templates/{tpl_id}/export").data)
@@ -409,7 +433,15 @@ def test_import_skip_image_means_asset_not_created(
     asset_id = _upload_asset(client, csrf, raw=_png_bytes((0, 255, 0, 255)))
     canvas = _basic_canvas()
     canvas["objects"].append(
-        {"id": "img_1", "type": "image", "x": 0, "y": 0, "width": 30, "height": 20, "assetId": asset_id}
+        {
+            "id": "img_1",
+            "type": "image",
+            "x": 0,
+            "y": 0,
+            "width": 30,
+            "height": 20,
+            "assetId": asset_id,
+        }
     )
     tpl_id = _create_template(client, csrf, format_id=fmt_id, canvas=canvas)
     source = json.loads(client.get(f"/api/templates/{tpl_id}/export").data)
@@ -428,9 +460,7 @@ def test_import_skip_image_means_asset_not_created(
     assert len(after["assets"]) == before_count  # no new Asset
 
 
-def test_import_rejects_unknown_skip_id(
-    app: Flask, client: FlaskClient, csrf: CsrfHelper
-) -> None:
+def test_import_rejects_unknown_skip_id(app: Flask, client: FlaskClient, csrf: CsrfHelper) -> None:
     _login(app, client, csrf)
     fmt_id = _seed_formats(app)
     tpl_id = _create_template(client, csrf, format_id=fmt_id, canvas=_basic_canvas())
@@ -451,7 +481,15 @@ def test_import_rejects_tampered_sha(app: Flask, client: FlaskClient, csrf: Csrf
     asset_id = _upload_asset(client, csrf, raw=_png_bytes())
     canvas = _basic_canvas()
     canvas["objects"].append(
-        {"id": "img_1", "type": "image", "x": 0, "y": 0, "width": 30, "height": 20, "assetId": asset_id}
+        {
+            "id": "img_1",
+            "type": "image",
+            "x": 0,
+            "y": 0,
+            "width": 30,
+            "height": 20,
+            "assetId": asset_id,
+        }
     )
     tpl_id = _create_template(client, csrf, format_id=fmt_id, canvas=canvas)
     source = json.loads(client.get(f"/api/templates/{tpl_id}/export").data)
@@ -462,7 +500,10 @@ def test_import_rejects_tampered_sha(app: Flask, client: FlaskClient, csrf: Csrf
 
     response = client.post(
         "/api/templates/import",
-        json={"source": source, "options": {"asset_resolution": {source["assets"][0]["ref"]: "new"}}},
+        json={
+            "source": source,
+            "options": {"asset_resolution": {source["assets"][0]["ref"]: "new"}},
+        },
         headers=csrf.headers(),
     )
     assert response.status_code == 400
@@ -480,7 +521,10 @@ def test_import_cross_user_owns_new_template(
     client.post("/api/auth/logout", headers=csrf.headers())
     with app.app_context():
         create_user(
-            get_session(), email="other@example.com", plain_password="otherPass123", role=Role.EDITOR
+            get_session(),
+            email="other@example.com",
+            plain_password="otherPass123",
+            role=Role.EDITOR,
         )
     client.post(
         "/api/auth/login",
@@ -507,9 +551,7 @@ def test_import_warning_for_unknown_format(
     source = json.loads(client.get(f"/api/templates/{tpl_id}/export").data)
     source["template"]["format_hint"]["name"] = "PinkUnicorn"
 
-    preview = client.post(
-        "/api/templates/import/preview", json=source, headers=csrf.headers()
-    )
+    preview = client.post("/api/templates/import/preview", json=source, headers=csrf.headers())
     assert preview.status_code == 200
     assert any("PinkUnicorn" in w for w in preview.get_json()["warnings"])
 

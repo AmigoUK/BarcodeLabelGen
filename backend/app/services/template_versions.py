@@ -43,9 +43,7 @@ def snapshot(
         )
     )
     if stale:
-        for old in session.scalars(
-            select(TemplateVersion).where(TemplateVersion.id.in_(stale))
-        ):
+        for old in session.scalars(select(TemplateVersion).where(TemplateVersion.id.in_(stale))):
             session.delete(old)
     return row
 

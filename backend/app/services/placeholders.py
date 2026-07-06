@@ -11,6 +11,7 @@ from __future__ import annotations
 
 import re
 from datetime import date, datetime
+from typing import Any
 
 from dateutil.relativedelta import relativedelta
 
@@ -64,7 +65,9 @@ def substitute_date_string(value: str, *, today: date | None = None) -> str:
     return PLACEHOLDER_RE.sub(repl, value)
 
 
-def substitute_dates_in_canvas(canvas_data: dict, *, today: date | None = None) -> dict:
+def substitute_dates_in_canvas(
+    canvas_data: dict[str, Any], *, today: date | None = None
+) -> dict[str, Any]:
     """Copy of the canvas with date placeholders resolved in the fields the
     renderers read — text on text objects, data on barcodes (mirrors
     batch_render.substitute_object's field selection)."""
@@ -84,9 +87,7 @@ def substitute_dates_in_canvas(canvas_data: dict, *, today: date | None = None) 
             elif kind == "table" and isinstance(obj.get("cells"), list):
                 obj["cells"] = [
                     [
-                        substitute_date_string(cell, today=today)
-                        if isinstance(cell, str)
-                        else cell
+                        substitute_date_string(cell, today=today) if isinstance(cell, str) else cell
                         for cell in r
                     ]
                     for r in obj["cells"]

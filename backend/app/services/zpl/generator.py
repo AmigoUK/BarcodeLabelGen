@@ -80,9 +80,7 @@ def generate_zpl(
 # ------------------------------------------------------------- per object ----
 
 
-def _emit_object(
-    obj: dict[str, Any], dpmm: int, warnings: list[dict[str, Any]] | None
-) -> str:
+def _emit_object(obj: dict[str, Any], dpmm: int, warnings: list[dict[str, Any]] | None) -> str:
     kind = obj.get("type")
     if kind == "text":
         return _emit_text(obj, dpmm)
@@ -211,9 +209,7 @@ def _emit_rect(obj: dict[str, Any], dpmm: int) -> str:
 _TABLE_PAD_MM = 0.8
 
 
-def _emit_table(
-    obj: dict[str, Any], dpmm: int, warnings: list[dict[str, Any]] | None
-) -> str:
+def _emit_table(obj: dict[str, Any], dpmm: int, warnings: list[dict[str, Any]] | None) -> str:
     """Native table: the grid becomes ^GB boxes (thin ones act as lines) and
     every cell delegates to _emit_text as a synthetic text object, so fonts,
     ^FB wrapping and escaping stay one code path."""

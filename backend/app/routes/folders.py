@@ -2,6 +2,8 @@
 
 from __future__ import annotations
 
+from typing import Any
+
 from flask import Blueprint, jsonify, request
 from flask.typing import ResponseReturnValue
 from flask_login import current_user, login_required
@@ -28,7 +30,7 @@ class FolderPatchRequest(BaseModel):
     color: str | None = Field(default=None, pattern=_COLOR_PATTERN)
 
 
-def _public(folder: Folder, count: int | None) -> dict:
+def _public(folder: Folder, count: int | None) -> dict[str, Any]:
     return {
         "id": folder.id,
         "name": folder.name,

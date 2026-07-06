@@ -129,7 +129,10 @@ def list_tables(path: Path) -> list[SqliteTableInfo]:
         for (name,) in rows:
             try:
                 cols = [r[1] for r in conn.execute(f'PRAGMA table_info("{_quote_ident(name)}")')]
-                row_count = int(conn.execute(f'SELECT COUNT(*) FROM "{_quote_ident(name)}"').fetchone()[0])
+                # S608 note: identifier comes from sqlite_master and is
+                # quote-escaped; the connection is read-only (query_only ON).
+                count_sql = f'SELECT COUNT(*) FROM "{_quote_ident(name)}"'  # noqa: S608
+                row_count = int(conn.execute(count_sql).fetchone()[0])
             except sqlite3.DatabaseError:
                 continue  # skip unreadable / corrupted tables
             out.append(SqliteTableInfo(name=name, columns=cols, row_count=row_count))
@@ -181,7 +184,9 @@ def validate_select(sql: str) -> str:
 def _row_to_str_dict(row: sqlite3.Row) -> dict[str, str]:
     """Convert a sqlite Row into the all-strings shape the rest of the pipeline expects."""
     out: dict[str, str] = {}
-    for k in row.keys():
+    # sqlite3.Row is not a dict — iterating it yields *values*, so the
+    # SIM118 "iterate the mapping directly" rewrite would be a bug here.
+    for k in row.keys():  # noqa: SIM118
         v = row[k]
         out[k] = "" if v is None else str(v)
     return out
@@ -208,7 +213,9 @@ def execute_table(path: Path, table_name: str) -> list[dict[str, str]]:
         if not _table_exists(conn, table_name):
             raise SqliteSourceError(f"table '{table_name}' not found in this file")
         quoted = f'"{_quote_ident(table_name)}"'
-        return _execute_capped(conn, f"SELECT * FROM {quoted}")
+        # S608 note: table_name is re-validated against the live schema above
+        # and quote-escaped; the connection is read-only (query_only ON).
+        return _execute_capped(conn, f"SELECT * FROM {quoted}")  # noqa: S608
 
 
 def execute_query(path: Path, sql: str) -> list[dict[str, str]]:

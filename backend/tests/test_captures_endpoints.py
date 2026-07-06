@@ -43,9 +43,7 @@ def test_upload_requires_token(client: FlaskClient) -> None:
 
 def test_upload_and_review_roundtrip(app: Flask, client: FlaskClient, csrf: CsrfHelper) -> None:
     device_id, token = _setup(app, client, csrf)
-    up = client.post(
-        "/api/agent/captures", json={"zpl_b64": _b64(_ZPL)}, headers=_bearer(token)
-    )
+    up = client.post("/api/agent/captures", json={"zpl_b64": _b64(_ZPL)}, headers=_bearer(token))
     assert up.status_code == 201
     cap = up.get_json()["capture"]
     assert cap["device_id"] == device_id

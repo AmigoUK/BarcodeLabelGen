@@ -34,11 +34,7 @@ def list_mine(
 
 def list_library(session: Session) -> list[Template]:
     """Everything shared into the library, regardless of owner."""
-    stmt = (
-        select(Template)
-        .where(Template.is_shared.is_(True))
-        .order_by(Template.updated_at.desc())
-    )
+    stmt = select(Template).where(Template.is_shared.is_(True)).order_by(Template.updated_at.desc())
     return list(session.execute(stmt).scalars().all())
 
 
@@ -87,9 +83,7 @@ def clone(session: Session, template_id: int, *, requesting_user_id: int) -> Tem
             if not isinstance(asset_id, int):
                 continue
             if asset_id not in remap:
-                remap[asset_id] = _copy_asset_to_user(
-                    session, asset_id, user_id=requesting_user_id
-                )
+                remap[asset_id] = _copy_asset_to_user(session, asset_id, user_id=requesting_user_id)
             if remap[asset_id] is not None:
                 obj["assetId"] = remap[asset_id]
         if featured_id is not None:
@@ -244,9 +238,7 @@ def restore_version(
     tpl.height_mm = src.height_mm
     tpl.version += 1
     session.flush()
-    tv_svc.snapshot(
-        session, tpl, created_by=requesting_user_id, note=f"restored from v{version}"
-    )
+    tv_svc.snapshot(session, tpl, created_by=requesting_user_id, note=f"restored from v{version}")
     session.commit()
     session.refresh(tpl)
     return tpl

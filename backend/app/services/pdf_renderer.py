@@ -390,8 +390,10 @@ def table_col_edges(obj: dict[str, Any]) -> list[float]:
     width = float(obj.get("width") or 0)
     raw = obj.get("colWidths")
     widths: list[float]
-    if isinstance(raw, list) and len(raw) == cols and all(
-        isinstance(v, int | float) and v > 0 for v in raw
+    if (
+        isinstance(raw, list)
+        and len(raw) == cols
+        and all(isinstance(v, int | float) and v > 0 for v in raw)
     ):
         widths = [float(v) for v in raw]
     else:
@@ -454,9 +456,7 @@ def _draw_table(
     for r in range(rows):
         row_cells = cells[r] if r < len(cells) else []
         is_header = header and r == 0
-        font = _resolve_font(
-            {**obj, "fontWeight": "bold" if is_header else obj.get("fontWeight")}
-        )
+        font = _resolve_font({**obj, "fontWeight": "bold" if is_header else obj.get("fontWeight")})
         for col in range(cols):
             text = str(row_cells[col]) if col < len(row_cells) and row_cells[col] else ""
             if not text:
@@ -473,9 +473,7 @@ def _draw_table(
                 truncated = True
             lines = lines[:max_lines]
             cell_x_pt = x_pt + (edges[col] + _TABLE_PAD_MM) * mm
-            baseline = (
-                top_pt - (r * row_h_mm + _TABLE_PAD_MM) * mm - font_size_pt * _ASCENT_RATIO
-            )
+            baseline = top_pt - (r * row_h_mm + _TABLE_PAD_MM) * mm - font_size_pt * _ASCENT_RATIO
             c.setFont(font, font_size_pt)
             for i, line in enumerate(lines):
                 c.drawString(cell_x_pt, baseline - i * font_size_pt * _LINE_HEIGHT_FACTOR, line)

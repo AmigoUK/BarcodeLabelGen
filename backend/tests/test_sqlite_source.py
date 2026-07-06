@@ -89,9 +89,8 @@ def test_validate_select_oversize_query_rejected() -> None:
 
 def test_open_readonly_blocks_writes(tmp_path: Path) -> None:
     db = _make_db(tmp_path / "t.db")
-    with ss.open_readonly(db) as conn:
-        with pytest.raises(sqlite3.DatabaseError):
-            conn.execute("INSERT INTO products VALUES ('Z','Z',0)")
+    with ss.open_readonly(db) as conn, pytest.raises(sqlite3.DatabaseError):
+        conn.execute("INSERT INTO products VALUES ('Z','Z',0)")
 
 
 def test_open_readonly_missing_file_raises(tmp_path: Path) -> None:

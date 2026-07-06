@@ -6,7 +6,8 @@ import enum
 from datetime import UTC, datetime
 from typing import Any
 
-from sqlalchemy import JSON, DateTime, Enum as SAEnum, ForeignKey, Integer, String, Text
+from sqlalchemy import JSON, DateTime, ForeignKey, Integer, String, Text
+from sqlalchemy import Enum as SAEnum
 from sqlalchemy.dialects.postgresql import JSONB
 from sqlalchemy.orm import Mapped, mapped_column
 
@@ -19,7 +20,7 @@ def _utcnow() -> datetime:
     return datetime.now(UTC)
 
 
-class DataSetSourceType(str, enum.Enum):
+class DataSetSourceType(enum.StrEnum):
     CSV = "csv"
     XLSX = "xlsx"
     SQLITE = "sqlite"
@@ -36,7 +37,11 @@ class DataSet(Base):
     storage_filename: Mapped[str] = mapped_column(String(255), nullable=False)
     file_format: Mapped[str] = mapped_column(String(10), nullable=False)
     source_type: Mapped[DataSetSourceType] = mapped_column(
-        SAEnum(DataSetSourceType, name="dataset_source_type", values_callable=lambda e: [m.value for m in e]),
+        SAEnum(
+            DataSetSourceType,
+            name="dataset_source_type",
+            values_callable=lambda e: [m.value for m in e],
+        ),
         nullable=False,
         default=DataSetSourceType.CSV,
     )

@@ -73,126 +73,126 @@ export function TemplatesPage() {
       <FolderRail active={folderFilter} onSelect={setFolderFilter} />
 
       <div className="min-w-0 flex-1 space-y-6">
-      <header className="flex flex-wrap items-center justify-between gap-3">
-        <h1 className="text-2xl font-bold">{t("nav.templates")}</h1>
-        <div className="flex items-center gap-2">
-          {templates.data && templates.data.length > 0 && (
-            <Input
-              type="search"
-              placeholder={t("templates.searchPlaceholder")}
-              value={query}
-              onChange={(e) => setQuery(e.target.value)}
-              className="w-64"
-            />
-          )}
-          <Button variant="secondary" onClick={() => setShowImport(true)}>
-            ⬆ {t("templates.import")}
-          </Button>
-          <Button onClick={() => setShowCreate(true)}>+ {t("templates.new")}</Button>
-        </div>
-      </header>
+        <header className="flex flex-wrap items-center justify-between gap-3">
+          <h1 className="text-2xl font-bold">{t("nav.templates")}</h1>
+          <div className="flex items-center gap-2">
+            {templates.data && templates.data.length > 0 && (
+              <Input
+                type="search"
+                placeholder={t("templates.searchPlaceholder")}
+                value={query}
+                onChange={(e) => setQuery(e.target.value)}
+                className="w-64"
+              />
+            )}
+            <Button variant="secondary" onClick={() => setShowImport(true)}>
+              ⬆ {t("templates.import")}
+            </Button>
+            <Button onClick={() => setShowCreate(true)}>+ {t("templates.new")}</Button>
+          </div>
+        </header>
 
-      {templates.isLoading && <p className="text-slate-400">{t("common.loading")}</p>}
+        {templates.isLoading && <p className="text-slate-400">{t("common.loading")}</p>}
 
-      {templates.data && templates.data.length === 0 && (
-        <div className="rounded-lg border border-dashed border-slate-700 bg-slate-900/40 p-10 text-center text-slate-400">
-          {t("templates.empty")}
-        </div>
-      )}
+        {templates.data && templates.data.length === 0 && (
+          <div className="rounded-lg border border-dashed border-slate-700 bg-slate-900/40 p-10 text-center text-slate-400">
+            {t("templates.empty")}
+          </div>
+        )}
 
-      {templates.data && templates.data.length > 0 && filtered.length === 0 && (
-        <div className="rounded-lg border border-dashed border-slate-700 bg-slate-900/40 p-10 text-center text-slate-400">
-          {t("templates.noMatches", { query })}
-        </div>
-      )}
+        {templates.data && templates.data.length > 0 && filtered.length === 0 && (
+          <div className="rounded-lg border border-dashed border-slate-700 bg-slate-900/40 p-10 text-center text-slate-400">
+            {t("templates.noMatches", { query })}
+          </div>
+        )}
 
-      {filtered.length > 0 && (
-        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
-          {filtered.map((tpl) => (
-            <a
-              key={tpl.id}
-              href={`/templates/${tpl.id}/edit`}
-              className="group rounded-lg border border-slate-800 bg-slate-900/50 p-4 transition-colors hover:border-indigo-600"
-            >
-              {tpl.featured_asset_id !== null && (
-                <img
-                  src={featuredImageUrl(tpl)}
-                  alt=""
-                  loading="lazy"
-                  className="mb-3 h-24 w-full rounded object-cover"
-                />
-              )}
-              <h3 className="mb-1 truncate font-semibold text-slate-100">
-                {tpl.is_shared && (
-                  <span className="mr-1" title={t("templates.sharedBadge")}>
-                    📚
-                  </span>
+        {filtered.length > 0 && (
+          <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+            {filtered.map((tpl) => (
+              <a
+                key={tpl.id}
+                href={`/templates/${tpl.id}/edit`}
+                className="group rounded-lg border border-slate-800 bg-slate-900/50 p-4 transition-colors hover:border-indigo-600"
+              >
+                {tpl.featured_asset_id !== null && (
+                  <img
+                    src={featuredImageUrl(tpl)}
+                    alt=""
+                    loading="lazy"
+                    className="mb-3 h-24 w-full rounded object-cover"
+                  />
                 )}
-                {tpl.name}
-              </h3>
-              <p className="flex items-center gap-1.5 text-xs text-slate-500">
-                <ColorDot color={folderColor(tpl.folder_id)} />
-                {tpl.width_mm} × {tpl.height_mm} mm
-              </p>
-              {tpl.description && (
-                <p className="mt-2 line-clamp-2 text-sm text-slate-400">{tpl.description}</p>
-              )}
-              <div className="mt-3 flex items-center justify-between text-xs text-slate-500">
-                <span>v{tpl.version}</span>
-                <span>{new Date(tpl.updated_at).toLocaleDateString()}</span>
-                <div className="flex items-center gap-1 opacity-0 group-hover:opacity-100">
-                  <button
-                    type="button"
-                    onClick={(e) => {
-                      e.preventDefault();
-                      setSettingsFor(tpl);
-                    }}
-                    className="rounded px-1.5 py-0.5 text-slate-400 hover:bg-slate-800 hover:text-slate-100"
-                    aria-label={t("templates.settings")}
-                    title={t("templates.settingsTooltip")}
-                  >
-                    ⚙
-                  </button>
-                  <button
-                    type="button"
-                    onClick={(e) => {
-                      e.preventDefault();
-                      const safe =
-                        tpl.name.replace(/[^A-Za-z0-9._-]+/g, "_").replace(/^_|_$/g, "") ||
-                        "template";
-                      void exportTemplateToFile(tpl.id, `${safe}.blg-template.json`);
-                    }}
-                    className="rounded px-1.5 py-0.5 text-slate-400 hover:bg-slate-800 hover:text-slate-100"
-                    aria-label={t("templates.export")}
-                    title={t("templates.exportTooltip")}
-                  >
-                    ⬇
-                  </button>
-                  <button
-                    type="button"
-                    onClick={(e) => {
-                      e.preventDefault();
-                      if (confirm(t("templates.confirmDelete", { name: tpl.name }))) {
-                        del.mutate(tpl.id);
-                      }
-                    }}
-                    className="rounded px-1.5 py-0.5 text-rose-400 hover:bg-rose-950/50"
-                    aria-label={t("common.delete")}
-                  >
-                    ✕
-                  </button>
+                <h3 className="mb-1 truncate font-semibold text-slate-100">
+                  {tpl.is_shared && (
+                    <span className="mr-1" title={t("templates.sharedBadge")}>
+                      📚
+                    </span>
+                  )}
+                  {tpl.name}
+                </h3>
+                <p className="flex items-center gap-1.5 text-xs text-slate-500">
+                  <ColorDot color={folderColor(tpl.folder_id)} />
+                  {tpl.width_mm} × {tpl.height_mm} mm
+                </p>
+                {tpl.description && (
+                  <p className="mt-2 line-clamp-2 text-sm text-slate-400">{tpl.description}</p>
+                )}
+                <div className="mt-3 flex items-center justify-between text-xs text-slate-500">
+                  <span>v{tpl.version}</span>
+                  <span>{new Date(tpl.updated_at).toLocaleDateString()}</span>
+                  <div className="flex items-center gap-1 opacity-0 group-hover:opacity-100">
+                    <button
+                      type="button"
+                      onClick={(e) => {
+                        e.preventDefault();
+                        setSettingsFor(tpl);
+                      }}
+                      className="rounded px-1.5 py-0.5 text-slate-400 hover:bg-slate-800 hover:text-slate-100"
+                      aria-label={t("templates.settings")}
+                      title={t("templates.settingsTooltip")}
+                    >
+                      ⚙
+                    </button>
+                    <button
+                      type="button"
+                      onClick={(e) => {
+                        e.preventDefault();
+                        const safe =
+                          tpl.name.replace(/[^A-Za-z0-9._-]+/g, "_").replace(/^_|_$/g, "") ||
+                          "template";
+                        void exportTemplateToFile(tpl.id, `${safe}.blg-template.json`);
+                      }}
+                      className="rounded px-1.5 py-0.5 text-slate-400 hover:bg-slate-800 hover:text-slate-100"
+                      aria-label={t("templates.export")}
+                      title={t("templates.exportTooltip")}
+                    >
+                      ⬇
+                    </button>
+                    <button
+                      type="button"
+                      onClick={(e) => {
+                        e.preventDefault();
+                        if (confirm(t("templates.confirmDelete", { name: tpl.name }))) {
+                          del.mutate(tpl.id);
+                        }
+                      }}
+                      className="rounded px-1.5 py-0.5 text-rose-400 hover:bg-rose-950/50"
+                      aria-label={t("common.delete")}
+                    >
+                      ✕
+                    </button>
+                  </div>
                 </div>
-              </div>
-            </a>
-          ))}
-        </div>
-      )}
+              </a>
+            ))}
+          </div>
+        )}
 
-      {showCreate && <NewTemplateModal onClose={() => setShowCreate(false)} />}
-      {showImport && <ImportTemplateModal onClose={() => setShowImport(false)} />}
-      {settingsFor && (
-        <TemplateSettingsModal template={settingsFor} onClose={() => setSettingsFor(null)} />
-      )}
+        {showCreate && <NewTemplateModal onClose={() => setShowCreate(false)} />}
+        {showImport && <ImportTemplateModal onClose={() => setShowImport(false)} />}
+        {settingsFor && (
+          <TemplateSettingsModal template={settingsFor} onClose={() => setSettingsFor(null)} />
+        )}
       </div>
     </div>
   );

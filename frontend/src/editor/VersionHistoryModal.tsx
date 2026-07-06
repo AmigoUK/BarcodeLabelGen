@@ -74,9 +74,7 @@ export function VersionHistoryModal({ templateId, onClose, onRestored }: Props) 
           ))}
         </div>
       )}
-      {restore.error && (
-        <p className="mt-2 text-sm text-rose-400">{t("auth.errors.generic")}</p>
-      )}
+      {restore.error && <p className="mt-2 text-sm text-rose-400">{t("auth.errors.generic")}</p>}
     </Modal>
   );
 }

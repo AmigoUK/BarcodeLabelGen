@@ -38,9 +38,7 @@ def test_single_pdf_resolves_date_placeholder(
         json={"name": "Dates", "format_id": fmt_id, "canvas_data": _CANVAS},
         headers=csrf.headers(),
     ).get_json()
-    resp = client.post(
-        "/api/generate", json={"template_id": tpl["id"]}, headers=csrf.headers()
-    )
+    resp = client.post("/api/generate", json={"template_id": tpl["id"]}, headers=csrf.headers())
     assert resp.status_code == 200
     assert resp.data.startswith(b"%PDF-")
 

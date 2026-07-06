@@ -54,7 +54,9 @@ def upgrade() -> None:
             ondelete="SET NULL",
         ),
         sa.PrimaryKeyConstraint("id", name=op.f("pk_template_versions")),
-        sa.UniqueConstraint("template_id", "version", name=op.f("uq_template_versions_template_id")),
+        sa.UniqueConstraint(
+            "template_id", "version", name=op.f("uq_template_versions_template_id")
+        ),
     )
     op.create_index(
         op.f("ix_template_versions_template_id"),

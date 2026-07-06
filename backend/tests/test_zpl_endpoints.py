@@ -34,9 +34,7 @@ def test_parse_rejects_unauthenticated(client: FlaskClient, csrf: CsrfHelper) ->
 
 def test_parse_returns_canvas(app: Flask, client: FlaskClient, csrf: CsrfHelper) -> None:
     _login(app, client, csrf)
-    resp = client.post(
-        "/api/zpl/parse", json={"zpl": _SAMPLE, "dpi": 203}, headers=csrf.headers()
-    )
+    resp = client.post("/api/zpl/parse", json={"zpl": _SAMPLE, "dpi": 203}, headers=csrf.headers())
     assert resp.status_code == 200
     body = resp.get_json()
     objs = body["canvas_data"]["objects"]
@@ -65,9 +63,7 @@ def test_generate_template_returns_zpl_text(
     assert "^PQ{NoLabel},0,1,Y" in text
 
 
-def test_generate_batch_requires_dataset(
-    app: Flask, client: FlaskClient, csrf: CsrfHelper
-) -> None:
+def test_generate_batch_requires_dataset(app: Flask, client: FlaskClient, csrf: CsrfHelper) -> None:
     _login(app, client, csrf)
     resp = client.post(
         "/api/zpl/generate",

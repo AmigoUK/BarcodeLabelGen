@@ -48,7 +48,7 @@ def _esc(text: Any) -> str:  # noqa: ANN401
     return str(text if text is not None else "").replace('"', "\\[22]")
 
 
-def _snap_rot(rotation: float | None, warnings: list[dict] | None, obj_id: str) -> int:
+def _snap_rot(rotation: float | None, warnings: list[dict[str, Any]] | None, obj_id: str) -> int:
     deg = round(float(rotation or 0)) % 360
     if deg in _ALLOWED_ROT:
         return deg
@@ -64,7 +64,7 @@ def _snap_rot(rotation: float | None, warnings: list[dict] | None, obj_id: str) 
 
 
 def _pick_font(
-    font_size_mm: float | None, dpmm: int, warnings: list[dict] | None, obj_id: str
+    font_size_mm: float | None, dpmm: int, warnings: list[dict[str, Any]] | None, obj_id: str
 ) -> tuple[str, int]:
     target = mm_to_dots(font_size_mm or 3, dpmm)
     best_name, best_mul, best_err = "3", 1, None
@@ -126,7 +126,7 @@ def generate_tspl(
     return "\n".join(out)
 
 
-def _emit_object(obj: dict[str, Any], dpmm: int, warnings: list[dict] | None) -> str:
+def _emit_object(obj: dict[str, Any], dpmm: int, warnings: list[dict[str, Any]] | None) -> str:
     kind = obj.get("type")
     if kind == "text":
         return _emit_text(obj, dpmm, warnings)
@@ -150,7 +150,7 @@ def _emit_object(obj: dict[str, Any], dpmm: int, warnings: list[dict] | None) ->
     return ""
 
 
-def _emit_text(obj: dict[str, Any], dpmm: int, warnings: list[dict] | None) -> str:
+def _emit_text(obj: dict[str, Any], dpmm: int, warnings: list[dict[str, Any]] | None) -> str:
     obj_id = str(obj.get("id") or "")
     x = mm_to_dots(obj.get("x") or 0, dpmm)
     y = mm_to_dots(obj.get("y") or 0, dpmm)
@@ -165,7 +165,7 @@ def _emit_text(obj: dict[str, Any], dpmm: int, warnings: list[dict] | None) -> s
     return f'TEXT {x},{y},"{font}",{rot},{mul},{mul},"{text}"'
 
 
-def _emit_barcode(obj: dict[str, Any], dpmm: int, warnings: list[dict] | None) -> str:
+def _emit_barcode(obj: dict[str, Any], dpmm: int, warnings: list[dict[str, Any]] | None) -> str:
     obj_id = str(obj.get("id") or "")
     x = mm_to_dots(obj.get("x") or 0, dpmm)
     y = mm_to_dots(obj.get("y") or 0, dpmm)
@@ -175,7 +175,7 @@ def _emit_barcode(obj: dict[str, Any], dpmm: int, warnings: list[dict] | None) -
     if bc == "qr":
         cell = max(1, min(10, round((obj.get("height") or 10) * dpmm / 25)))
         return f'QRCODE {x},{y},M,{cell},A,{rot},"{data}"'
-    tspl_type = _BARCODE_TYPE.get(bc)
+    tspl_type = _BARCODE_TYPE.get(bc) if isinstance(bc, str) else None
     if tspl_type is None:
         tspl_type = "128"
         if warnings is not None:
@@ -198,7 +198,7 @@ def _emit_rect(obj: dict[str, Any], dpmm: int) -> str:
     return f"BOX {x},{y},{x + w},{y + h},{t}"
 
 
-def _emit_line(obj: dict[str, Any], dpmm: int, warnings: list[dict] | None) -> str:
+def _emit_line(obj: dict[str, Any], dpmm: int, warnings: list[dict[str, Any]] | None) -> str:
     x = mm_to_dots(obj.get("x") or 0, dpmm)
     y = mm_to_dots(obj.get("y") or 0, dpmm)
     points = obj.get("points") or [0, 0, 0, 0]
@@ -219,7 +219,7 @@ def _emit_line(obj: dict[str, Any], dpmm: int, warnings: list[dict] | None) -> s
     return ""
 
 
-def _emit_table(obj: dict[str, Any], dpmm: int, warnings: list[dict] | None) -> str:
+def _emit_table(obj: dict[str, Any], dpmm: int, warnings: list[dict[str, Any]] | None) -> str:
     from app.services.pdf_renderer import table_col_edges
 
     rows = int(obj.get("rows") or 0)

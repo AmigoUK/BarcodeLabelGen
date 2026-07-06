@@ -42,7 +42,10 @@ export function DevicesPage() {
       <header className="flex items-center justify-between">
         <h1 className="text-2xl font-bold">{t("devices.title")}</h1>
         <div className="flex items-center gap-3">
-          <button className="text-sm text-slate-400 hover:text-slate-200" onClick={() => setShowCreate(true)}>
+          <button
+            className="text-sm text-slate-400 hover:text-slate-200"
+            onClick={() => setShowCreate(true)}
+          >
             {t("devices.createAdvanced")}
           </button>
           <Button onClick={() => setShowWizard(true)}>🖨 {t("wizard.connectButton")}</Button>
@@ -90,9 +93,7 @@ export function DevicesPage() {
                     )}
                   </td>
                   <td className="px-4 py-3 text-xs text-slate-300">
-                    {d.printers.length === 0
-                      ? "—"
-                      : d.printers.map((p) => p.name).join(", ")}
+                    {d.printers.length === 0 ? "—" : d.printers.map((p) => p.name).join(", ")}
                   </td>
                   <td className="px-4 py-3 text-xs text-slate-400">
                     {formatDate(d.last_seen_at, t("devices.neverSeen"))}

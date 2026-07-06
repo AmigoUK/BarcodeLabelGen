@@ -121,9 +121,7 @@ def test_history_owner_scoped_and_delete(
 
     client.post("/api/auth/logout", headers=csrf.headers())
     with app.app_context():
-        create_user(
-            get_session(), email="other@example.com", plain_password="pw", role=Role.EDITOR
-        )
+        create_user(get_session(), email="other@example.com", plain_password="pw", role=Role.EDITOR)
     client.post(
         "/api/auth/login",
         json={"email": "other@example.com", "password": "pw"},

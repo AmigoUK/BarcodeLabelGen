@@ -203,7 +203,9 @@ function TextProps({ obj, update }: { obj: TextObject; update: (p: Partial<TextO
           onChange={(e) => update({ text: e.target.value })}
           className="block w-full rounded-md border border-slate-700 bg-slate-900 px-3 py-2 text-sm text-slate-100 focus:outline-none focus:ring-2 focus:ring-indigo-400"
         />
-        <p className="mt-1 text-xs text-slate-500">{t("editor.dynamicHint", { interpolation: { prefix: "[[", suffix: "]]" } })}</p>
+        <p className="mt-1 text-xs text-slate-500">
+          {t("editor.dynamicHint", { interpolation: { prefix: "[[", suffix: "]]" } })}
+        </p>
         <PlaceholderChips value={obj.text} label={t("editor.dynamicFields")} />
       </div>
       <div className="grid grid-cols-2 gap-2">
@@ -468,7 +470,9 @@ function BarcodeProps({
           onChange={(e) => update({ data: e.target.value })}
           className="block w-full rounded-md border border-slate-700 bg-slate-900 px-3 py-2 font-mono text-sm text-slate-100 focus:outline-none focus:ring-2 focus:ring-indigo-400"
         />
-        <p className="mt-1 text-xs text-slate-500">{t("editor.dynamicHint", { interpolation: { prefix: "[[", suffix: "]]" } })}</p>
+        <p className="mt-1 text-xs text-slate-500">
+          {t("editor.dynamicHint", { interpolation: { prefix: "[[", suffix: "]]" } })}
+        </p>
         <PlaceholderChips value={obj.data} label={t("editor.dynamicFields")} />
       </div>
       <div className="grid grid-cols-2 gap-2">
@@ -514,10 +518,7 @@ function TableProps({
   const setGrid = (rows: number, cols: number) => {
     rows = Math.max(1, Math.min(20, Math.round(rows)));
     cols = Math.max(1, Math.min(8, Math.round(cols)));
-    const nextWidths = Array.from(
-      { length: cols },
-      (_, c) => colWidths[c] ?? obj.width / obj.cols,
-    );
+    const nextWidths = Array.from({ length: cols }, (_, c) => colWidths[c] ?? obj.width / obj.cols);
     update({
       rows,
       cols,
@@ -574,10 +575,7 @@ function TableProps({
             </div>
           ))}
         </div>
-        <PlaceholderChips
-          value={obj.cells.flat().join("\n")}
-          label={t("editor.dynamicFields")}
-        />
+        <PlaceholderChips value={obj.cells.flat().join("\n")} label={t("editor.dynamicFields")} />
       </div>
 
       <div className="space-y-1">

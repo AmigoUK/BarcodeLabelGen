@@ -56,7 +56,7 @@ def test_text_with_width_emits_BLOCK():
 
 def test_text_escapes_quote():
     out = _gen([{"type": "text", "x": 0, "y": 0, "fontSize": 3, "text": 'a"b'}])
-    assert 'a\\[22]b' in out
+    assert "a\\[22]b" in out
 
 
 def test_barcode_code128():
@@ -141,10 +141,18 @@ def test_rotation_snapped_with_warning():
 
 def test_table_emits_box_and_cells():
     obj = {
-        "type": "table", "id": "t1", "x": 0, "y": 0, "width": 40, "height": 20,
-        "rows": 2, "cols": 2, "strokeWidth": 0.2, "fontSize": 3,
+        "type": "table",
+        "id": "t1",
+        "x": 0,
+        "y": 0,
+        "width": 40,
+        "height": 20,
+        "rows": 2,
+        "cols": 2,
+        "strokeWidth": 0.2,
+        "fontSize": 3,
         "cells": [["A", "B"], ["C", "D"]],
     }
     out = _gen([obj])
     assert out.count("BOX ") == 1
-    assert 'BLOCK' in out and '"A"' in out and '"D"' in out
+    assert "BLOCK" in out and '"A"' in out and '"D"' in out

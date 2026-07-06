@@ -9,9 +9,18 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 - **CI: GitHub Actions bumped off deprecated Node 20 runners** — `checkout`
-  v4→v7, `setup-go` v5→v6, `setup-node` v4→v6, `setup-uv` v4→v8. `release.yml`
+  v4→v7, `setup-go` v5→v6, `setup-node` v4→v6, `setup-uv` v4→v8.3.0. `release.yml`
   gains a `workflow_dispatch` trigger so binaries can be re-attached to an
   existing release manually.
+
+### Fixed
+- **CI on main is green again** (it had been red for 30+ commits, since
+  ~v0.13.0). Frontend: Prettier formatting applied to 7 drifted files.
+  Backend: all 21 Ruff findings fixed (line wraps, `StrEnum` migration,
+  reviewed `noqa` for two S608 false positives on quote-escaped identifiers)
+  plus 13 mypy errors (parameterized bare `dict` annotations, literal-typed
+  `$schema`/`mime_type` in the template export path). No behavior changes;
+  full backend test suite passes.
 
 ## [0.21.2] — 2026-07-06
 

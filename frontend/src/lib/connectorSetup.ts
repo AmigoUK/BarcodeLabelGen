@@ -31,8 +31,7 @@ const ASSET: Record<ConnectorOS, string> = {
   "linux-arm": "blg-connector-linux-arm",
 };
 
-const RELEASE_BASE =
-  "https://github.com/AmigoUK/BarcodeLabelGen/releases/latest/download";
+const RELEASE_BASE = "https://github.com/AmigoUK/BarcodeLabelGen/releases/latest/download";
 
 export function assetFor(os: ConnectorOS): string {
   return ASSET[os];
@@ -42,9 +41,7 @@ export function downloadUrlFor(os: ConnectorOS): string {
   return `${RELEASE_BASE}/${assetFor(os)}`;
 }
 
-export function detectOS(
-  nav: { platform?: string; userAgent?: string } = navigator,
-): OSDetection {
+export function detectOS(nav: { platform?: string; userAgent?: string } = navigator): OSDetection {
   const p = (nav.platform || "").toLowerCase();
   const ua = (nav.userAgent || "").toLowerCase();
   if (p.includes("mac") || ua.includes("macintosh")) {
@@ -66,8 +63,7 @@ export function buildConfigYaml(opts: {
   os: ConnectorOS;
   printer: PrinterChoice;
 }): string {
-  const testPath =
-    opts.os === "windows" ? "file://C:/blg-wydruki" : "file:///tmp/blg-wydruki";
+  const testPath = opts.os === "windows" ? "file://C:/blg-wydruki" : "file:///tmp/blg-wydruki";
   const printer =
     opts.printer.mode === "ip"
       ? { name: "drukarka", host: opts.printer.ip, port: opts.printer.port ?? 9100 }

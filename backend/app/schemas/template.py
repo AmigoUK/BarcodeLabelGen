@@ -3,7 +3,7 @@
 from __future__ import annotations
 
 from datetime import datetime
-from typing import Any, Literal
+from typing import Any, Final, Literal
 
 from pydantic import BaseModel, ConfigDict, Field
 
@@ -92,7 +92,9 @@ class AssetPublic(BaseModel):
 
 # ---------------- Template export / import ----------------
 
-EXPORT_SCHEMA_ID = "blg-template/v1"
+EXPORT_SCHEMA_ID: Final = "blg-template/v1"
+
+ImageMimeType = Literal["image/png", "image/jpeg", "image/svg+xml"]
 
 
 class AssetExport(BaseModel):
@@ -100,7 +102,7 @@ class AssetExport(BaseModel):
 
     ref: str = Field(min_length=1, max_length=64)
     original_filename: str = Field(min_length=1, max_length=255)
-    mime_type: Literal["image/png", "image/jpeg", "image/svg+xml"]
+    mime_type: ImageMimeType
     width_px: int = Field(ge=0)  # SVG can legitimately be 0; PIL won't size it
     height_px: int = Field(ge=0)
     size_bytes: int = Field(ge=1, le=5 * 1024 * 1024)

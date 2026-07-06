@@ -1,13 +1,13 @@
 """ZPL/ZPL II round-trip endpoints.
 
-  • POST /api/zpl/parse    — paste ZPL, get back a canvas_data tree to load
-                             into the editor (+ soft warnings).
-  • POST /api/zpl/generate — turn a canvas (the live editor state or a saved
-                             template) into ZPL. Two modes:
-      · template — returns text/plain ZPL synchronously, variables intact.
-      · batch    — substitutes a dataset's {{column}} values per row and
-                   returns 202 + job_id; the concatenated .zpl is polled
-                   and downloaded through the shared /api/jobs endpoints.
+• POST /api/zpl/parse    — paste ZPL, get back a canvas_data tree to load
+                           into the editor (+ soft warnings).
+• POST /api/zpl/generate — turn a canvas (the live editor state or a saved
+                           template) into ZPL. Two modes:
+    · template — returns text/plain ZPL synchronously, variables intact.
+    · batch    — substitutes a dataset's {{column}} values per row and
+                 returns 202 + job_id; the concatenated .zpl is polled
+                 and downloaded through the shared /api/jobs endpoints.
 """
 
 from __future__ import annotations
@@ -174,9 +174,7 @@ def generate_endpoint() -> ResponseReturnValue:
         cfg.redis_url, owner_id=current_user.id, template_id=tpl.id, total=len(projected)
     )
 
-    def _runner(
-        progress_cb: Callable[[int, int], None], warnings: list[dict[str, Any]]
-    ) -> bytes:
+    def _runner(progress_cb: Callable[[int, int], None], warnings: list[dict[str, Any]]) -> bytes:
         return render_batch_zpl(
             batch_canvas, projected, dpmm=dpmm, on_progress=progress_cb, warnings=warnings
         )

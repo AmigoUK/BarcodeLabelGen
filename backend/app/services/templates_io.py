@@ -21,7 +21,7 @@ import hashlib
 import secrets
 from copy import deepcopy
 from datetime import UTC, datetime
-from typing import Any
+from typing import Any, Literal, cast
 
 from sqlalchemy import select
 from sqlalchemy.orm import Session
@@ -35,6 +35,7 @@ from app.schemas.template import (
     AssetDupReport,
     AssetExport,
     FormatHint,
+    ImageMimeType,
     ImportOptions,
     ImportPreview,
     ObjectSummary,
@@ -79,7 +80,9 @@ def export_template(session: Session, template_id: int, user: User) -> dict[str,
     except tpl_svc.TemplateAccessError as exc:
         raise TemplateExportError(f"template {template_id} not accessible") from exc
 
-    canvas = deepcopy(tpl.canvas_data) if tpl.canvas_data else {"version": 1, "objects": []}
+    canvas: dict[str, Any] = (
+        deepcopy(tpl.canvas_data) if tpl.canvas_data else {"version": 1, "objects": []}
+    )
 
     # Collect referenced assets — one entry per distinct assetId, in first-
     # encounter order so the export is deterministic.
@@ -115,8 +118,10 @@ def export_template(session: Session, template_id: int, user: User) -> dict[str,
         else None
     )
 
+    # Passed via ** because "$schema" is not a valid Python identifier.
+    schema_kwargs: dict[str, Literal["blg-template/v1"]] = {"$schema": EXPORT_SCHEMA_ID}
     payload = TemplateExport(
-        **{"$schema": EXPORT_SCHEMA_ID},
+        **schema_kwargs,
         exportedAt=datetime.now(UTC),
         exportedBy=user.email,
         exporter={"app": "BarcodeLabelGen", "version": "0.1.0"},
@@ -143,7 +148,7 @@ def _export_asset(asset: Asset, ref: str) -> AssetExport:
     return AssetExport(
         ref=ref,
         original_filename=asset.original_filename,
-        mime_type=asset.mime_type,
+        mime_type=cast(ImageMimeType, asset.mime_type),
         width_px=asset.width_px,
         height_px=asset.height_px,
         size_bytes=len(raw),
@@ -287,9 +292,7 @@ def import_template(
         src_asset = src_assets_by_ref[ref]
         resolution = options.asset_resolution.get(ref, "new")
         if resolution == "reuse":
-            existing = assets_svc.find_by_sha256(
-                session, owner_id=user.id, sha256=src_asset.sha256
-            )
+            existing = assets_svc.find_by_sha256(session, owner_id=user.id, sha256=src_asset.sha256)
             if existing is None:
                 # UI offered "reuse" based on stale preview data, or the
                 # asset was deleted between preview and submit — fall
@@ -323,8 +326,10 @@ def import_template(
                 new_obj["assetId"] = ref_to_new_id[ref]
         objects_out.append(new_obj)
 
-    final_w = float(options.width_mm) if options.width_mm is not None else float(source.template.width_mm)
-    final_h = float(options.height_mm) if options.height_mm is not None else float(source.template.height_mm)
+    final_w = float(options.width_mm if options.width_mm is not None else source.template.width_mm)
+    final_h = float(
+        options.height_mm if options.height_mm is not None else source.template.height_mm
+    )
 
     canvas_out = {
         "version": int(source.canvas_data.get("version", 1)),
@@ -409,8 +414,8 @@ def _disambiguate_name(session: Session, owner_id: int, desired: str) -> str:
 
 def _validate_canvas_assets(source: TemplateExport) -> None:
     """Cross-field checks Pydantic alone can't express:
-      - every `image` object's assetRef must point into source.assets,
-      - sanity cap on object count (50)."""
+    - every `image` object's assetRef must point into source.assets,
+    - sanity cap on object count (50)."""
     objects = source.canvas_data.get("objects", []) or []
     if not isinstance(objects, list):
         raise TemplateImportError("canvas_data.objects must be a list")

@@ -90,7 +90,9 @@ def save_upload(
     file_format = _detect_format(original_filename)
     source_type = _source_type_for(file_format)
 
-    size_limit = MAX_SIZE_BYTES_SQLITE if source_type is DataSetSourceType.SQLITE else MAX_SIZE_BYTES
+    size_limit = (
+        MAX_SIZE_BYTES_SQLITE if source_type is DataSetSourceType.SQLITE else MAX_SIZE_BYTES
+    )
     if len(raw) > size_limit:
         raise DataSetUploadError(f"file exceeds {size_limit} bytes limit")
 

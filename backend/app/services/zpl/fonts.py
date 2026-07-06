@@ -25,9 +25,7 @@ _TOKEN_TO_FAMILY: dict[str, tuple[str, str, str]] = {
 }
 
 
-def family_to_zpl_font(
-    family: str | None, *, bold: bool = False, italic: bool = False
-) -> str:
+def family_to_zpl_font(family: str | None, *, bold: bool = False, italic: bool = False) -> str:
     """Return the resident ZPL font token for an editor font family.
 
     Falls back to the Arial faces for any unrecognised family — the same

@@ -166,9 +166,7 @@ def test_starters_list_and_use(app: Flask, client: FlaskClient, csrf: CsrfHelper
     mine = client.get("/api/templates").get_json()["templates"]
     assert any(t["id"] == body["id"] for t in mine)
 
-    assert (
-        client.post("/api/library/starters/nope/use", headers=csrf.headers()).status_code == 404
-    )
+    assert client.post("/api/library/starters/nope/use", headers=csrf.headers()).status_code == 404
 
 
 def test_folder_color(app: Flask, client: FlaskClient, csrf: CsrfHelper) -> None:

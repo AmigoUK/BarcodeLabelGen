@@ -79,9 +79,10 @@ def test_restore_sets_canvas_and_records_snapshot(
     versions = client.get(f"/api/templates/{tid}/versions").get_json()["versions"]
     assert versions[0]["note"] == "restored from v2"
     # live template now shows the restored text
-    assert client.get(f"/api/templates/{tid}").get_json()["canvas_data"]["objects"][0][
-        "text"
-    ] == "original"
+    assert (
+        client.get(f"/api/templates/{tid}").get_json()["canvas_data"]["objects"][0]["text"]
+        == "original"
+    )
 
 
 def test_restore_missing_version_404(app: Flask, client: FlaskClient, csrf: CsrfHelper) -> None:

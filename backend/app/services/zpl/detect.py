@@ -63,6 +63,7 @@ def detect_dpi(
     pw, ll = scan_pw_ll(zpl)
 
     if pw and target_width_mm:
+
         def score(dpi: int) -> float:
             dpmm = DPMM_BY_DPI[dpi]
             err = _rel_err(pw / dpmm, target_width_mm)

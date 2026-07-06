@@ -102,27 +102,31 @@ export function TableObject({
         />
       ))}
       {/* Cell texts */}
-      {object.cells.slice(0, object.rows).flatMap((row, r) =>
-        row.slice(0, object.cols).map((cell, col) =>
-          cell ? (
-            <Text
-              key={`c${r}-${col}`}
-              x={(edges[col] + PAD_MM) * scale}
-              y={(r * rowH + PAD_MM) * scale}
-              width={Math.max(1, edges[col + 1] - edges[col] - 2 * PAD_MM) * scale}
-              height={Math.max(1, rowH - 2 * PAD_MM) * scale}
-              text={cell}
-              fontSize={object.fontSize * scale}
-              fontFamily={object.fontFamily}
-              fontStyle={object.headerRow && r === 0 ? "bold" : "normal"}
-              fill={object.fill}
-              wrap="word"
-              ellipsis
-              listening={false}
-            />
-          ) : null,
-        ),
-      )}
+      {object.cells
+        .slice(0, object.rows)
+        .flatMap((row, r) =>
+          row
+            .slice(0, object.cols)
+            .map((cell, col) =>
+              cell ? (
+                <Text
+                  key={`c${r}-${col}`}
+                  x={(edges[col] + PAD_MM) * scale}
+                  y={(r * rowH + PAD_MM) * scale}
+                  width={Math.max(1, edges[col + 1] - edges[col] - 2 * PAD_MM) * scale}
+                  height={Math.max(1, rowH - 2 * PAD_MM) * scale}
+                  text={cell}
+                  fontSize={object.fontSize * scale}
+                  fontFamily={object.fontFamily}
+                  fontStyle={object.headerRow && r === 0 ? "bold" : "normal"}
+                  fill={object.fill}
+                  wrap="word"
+                  ellipsis
+                  listening={false}
+                />
+              ) : null,
+            ),
+        )}
     </Group>
   );
 }
