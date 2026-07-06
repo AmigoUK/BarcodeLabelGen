@@ -7,7 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
-_Nothing yet._
+### Added
+- **`SHA256SUMS` on every release** — the release workflow now generates and
+  attaches a checksum file next to the connector binaries so downloads can be
+  integrity-checked (added retroactively to v0.21.3 from the published assets).
 
 ## [0.21.3] — 2026-07-06
 
