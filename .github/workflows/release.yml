@@ -1,0 +1,37 @@
+name: Release assets
+
+# The connect-a-printer wizard (F38) links to
+# releases/latest/download/<connector-binary>, so EVERY published release must
+# carry all six connector binaries. Attaching them here removes the manual
+# "remember to upload dist/*" step that broke v0.21.1.
+on:
+  release:
+    types: [published]
+
+permissions:
+  contents: write
+
+jobs:
+  connector-binaries:
+    name: Build + attach connector binaries
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.release.tag_name }}
+
+      - name: Set up Go
+        uses: actions/setup-go@v5
+        with:
+          go-version-file: connector/go.mod
+          cache-dependency-path: connector/go.sum
+
+      - name: Cross-compile all targets
+        run: ./build-all.sh
+        working-directory: connector
+
+      - name: Upload binaries to the release
+        env:
+          GH_TOKEN: ${{ github.token }}
+          TAG: ${{ github.event.release.tag_name }}
+        run: gh release upload "$TAG" connector/dist/* --clobber

@@ -9,6 +9,17 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 _Nothing yet._
 
+## [0.21.2] — 2026-07-06
+
+### Fixed
+- **Wizard download links 404'd on the latest release.** The connect-a-printer
+  wizard points at `releases/latest/download/<connector-binary>`, but v0.21.1
+  was published without the six connector binaries, so every download in the
+  wizard returned 404. The binaries are re-attached to v0.21.1, and a new
+  `release.yml` GitHub Actions workflow now builds and uploads all six
+  connector binaries automatically whenever a release is published — the
+  manual "remember to upload dist/*" step is gone.
+
 ## [0.21.1] — 2026-07-05
 
 ### Fixed
@@ -437,7 +448,8 @@ _Nothing yet._
   label formats, dataset upload (CSV/XLSX/SQLite) with `{{column}}`
   mail-merge, and PDF single-label + batch generation via ReportLab.
 
-[Unreleased]: https://github.com/AmigoUK/BarcodeLabelGen/compare/v0.21.1...HEAD
+[Unreleased]: https://github.com/AmigoUK/BarcodeLabelGen/compare/v0.21.2...HEAD
+[0.21.2]: https://github.com/AmigoUK/BarcodeLabelGen/releases/tag/v0.21.2
 [0.21.1]: https://github.com/AmigoUK/BarcodeLabelGen/releases/tag/v0.21.1
 [0.21.0]: https://github.com/AmigoUK/BarcodeLabelGen/releases/tag/v0.21.0
 [0.20.1]: https://github.com/AmigoUK/BarcodeLabelGen/releases/tag/v0.20.1
