@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+_Nothing yet._
+
+## [0.21.3] — 2026-07-06
+
 ### Changed
 - **CI: GitHub Actions bumped off deprecated Node 20 runners** — `checkout`
   v4→v7, `setup-go` v5→v6, `setup-node` v4→v6, `setup-uv` v4→v8.3.0. `release.yml`
@@ -461,7 +465,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   label formats, dataset upload (CSV/XLSX/SQLite) with `{{column}}`
   mail-merge, and PDF single-label + batch generation via ReportLab.
 
-[Unreleased]: https://github.com/AmigoUK/BarcodeLabelGen/compare/v0.21.2...HEAD
+[Unreleased]: https://github.com/AmigoUK/BarcodeLabelGen/compare/v0.21.3...HEAD
+[0.21.3]: https://github.com/AmigoUK/BarcodeLabelGen/releases/tag/v0.21.3
 [0.21.2]: https://github.com/AmigoUK/BarcodeLabelGen/releases/tag/v0.21.2
 [0.21.1]: https://github.com/AmigoUK/BarcodeLabelGen/releases/tag/v0.21.1
 [0.21.0]: https://github.com/AmigoUK/BarcodeLabelGen/releases/tag/v0.21.0
