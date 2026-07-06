@@ -7,6 +7,14 @@ name: Release assets
 on:
   release:
     types: [published]
+  # Manual re-run for an existing release (e.g. after a workflow fix) —
+  # upload is idempotent thanks to --clobber.
+  workflow_dispatch:
+    inputs:
+      tag:
+        description: "Release tag to attach binaries to (e.g. v0.21.2)"
+        required: true
+        type: string
 
 permissions:
   contents: write
@@ -16,12 +24,12 @@ jobs:
     name: Build + attach connector binaries
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
         with:
-          ref: ${{ github.event.release.tag_name }}
+          ref: ${{ github.event.release.tag_name || inputs.tag }}
 
       - name: Set up Go
-        uses: actions/setup-go@v5
+        uses: actions/setup-go@v6
         with:
           go-version-file: connector/go.mod
           cache-dependency-path: connector/go.sum
@@ -33,5 +41,5 @@ jobs:
       - name: Upload binaries to the release
         env:
           GH_TOKEN: ${{ github.token }}
-          TAG: ${{ github.event.release.tag_name }}
+          TAG: ${{ github.event.release.tag_name || inputs.tag }}
         run: gh release upload "$TAG" connector/dist/* --clobber

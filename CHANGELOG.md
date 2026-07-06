@@ -7,7 +7,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
-_Nothing yet._
+### Changed
+- **CI: GitHub Actions bumped off deprecated Node 20 runners** — `checkout`
+  v4→v7, `setup-go` v5→v6, `setup-node` v4→v6, `setup-uv` v4→v8. `release.yml`
+  gains a `workflow_dispatch` trigger so binaries can be re-attached to an
+  existing release manually.
 
 ## [0.21.2] — 2026-07-06
 
