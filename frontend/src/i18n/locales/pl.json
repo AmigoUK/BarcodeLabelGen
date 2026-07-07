@@ -409,9 +409,11 @@
     "virtualHintUnix": "Drukuj z dowolnego programu tak, jakby to była zwykła drukarka — wydruk trafi prosto do Inbox w tej aplikacji.",
     "virtualCmd": "Wklej w Terminalu:",
     "virtualWinStep1": "Pobierz i zainstaluj sterownik Zebra ZDesigner ze strony zebra.com.",
-    "virtualWinStep2": "Dodaj nową drukarkę: port „Standard TCP/IP\", adres 127.0.0.1, port 9101.",
+    "virtualWinStep2": "Dodaj nową drukarkę: port „Standard TCP/IP”, adres 127.0.0.1, port 9101.",
     "virtualWinStep3": "W ustawieniach portu wyłącz SNMP i ustaw typ danych na RAW.",
-    "virtualWinStep4": "Gotowe — drukuj z dowolnego programu, wydruk trafi do Inbox w tej aplikacji."
+    "virtualWinStep4": "Gotowe — drukuj z dowolnego programu, wydruk trafi do Inbox w tej aplikacji.",
+    "virtualCmdMac": "bash ~/Downloads/Podlacz-BLG.command --virtual-printer",
+    "virtualCmdLinux": "bash ~/Pobrane/podlacz-blg.sh --virtual-printer"
   },
   "print": {
     "title": "Drukuj przez konektor",

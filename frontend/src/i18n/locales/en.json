@@ -411,7 +411,9 @@
     "virtualWinStep1": "Download and install the Zebra ZDesigner driver from zebra.com.",
     "virtualWinStep2": "Add a new printer: port \"Standard TCP/IP\", address 127.0.0.1, port 9101.",
     "virtualWinStep3": "In the port settings, turn off SNMP and set the data type to RAW.",
-    "virtualWinStep4": "Done — print from any program, the printout lands in this app's Inbox."
+    "virtualWinStep4": "Done — print from any program, the printout lands in this app's Inbox.",
+    "virtualCmdMac": "bash ~/Downloads/Podlacz-BLG.command --virtual-printer",
+    "virtualCmdLinux": "bash ~/Downloads/podlacz-blg.sh --virtual-printer"
   },
   "print": {
     "title": "Print via connector",

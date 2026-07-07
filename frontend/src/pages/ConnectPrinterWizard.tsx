@@ -29,13 +29,6 @@ function download(filename: string, text: string) {
   URL.revokeObjectURL(url);
 }
 
-/** The literal one-line command shown on the virtual-printer step (mac/linux). */
-function virtualCommandFor(family: "mac" | "linux"): string {
-  return family === "mac"
-    ? "bash ~/Pobrane/Podlacz-BLG.command --virtual-printer"
-    : "bash ~/Pobrane/podlacz-blg.sh --virtual-printer";
-}
-
 export function ConnectPrinterWizard({ open, onClose }: { open: boolean; onClose: () => void }) {
   const { t } = useTranslation();
   const create = useCreateDevice();
@@ -325,10 +318,14 @@ export function ConnectPrinterWizard({ open, onClose }: { open: boolean; onClose
               <p className="text-sm text-slate-400">{t("wizard.virtualCmd")}</p>
               <div className="flex items-center gap-2 rounded-lg border border-slate-700 bg-slate-900 p-3">
                 <code className="flex-1 overflow-x-auto whitespace-nowrap font-mono text-xs text-slate-200">
-                  {virtualCommandFor(family)}
+                  {t(family === "mac" ? "wizard.virtualCmdMac" : "wizard.virtualCmdLinux")}
                 </code>
                 <Button
-                  onClick={() => void navigator.clipboard?.writeText(virtualCommandFor(family))}
+                  onClick={() =>
+                    void navigator.clipboard?.writeText(
+                      t(family === "mac" ? "wizard.virtualCmdMac" : "wizard.virtualCmdLinux"),
+                    )
+                  }
                 >
                   {t("common.copy")}
                 </Button>
