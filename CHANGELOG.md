@@ -9,6 +9,31 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 _Nothing yet._
 
+## [0.23.0] — 2026-07-07
+
+### Added
+- **One-file connector installer + wizard v2 (F40).** The connect-a-printer
+  wizard now generates a single personalized installer per OS
+  (`Podlacz-BLG.command` / `Podlacz-BLG.bat` / `podlacz-blg.sh`) with the
+  token and config embedded — no more separate binary + config.yaml download
+  and no terminal commands to type. The installer autodetects the CPU
+  architecture (the Apple/Intel question is gone), downloads the right binary
+  from GitHub Releases, **verifies its SHA256 checksum**, and registers the
+  connector as a background service with autostart: macOS LaunchAgent,
+  Windows Task Scheduler (hidden window, log to file), Linux systemd --user
+  (+ enable-linger). Re-running the installer updates/repairs the install
+  (it preserves a previously enabled capture section). A new printers step
+  lists the F39-discovered local printers live ("Zebra_ZD421 — local"), with
+  network-IP as a collapsed advanced option that regenerates the installer;
+  a final optional step sets up the virtual printer (one `--virtual-printer`
+  command on macOS/Linux; a 4-step ZDesigner guide on Windows). Frontend-only;
+  Vitest introduced for the installer generators (11 tests) and wired into CI.
+
+### Changed
+- **Wizard flow replaces the manual two-file download** — the old
+  binary+config+terminal steps are gone from the UI; `connector/README.md`
+  keeps the manual path for advanced users.
+
 ## [0.22.0] — 2026-07-07
 
 ### Added
@@ -480,7 +505,8 @@ _Nothing yet._
   label formats, dataset upload (CSV/XLSX/SQLite) with `{{column}}`
   mail-merge, and PDF single-label + batch generation via ReportLab.
 
-[Unreleased]: https://github.com/AmigoUK/BarcodeLabelGen/compare/v0.22.0...HEAD
+[Unreleased]: https://github.com/AmigoUK/BarcodeLabelGen/compare/v0.23.0...HEAD
+[0.23.0]: https://github.com/AmigoUK/BarcodeLabelGen/releases/tag/v0.23.0
 [0.22.0]: https://github.com/AmigoUK/BarcodeLabelGen/releases/tag/v0.22.0
 [0.21.3]: https://github.com/AmigoUK/BarcodeLabelGen/releases/tag/v0.21.3
 [0.21.2]: https://github.com/AmigoUK/BarcodeLabelGen/releases/tag/v0.21.2
