@@ -10,13 +10,28 @@ import (
 	"gopkg.in/yaml.v3"
 )
 
-// Printer is a ZPL target. Host is either an IP/hostname (RAW TCP, JetDirect)
-// or a `file:///path/to/dir` URL — then jobs are spooled as .zpl files, which
-// doubles as the simulated-printer mode for testing without hardware.
+// Printer is a print target. Host is an IP/hostname (RAW TCP, JetDirect),
+// a `file:///path/to/dir` URL (spool-to-disk simulated printer), or empty
+// for Kind==KindLocal — a system print queue discovered at runtime.
 type Printer struct {
 	Name string `yaml:"name" json:"name"`
 	Host string `yaml:"host" json:"host"`
 	Port int    `yaml:"port" json:"port"`
+	// Kind is computed, never read from YAML: network | file | local.
+	Kind string `yaml:"-" json:"kind"`
+}
+
+const (
+	KindNetwork = "network"
+	KindFile    = "file"
+	KindLocal   = "local"
+)
+
+func kindForHost(host string) string {
+	if strings.HasPrefix(host, "file://") {
+		return KindFile
+	}
+	return KindNetwork
 }
 
 func (p Printer) IsFile() bool { return strings.HasPrefix(p.Host, "file://") }
