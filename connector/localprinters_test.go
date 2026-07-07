@@ -145,3 +145,17 @@ exit 1`)
 		t.Fatal("invalid queue name must be rejected before exec")
 	}
 }
+
+func TestLocalPrintersRefreshKeepsSnapshotOnError(t *testing.T) {
+	var l LocalPrinters
+	l.set([]string{"Zebra_ZD421"})
+
+	dir := t.TempDir()
+	fakeBin(t, dir, "lpstat", `exit 1`)
+	t.Setenv("PATH", dir+string(os.PathListSeparator)+os.Getenv("PATH"))
+
+	l.Refresh()
+	if !l.Has("Zebra_ZD421") {
+		t.Fatal("failed Refresh must keep the previous snapshot")
+	}
+}

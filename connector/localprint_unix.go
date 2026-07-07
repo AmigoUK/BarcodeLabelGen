@@ -15,7 +15,9 @@ import (
 // queue name per line; names that fail validQueueName are skipped (they
 // could not be addressed safely anyway).
 func listSystemPrinters() ([]string, error) {
-	out, err := exec.Command("lpstat", "-e").Output()
+	ctx, cancel := context.WithTimeout(context.Background(), printTimeout)
+	defer cancel()
+	out, err := exec.CommandContext(ctx, "lpstat", "-e").Output()
 	if err != nil {
 		return nil, fmt.Errorf("lpstat -e: %w", err)
 	}
