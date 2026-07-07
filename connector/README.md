@@ -159,6 +159,19 @@ w sterowniku domyślny tryb ASCII/hex (`^GFA`); bitmapy przechodzą jako
 passthrough (drukują się, ale nie są edytowalne w edytorze). Nieudane
 uploady czekają w lokalnym spoolu i są ponawiane co 30 s.
 
+## Drukarki lokalne (USB) — zero konfiguracji
+
+Agent co 60 s wykrywa systemowe kolejki druku (macOS/Linux: CUPS przez
+`lpstat -e`; Windows: zainstalowane drukarki przez winspool) i zgłasza je
+serwerowi obok drukarek z `config.yaml`. Drukarka podłączona po USB
+(np. Zebra ZD421) wystarczy, że jest dodana w ustawieniach systemu —
+w BLG pojawi się automatycznie jako „drukarka z tego komputera".
+
+- Druk: macOS/Linux `lp -d <kolejka> -o raw -n <kopie>`; Windows RAW przez
+  winspool. Sterowniki i filtry systemowe są omijane (raw).
+- Przy konflikcie nazw z `config.yaml` wygrywa konfiguracja YAML.
+- Brak CUPS/`lpstat` = po prostu brak wykrytych drukarek (bez błędu).
+
 ## Lokalne API (szybka ścieżka przeglądarki)
 
 Agent nasłuchuje na `127.0.0.1:9110` (tylko loopback):

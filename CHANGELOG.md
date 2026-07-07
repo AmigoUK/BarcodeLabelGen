@@ -7,7 +7,18 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+_Nothing yet._
+
+## [0.22.0] — 2026-07-07
+
 ### Added
+- **Local (USB/system) printers via connector discovery (F39).** Every 60 seconds,
+  the agent discovers system printer queues (macOS/Linux via CUPS `lpstat -e`,
+  Windows via winspool) and reports them alongside configured `config.yaml`
+  printers. A USB printer (e.g. Zebra ZD421) appears automatically as "printer
+  from this computer" — zero configuration. Print via raw system spooler; name
+  conflicts defer to YAML config. Kind badge shows the printer origin. No
+  migration needed.
 - **`SHA256SUMS` on every release** — the release workflow now generates and
   attaches a checksum file next to the connector binaries so downloads can be
   integrity-checked (added retroactively to v0.21.3 from the published assets).
@@ -468,7 +479,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   label formats, dataset upload (CSV/XLSX/SQLite) with `{{column}}`
   mail-merge, and PDF single-label + batch generation via ReportLab.
 
-[Unreleased]: https://github.com/AmigoUK/BarcodeLabelGen/compare/v0.21.3...HEAD
+[Unreleased]: https://github.com/AmigoUK/BarcodeLabelGen/compare/v0.22.0...HEAD
+[0.22.0]: https://github.com/AmigoUK/BarcodeLabelGen/releases/tag/v0.22.0
 [0.21.3]: https://github.com/AmigoUK/BarcodeLabelGen/releases/tag/v0.21.3
 [0.21.2]: https://github.com/AmigoUK/BarcodeLabelGen/releases/tag/v0.21.2
 [0.21.1]: https://github.com/AmigoUK/BarcodeLabelGen/releases/tag/v0.21.1
