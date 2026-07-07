@@ -32,6 +32,9 @@ func printLocal(queue, zpl string, copies int) error {
 	if !validQueueName(queue) {
 		return fmt.Errorf("printer %q: invalid queue name", queue)
 	}
+	if copies < 1 {
+		copies = 1
+	}
 	p, err := winprinter.Open(queue)
 	if err != nil {
 		return fmt.Errorf("printer %s (local queue): %w", queue, err)

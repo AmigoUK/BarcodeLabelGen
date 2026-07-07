@@ -50,9 +50,12 @@ func main() {
 	}
 
 	client := NewClient(cfg.ServerURL, cfg.Token)
-	local := NewLocalAPI(cfg)
 
-	server := &http.Server{Addr: cfg.Listen, Handler: local.Handler(), ReadHeaderTimeout: 5 * time.Second}
+	local := &LocalPrinters{}
+	local.Refresh()
+	localAPI := NewLocalAPI(cfg, local)
+
+	server := &http.Server{Addr: cfg.Listen, Handler: localAPI.Handler(), ReadHeaderTimeout: 5 * time.Second}
 	go func() {
 		log.Printf("local API listening on http://%s", cfg.Listen)
 		if err := server.ListenAndServe(); err != nil && err != http.ErrServerClosed {
@@ -62,6 +65,19 @@ func main() {
 
 	ctx, stop := signal.NotifyContext(context.Background(), syscall.SIGINT, syscall.SIGTERM)
 	defer stop()
+
+	go func() {
+		t := time.NewTicker(60 * time.Second)
+		defer t.Stop()
+		for {
+			select {
+			case <-ctx.Done():
+				return
+			case <-t.C:
+				local.Refresh()
+			}
+		}
+	}()
 
 	if cfg.Capture.Listen != "" {
 		capturer := NewCapturer(cfg.Capture, client)
@@ -73,30 +89,23 @@ func main() {
 	}
 
 	heartbeat := func() {
-		printers := make([]Printer, len(cfg.Printers))
-		copy(printers, cfg.Printers)
-		for i := range printers {
-			if printers[i].Port == 0 {
-				printers[i].Port = 9100 // schema requires 1–65535; file:// spools don't use it
-			}
-		}
-		if err := client.ReportState(Version, printers); err != nil {
+		if err := client.ReportState(Version, mergedPrinters(cfg, local.Snapshot())); err != nil {
 			log.Printf("heartbeat failed: %v", err)
 		}
 	}
 
 	processJobs := func() {
 		jobs, err := client.PollJobs()
-		local.RecordPoll(err == nil)
+		localAPI.RecordPoll(err == nil)
 		if err != nil {
 			log.Printf("poll failed: %v", err)
 			return
 		}
 		for _, job := range jobs {
-			printer, ok := cfg.PrinterByName(job.Printer)
+			printer, ok := resolvePrinter(cfg, local, job.Printer)
 			if !ok {
 				log.Printf("job %d: unknown printer %q", job.ID, job.Printer)
-				_ = client.ReportStatus(job.ID, "error", fmt.Sprintf("printer %q not configured on this device", job.Printer))
+				_ = client.ReportStatus(job.ID, "error", fmt.Sprintf("printer %q not available on this device", job.Printer))
 				continue
 			}
 			if err := Print(printer, job.Zpl, job.Copies); err != nil {
@@ -111,8 +120,8 @@ func main() {
 		}
 	}
 
-	log.Printf("blg-connector %s → %s (%d printers, poll %s)",
-		Version, cfg.ServerURL, len(cfg.Printers), cfg.PollInterval())
+	log.Printf("blg-connector %s → %s (%d printers, %d local queues, poll %s)",
+		Version, cfg.ServerURL, len(cfg.Printers), len(local.Snapshot()), cfg.PollInterval())
 	heartbeat()
 	processJobs()
 

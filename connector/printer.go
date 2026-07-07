@@ -26,6 +26,9 @@ func Print(p Printer, zpl string, copies int) error {
 	if copies > MaxCopies {
 		copies = MaxCopies
 	}
+	if p.Kind == KindLocal {
+		return printLocal(p.Name, zpl, copies)
+	}
 	if p.IsFile() {
 		return printToFile(p, zpl, copies)
 	}

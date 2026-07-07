@@ -17,6 +17,7 @@ import (
 // Chrome's Private Network Access preflight gets the required header.
 type LocalAPI struct {
 	cfg           *Config
+	local         *LocalPrinters
 	allowedOrigin string
 
 	mu         sync.Mutex
@@ -24,8 +25,8 @@ type LocalAPI struct {
 	lastPollOK bool
 }
 
-func NewLocalAPI(cfg *Config) *LocalAPI {
-	return &LocalAPI{cfg: cfg, allowedOrigin: originOf(cfg.ServerURL)}
+func NewLocalAPI(cfg *Config, local *LocalPrinters) *LocalAPI {
+	return &LocalAPI{cfg: cfg, local: local, allowedOrigin: originOf(cfg.ServerURL)}
 }
 
 // originOf reduces a URL to scheme://host[:port] for CORS matching.
@@ -108,7 +109,7 @@ func (a *LocalAPI) handlePrinters(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, "method not allowed", http.StatusMethodNotAllowed)
 		return
 	}
-	writeJSON(w, http.StatusOK, map[string]any{"printers": a.cfg.Printers})
+	writeJSON(w, http.StatusOK, map[string]any{"printers": mergedPrinters(a.cfg, a.local.Snapshot())})
 }
 
 func (a *LocalAPI) handlePrint(w http.ResponseWriter, r *http.Request) {
@@ -144,7 +145,7 @@ func (a *LocalAPI) handlePrint(w http.ResponseWriter, r *http.Request) {
 		writeJSON(w, http.StatusBadRequest, map[string]any{"error": "too_many_copies", "max": MaxCopies})
 		return
 	}
-	printer, ok := a.cfg.PrinterByName(req.Printer)
+	printer, ok := resolvePrinter(a.cfg, a.local, req.Printer)
 	if !ok {
 		writeJSON(w, http.StatusNotFound, map[string]any{"error": "printer_not_found"})
 		return

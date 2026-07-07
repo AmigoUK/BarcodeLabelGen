@@ -159,3 +159,36 @@ func TestLocalPrintersRefreshKeepsSnapshotOnError(t *testing.T) {
 		t.Fatal("failed Refresh must keep the previous snapshot")
 	}
 }
+
+func TestPrintDispatchesLocal(t *testing.T) {
+	dir := t.TempDir()
+	dataFile := filepath.Join(dir, "data")
+	fakeBin(t, dir, "lp", `cat > `+dataFile)
+	t.Setenv("PATH", dir+string(os.PathListSeparator)+os.Getenv("PATH"))
+
+	err := Print(Printer{Name: "Zebra_ZD421", Kind: KindLocal}, "^XA^XZ", 1)
+	if err != nil {
+		t.Fatal(err)
+	}
+	if data, _ := os.ReadFile(dataFile); string(data) != "^XA^XZ\n" {
+		t.Fatalf("payload = %q", string(data))
+	}
+}
+
+func TestResolvePrinter(t *testing.T) {
+	cfg := &Config{Printers: []Printer{{Name: "drukarka", Host: "10.0.0.5", Port: 9100}}}
+	var local LocalPrinters
+	local.set([]string{"Zebra_ZD421"})
+
+	p, ok := resolvePrinter(cfg, &local, "drukarka")
+	if !ok || p.Host != "10.0.0.5" {
+		t.Fatalf("config printer not resolved: %+v ok=%v", p, ok)
+	}
+	p, ok = resolvePrinter(cfg, &local, "Zebra_ZD421")
+	if !ok || p.Kind != KindLocal {
+		t.Fatalf("local printer not resolved: %+v ok=%v", p, ok)
+	}
+	if _, ok := resolvePrinter(cfg, &local, "Ghost"); ok {
+		t.Fatal("unknown printer must not resolve")
+	}
+}

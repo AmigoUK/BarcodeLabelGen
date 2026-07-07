@@ -163,7 +163,7 @@ func TestLocalAPIStatusAndPrint(t *testing.T) {
 		Listen:    "127.0.0.1:0",
 		Printers:  []Printer{{Name: "spool", Host: "file://" + dir}},
 	}
-	api := NewLocalAPI(cfg)
+	api := NewLocalAPI(cfg, &LocalPrinters{})
 	api.RecordPoll(true)
 	srv := httptest.NewServer(api.Handler())
 	defer srv.Close()
@@ -401,7 +401,7 @@ func TestLocalAPIPrintRejectsNonZPL(t *testing.T) {
 		ServerURL: "https://app.example.com",
 		Printers:  []Printer{{Name: "spool", Host: "file://" + t.TempDir()}},
 	}
-	srv := httptest.NewServer(NewLocalAPI(cfg).Handler())
+	srv := httptest.NewServer(NewLocalAPI(cfg, &LocalPrinters{}).Handler())
 	defer srv.Close()
 	resp, _ := http.Post(srv.URL+"/print", "application/json",
 		strings.NewReader(`{"printer":"spool","zpl":"<!doctype html>"}`))

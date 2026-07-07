@@ -37,6 +37,9 @@ func printLocal(queue, zpl string, copies int) error {
 	if !validQueueName(queue) {
 		return fmt.Errorf("printer %q: invalid queue name", queue)
 	}
+	if copies < 1 {
+		copies = 1
+	}
 	ctx, cancel := context.WithTimeout(context.Background(), printTimeout)
 	defer cancel()
 	cmd := exec.CommandContext(ctx, "lp", "-d", queue, "-o", "raw",

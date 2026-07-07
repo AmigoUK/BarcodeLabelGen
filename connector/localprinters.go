@@ -66,6 +66,19 @@ func mergedPrinters(cfg *Config, local []string) []Printer {
 	return out
 }
 
+// resolvePrinter finds a job's target: config printers win, then any
+// currently-discovered system queue prints as kind=local.
+func resolvePrinter(cfg *Config, local *LocalPrinters, name string) (Printer, bool) {
+	if p, ok := cfg.PrinterByName(name); ok {
+		p.Kind = kindForHost(p.Host)
+		return p, true
+	}
+	if local.Has(name) {
+		return Printer{Name: name, Kind: KindLocal, Port: 9100}, true
+	}
+	return Printer{}, false
+}
+
 // Refresh re-reads the system queues. Errors (no CUPS, no lpstat) leave the
 // previous snapshot untouched — a discovery hiccup must not unlist printers
 // that jobs may be in flight for; a missing subsystem simply yields nothing.
