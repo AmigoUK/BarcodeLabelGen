@@ -6,6 +6,8 @@ Jeden statyczny plik wykonywalny — Windows, Linux, Raspberry Pi.
 
 ## Szybki start
 
+**Najprostsza droga:** strona *Urządzenia* → „Podłącz drukarkę" generuje jednoplikowy instalator (macOS/Windows/Linux), który konfiguruje wszystko sam — łącznie z autostartem i pracą w tle. Poniższa instrukcja ręczna pozostaje dla zaawansowanych.
+
 1. W aplikacji: **Urządzenia → Dodaj urządzenie** — skopiuj token (pokazany raz).
 2. Utwórz `config.yaml`:
 
