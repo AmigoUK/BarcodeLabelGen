@@ -5,7 +5,7 @@ from __future__ import annotations
 from datetime import datetime
 from typing import Any, Literal
 
-from pydantic import BaseModel, ConfigDict, Field
+from pydantic import BaseModel, ConfigDict, Field, model_validator
 
 _MAX_ZPL_BYTES = 512 * 1024
 
@@ -64,8 +64,17 @@ class AgentStatusRequest(BaseModel):
 
 class AgentPrinter(BaseModel):
     name: str = Field(min_length=1, max_length=100)
-    host: str = Field(min_length=1, max_length=255)
+    # Empty host is legal only for kind="local" (a queue discovered on the
+    # connector's computer) — see the validator below.
+    host: str = Field(default="", max_length=255)
     port: int = Field(default=9100, ge=1, le=65535)
+    kind: Literal["network", "file", "local"] = "network"
+
+    @model_validator(mode="after")
+    def _host_required_unless_local(self) -> AgentPrinter:
+        if self.kind != "local" and not self.host:
+            raise ValueError("host is required for network/file printers")
+        return self
 
 
 class AgentStateRequest(BaseModel):

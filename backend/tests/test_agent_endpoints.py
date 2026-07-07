@@ -115,5 +115,40 @@ def test_agent_state_updates_device(app: Flask, client: FlaskClient, csrf: CsrfH
     assert resp.status_code == 200
     device = client.get("/api/devices").get_json()["devices"][0]
     assert device["agent_version"] == "0.1.0"
-    assert device["printers"] == [{"name": "Zebra-1", "host": "192.168.1.50", "port": 9100}]
+    assert device["printers"] == [
+        {"name": "Zebra-1", "host": "192.168.1.50", "port": 9100, "kind": "network"}
+    ]
     assert device["last_seen_at"] is not None
+
+
+def test_agent_state_accepts_local_printers(
+    app: Flask, client: FlaskClient, csrf: CsrfHelper
+) -> None:
+    """F39: discovered system queues report kind=local and no host."""
+    _device_id, token = _setup(app, client, csrf)
+    resp = client.post(
+        "/api/agent/state",
+        json={
+            "agent_version": "0.6.0",
+            "printers": [
+                {"name": "drukarka", "host": "192.168.1.50", "port": 9100, "kind": "network"},
+                {"name": "Zebra_ZD421", "host": "", "port": 9100, "kind": "local"},
+            ],
+        },
+        headers=_bearer(token),
+    )
+    assert resp.status_code == 200
+    printers = client.get("/api/devices").get_json()["devices"][0]["printers"]
+    assert printers[1] == {"name": "Zebra_ZD421", "host": "", "port": 9100, "kind": "local"}
+
+
+def test_agent_state_rejects_remote_printer_without_host(
+    app: Flask, client: FlaskClient, csrf: CsrfHelper
+) -> None:
+    _device_id, token = _setup(app, client, csrf)
+    resp = client.post(
+        "/api/agent/state",
+        json={"printers": [{"name": "x", "host": "", "port": 9100, "kind": "network"}]},
+        headers=_bearer(token),
+    )
+    assert resp.status_code == 400
