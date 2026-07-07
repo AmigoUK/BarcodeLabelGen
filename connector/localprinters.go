@@ -1,6 +1,9 @@
 package main
 
-import "sync"
+import (
+	"sync"
+	"unicode/utf8"
+)
 
 // maxPrinters and maxPrinterNameLen mirror the server schema
 // (AgentStateRequest.printers max_length=50, AgentPrinter.name max_length=100)
@@ -63,7 +66,9 @@ func mergedPrinters(cfg *Config, local []string) []Printer {
 		if seen[name] {
 			continue
 		}
-		if len(name) > maxPrinterNameLen {
+		// Rune count, not bytes — Pydantic max_length counts characters, and
+		// Windows names may carry non-ASCII (e.g. Polish diacritics).
+		if utf8.RuneCountInString(name) > maxPrinterNameLen {
 			continue
 		}
 		seen[name] = true
