@@ -93,7 +93,15 @@ export function DevicesPage() {
                     )}
                   </td>
                   <td className="px-4 py-3 text-xs text-slate-300">
-                    {d.printers.length === 0 ? "—" : d.printers.map((p) => p.name).join(", ")}
+                    {d.printers.length === 0
+                      ? "—"
+                      : d.printers
+                          .map((p) =>
+                            p.kind === "local"
+                              ? `${p.name} (${t("devices.localPrinter")})`
+                              : p.name,
+                          )
+                          .join(", ")}
                   </td>
                   <td className="px-4 py-3 text-xs text-slate-400">
                     {formatDate(d.last_seen_at, t("devices.neverSeen"))}

@@ -359,6 +359,7 @@
     "copyToken": "Kopiuj token",
     "copied": "Skopiowano!",
     "empty": "Brak urządzeń. Dodaj pierwsze, aby połączyć drukarki etykiet z aplikacją.",
+    "localPrinter": "lokalna",
     "errors": {
       "nameTaken": "Masz już urządzenie o tej nazwie."
     }
@@ -426,7 +427,8 @@
     "deviceOfflineHint": "To urządzenie jest offline — zadanie poczeka w kolejce, aż agent się połączy.",
     "noDevices": "Nie masz jeszcze żadnego urządzenia konektora. Podłącz je na stronie Urządzenia:",
     "localDevice": "Ten komputer — druk natychmiastowy (agent {{version}})",
-    "localHint": "Wykryto konektor na tym komputerze — etykieta pójdzie prosto na drukarkę, bez kolejki serwera."
+    "localHint": "Wykryto konektor na tym komputerze — etykieta pójdzie prosto na drukarkę, bez kolejki serwera.",
+    "localPrinter": "drukarka z tego komputera"
   },
   "captures": {
     "title": "Inbox — przechwycone etykiety",

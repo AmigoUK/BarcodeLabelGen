@@ -22,6 +22,8 @@ export type LocalPrinter = {
   name: string;
   host: string;
   port: number;
+  /** F39: "local" = a queue discovered on the connector's computer. */
+  kind?: "network" | "file" | "local";
 };
 
 async function agentFetch<T>(path: string, init?: RequestInit): Promise<T> {

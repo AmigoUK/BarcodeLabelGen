@@ -20,6 +20,8 @@ export type DevicePrinter = {
   name: string;
   host: string;
   port: number;
+  /** F39: "local" = a queue discovered on the connector's computer. */
+  kind?: "network" | "file" | "local";
 };
 
 export type Device = {

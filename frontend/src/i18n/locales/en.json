@@ -359,6 +359,7 @@
     "copyToken": "Copy token",
     "copied": "Copied!",
     "empty": "No devices yet. Add one to connect your label printers to the app.",
+    "localPrinter": "local",
     "errors": {
       "nameTaken": "You already have a device with this name."
     }
@@ -426,7 +427,8 @@
     "deviceOfflineHint": "This device is offline — the job will wait in the queue until the agent connects.",
     "noDevices": "You don't have a connector device yet. Connect one on the Devices page:",
     "localDevice": "This computer — instant print (agent {{version}})",
-    "localHint": "Connector detected on this computer — the label goes straight to the printer, skipping the server queue."
+    "localHint": "Connector detected on this computer — the label goes straight to the printer, skipping the server queue.",
+    "localPrinter": "printer on this computer"
   },
   "captures": {
     "title": "Inbox — captured labels",

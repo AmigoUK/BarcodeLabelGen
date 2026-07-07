@@ -194,7 +194,7 @@ export function PrintModal({ open, onClose, canvas }: Props) {
   const noDevices = devices !== undefined && devices.length === 0 && !localAvailable;
   const reportedPrinters =
     deviceId === LOCAL
-      ? (localPrinters.data?.map((p) => ({ name: p.name, host: p.host })) ?? [])
+      ? (localPrinters.data?.map((p) => ({ name: p.name, host: p.host, kind: p.kind })) ?? [])
       : (selectedDevice?.printers ?? []);
   const submitting = generateZpl.isPending || createJob.isPending;
 
@@ -260,7 +260,7 @@ export function PrintModal({ open, onClose, canvas }: Props) {
               >
                 {reportedPrinters.map((p) => (
                   <option key={p.name} value={p.name}>
-                    {p.name} ({p.host})
+                    {p.name} ({p.host}){p.kind === "local" ? ` — ${t("print.localPrinter")}` : ""}
                   </option>
                 ))}
               </Select>
