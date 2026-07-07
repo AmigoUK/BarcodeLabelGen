@@ -102,6 +102,10 @@ systemctl --user daemon-reload
 systemctl --user enable --now blg-connector.service
 loginctl enable-linger "$USER" 2>/dev/null || true`;
 
+  const logLine = isMac
+    ? 'echo "Log: $APP_DIR/connector.log — mozesz wrocic do przegladarki."'
+    : 'echo "Log: journalctl --user -u blg-connector.service — mozesz wrocic do przegladarki."';
+
   return `#!/bin/bash
 # BarcodeLabelGen — instalator connectora (wygenerowany przez kreator).
 # Uruchom ponownie w dowolnym momencie: aktualizuje program i konfiguracje.
@@ -120,6 +124,9 @@ ${isMac ? 'mkdir -p "$HOME/Library/LaunchAgents"' : ""}
 
 ${stopPrev}
 
+HAD_CAPTURE=0
+grep -q "^capture:" "$APP_DIR/config.yaml" 2>/dev/null && HAD_CAPTURE=1
+
 cat > "$APP_DIR/config.yaml" <<'BLGCONF'
 ${cfg}BLGCONF
 
@@ -131,20 +138,22 @@ echo "-> sprawdzam sume kontrolna..."
 chmod +x "$APP_DIR/blg-connector"
 ${isMac ? 'xattr -d com.apple.quarantine "$APP_DIR/blg-connector" 2>/dev/null || true' : ""}
 
-if [ "\${1:-}" = "--virtual-printer" ]; then
+if [ "\${1:-}" = "--virtual-printer" ] || [ "$HAD_CAPTURE" = "1" ]; then
   if ! grep -q "^capture:" "$APP_DIR/config.yaml"; then
     printf 'capture:\\n  listen: "127.0.0.1:9101"\\n' >> "$APP_DIR/config.yaml"
   fi
-  echo "-> tworze wirtualna drukarke (kolejka CUPS)..."
-  lpadmin -p "BarcodeLabelGen-Capture" -E -v "socket://127.0.0.1:9101" -m raw || \\
-    echo "UWAGA: lpadmin nie powiodl sie — uruchom z sudo albo dodaj sie do grupy lpadmin/_lpadmin."
+  if [ "\${1:-}" = "--virtual-printer" ]; then
+    echo "-> tworze wirtualna drukarke (kolejka CUPS)..."
+    lpadmin -p "BarcodeLabelGen-Capture" -E -v "socket://127.0.0.1:9101" -m raw || \\
+      echo "UWAGA: lpadmin nie powiodl sie — uruchom z sudo albo dodaj sie do grupy lpadmin/_lpadmin."
+  fi
 fi
 
 ${autostart}
 
 echo ""
 echo "OK — gotowe! Connector dziala w tle i wstaje automatycznie po restarcie."
-echo "Log: $APP_DIR/connector.log — mozesz wrocic do przegladarki."
+${logLine}
 `.replace(/\n{3,}/g, "\n\n");
 }
 
@@ -165,11 +174,13 @@ powershell -NoProfile -Command "[IO.File]::WriteAllBytes('%APP%\\config.yaml',[C
 
 echo Pobieram program...
 curl.exe -fsSL -o "%APP%\\blg-connector.exe" "${RELEASE_BASE}/%ASSET%"
+if errorlevel 1 (echo BLAD: pobieranie nie powiodlo sie - sprawdz internet. & pause & exit /b 1)
 curl.exe -fsSL -o "%APP%\\SHA256SUMS" "${RELEASE_BASE}/SHA256SUMS"
+if errorlevel 1 (echo BLAD: pobieranie nie powiodlo sie - sprawdz internet. & pause & exit /b 1)
 echo Sprawdzam sume kontrolna...
-powershell -NoProfile -Command "$h=(Get-FileHash '%APP%\\blg-connector.exe' -Algorithm SHA256).Hash.ToLower(); $s=((Select-String -Path '%APP%\\SHA256SUMS' -Pattern [regex]::Escape('%ASSET%')).Line -split '\\s+')[0]; if($h -ne $s){exit 1}"
+powershell -NoProfile -Command "$h=(Get-FileHash '%APP%\\blg-connector.exe' -Algorithm SHA256).Hash.ToLower(); $s=((Select-String -Path '%APP%\\SHA256SUMS' -SimpleMatch '%ASSET%').Line -split '\\s+')[0]; if($h -ne $s){exit 1}"
 if errorlevel 1 (
-  echo BLAD: suma kontrolna sie nie zgadza — sprobuj ponownie.
+  echo BLAD: suma kontrolna sie nie zgadza - sprobuj ponownie.
   pause
   exit /b 1
 )
@@ -180,11 +191,20 @@ rem Pomocnicze pliki: log + ukryte okno
 
 rem Autostart przy logowaniu + start teraz (bez okna)
 schtasks /Create /F /TN "BLG Connector" /SC ONLOGON /TR "wscript \\"%APP%\\run-blg.vbs\\"" >nul
+if errorlevel 1 (
+  echo BLAD: nie udalo sie dodac autostartu. Uruchom ten plik jako administrator
+  echo (prawy przycisk - Uruchom jako administrator).
+  pause
+  exit /b 1
+)
 schtasks /Run /TN "BLG Connector" >nul
+if errorlevel 1 (
+  echo UWAGA: nie udalo sie uruchomic uslugi teraz - zaloguj sie ponownie, aby ja uruchomic.
+)
 
 echo.
-echo OK — gotowe! Connector dziala w tle i wstaje automatycznie po zalogowaniu.
-echo Log: %APP%\\connector.log — mozesz wrocic do przegladarki.
+echo OK - gotowe! Connector dziala w tle i wstaje automatycznie po zalogowaniu.
+echo Log: %APP%\\connector.log - mozesz wrocic do przegladarki.
 pause
 `;
 }
