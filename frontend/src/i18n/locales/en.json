@@ -388,7 +388,7 @@
     "waiting": "Waiting for your computer to check in…",
     "waitingHint": "The installer finishes in the background — this usually takes up to a minute.",
     "notSeen": "I can't see your computer yet",
-    "tip1": "Did the installer print \"OK — done\" at the end? If not, run it again.",
+    "tip1": "Did the installer finish with its success message (\"OK - gotowe\")? If not, run it again.",
     "tip2": "Is Tailscale on and connected (menu-bar icon)?",
     "tip3": "Check the log: macOS — connector.log file in ~/Library/Application Support/blg-connector; Windows — %LOCALAPPDATA%\\blg-connector\\connector.log; Linux — journalctl --user -u blg-connector.service.",
     "startOver": "Start over",

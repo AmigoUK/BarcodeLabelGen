@@ -388,7 +388,7 @@
     "waiting": "Czekam, aż Twój komputer się zgłosi…",
     "waitingHint": "Instalator kończy pracę w tle — zwykle trwa to do minuty.",
     "notSeen": "Nie widzę jeszcze Twojego komputera",
-    "tip1": "Czy instalator wypisał na końcu „OK — gotowe”? Jeśli nie — uruchom go ponownie.",
+    "tip1": "Czy instalator zakończył pracę komunikatem o sukcesie („OK – gotowe”)? Jeśli nie — uruchom go ponownie.",
     "tip2": "Czy Tailscale jest włączony i połączony (ikona w pasku menu)?",
     "tip3": "Zajrzyj do logu: macOS — plik connector.log w ~/Library/Application Support/blg-connector; Windows — %LOCALAPPDATA%\\blg-connector\\connector.log; Linux — journalctl --user -u blg-connector.service.",
     "startOver": "Zacznij od nowa",
