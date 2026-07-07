@@ -42,18 +42,34 @@ describe("installerFor", () => {
     expect(content).not.toContain("Log: $APP_DIR/connector.log");
   });
 
-  it("windows: .bat with base64 config (decodes to the YAML), checksum, schtasks + vbs", () => {
+  it("windows: .bat with base64 config (decodes to the YAML), checksum, HKCU Run + vbs autostart", () => {
     const { filename, content } = installerFor("windows", OPTS);
     expect(filename).toBe("Podlacz-BLG.bat");
     expect(content).toContain("blg-connector-windows-amd64.exe");
     expect(content).toContain("Get-FileHash");
-    expect(content).toContain('schtasks /Create /F /TN "BLG Connector"');
+    expect(content).toContain('reg add "HKCU\\Software\\Microsoft\\Windows\\CurrentVersion\\Run"');
+    expect(content).not.toContain("schtasks");
     expect(content).toContain("run-blg.vbs");
     const m = content.match(/FromBase64String\('([^']+)'\)/);
     expect(m).not.toBeNull();
     const decoded = new TextDecoder().decode(Uint8Array.from(atob(m![1]), (c) => c.charCodeAt(0)));
     expect(decoded).toContain('token: "blg_abc123"');
     expect(decoded).toContain('server_url: "https://linuxserv1.tailc29352.ts.net:18003"');
+  });
+
+  it("windows: config always includes a capture section (ZDesigner virtual-printer guide targets port 9101)", () => {
+    const { content } = installerFor("windows", OPTS);
+    const m = content.match(/FromBase64String\('([^']+)'\)/);
+    expect(m).not.toBeNull();
+    const decoded = new TextDecoder().decode(Uint8Array.from(atob(m![1]), (c) => c.charCodeAt(0)));
+    expect(decoded).toContain("capture:");
+    expect(decoded).toContain("127.0.0.1:9101");
+  });
+
+  it("windows: generates CRLF line endings throughout", () => {
+    const { content } = installerFor("windows", OPTS);
+    expect(content).toContain("\r\n");
+    expect(content.split("\r\n").every((l) => !l.includes("\n"))).toBe(true);
   });
 
   it("windows: checksum comparison uses -SimpleMatch, not a broken -Pattern expression", () => {
@@ -63,20 +79,36 @@ describe("installerFor", () => {
     expect(content).not.toContain("-Pattern [regex]");
   });
 
-  it("windows: schtasks /Create failure aborts with guidance, /Run failure only warns", () => {
+  it("windows: HKCU Run key add is elevation-free (no schtasks/admin) and aborts on failure", () => {
     const { content } = installerFor("windows", OPTS);
-    const createIdx = content.indexOf('schtasks /Create /F /TN "BLG Connector"');
-    const runIdx = content.indexOf('schtasks /Run /TN "BLG Connector"');
-    expect(createIdx).toBeGreaterThan(-1);
-    expect(runIdx).toBeGreaterThan(createIdx);
-    const betweenCreateAndRun = content.slice(createIdx, runIdx);
-    expect(betweenCreateAndRun).toContain("if errorlevel 1");
-    expect(betweenCreateAndRun).toContain("exit /b 1");
-    expect(betweenCreateAndRun).toContain("administrator");
-    const afterRun = content.slice(runIdx);
-    const afterRunBlock = afterRun.split(/\r?\n\r?\n/)[0];
-    expect(afterRunBlock).toContain("if errorlevel 1");
-    expect(afterRunBlock).not.toContain("exit /b 1");
+    const regIdx = content.indexOf(
+      'reg add "HKCU\\Software\\Microsoft\\Windows\\CurrentVersion\\Run"',
+    );
+    expect(regIdx).toBeGreaterThan(-1);
+    expect(content).not.toContain("schtasks");
+    const afterReg = content.slice(regIdx);
+    const block = afterReg.split(/\r\n\r\n/)[0];
+    expect(block).toContain("if errorlevel 1");
+    expect(block).toContain("exit /b 1");
+  });
+
+  it("windows: starts the connector immediately via wscript, after the autostart key is registered", () => {
+    const { content } = installerFor("windows", OPTS);
+    const regIdx = content.indexOf(
+      'reg add "HKCU\\Software\\Microsoft\\Windows\\CurrentVersion\\Run"',
+    );
+    const startNowIdx = content.indexOf('wscript "%APP%\\run-blg.vbs"');
+    expect(regIdx).toBeGreaterThan(-1);
+    expect(startNowIdx).toBeGreaterThan(regIdx);
+  });
+
+  it("windows: config-write PowerShell command is checked for failure", () => {
+    const { content } = installerFor("windows", OPTS);
+    const writeIdx = content.indexOf("WriteAllBytes");
+    expect(writeIdx).toBeGreaterThan(-1);
+    const after = content.slice(writeIdx);
+    const nextLine = after.split(/\r\n/)[1];
+    expect(nextLine).toContain("if errorlevel 1");
   });
 
   it("windows: both curl.exe downloads are checked for failure", () => {

@@ -12,7 +12,6 @@ export type InstallerOptions = {
   serverUrl: string;
   token: string;
   printer: PrinterChoice;
-  virtualPrinter?: boolean;
 };
 
 const RELEASE_BASE = "https://github.com/AmigoUK/BarcodeLabelGen/releases/latest/download";
@@ -158,8 +157,12 @@ ${logLine}
 }
 
 function windowsBat(opts: InstallerOptions): string {
-  const cfgB64 = toBase64(configFor("windows", opts));
-  return `@echo off
+  // Windows has no unix-style runtime capture toggle (see unixScript's
+  // HAD_CAPTURE re-run logic) — always ship a listen-only capture section so
+  // the ZDesigner virtual-printer guide (port 9101) works without a re-run.
+  const cfg = configFor("windows", opts) + 'capture:\n  listen: "127.0.0.1:9101"\n';
+  const cfgB64 = toBase64(cfg);
+  const bat = `@echo off
 setlocal
 echo == BarcodeLabelGen: instaluje connector ==
 set "APP=%LOCALAPPDATA%\\blg-connector"
@@ -171,6 +174,7 @@ taskkill /IM blg-connector.exe /F >nul 2>&1
 
 rem Konfiguracja (base64 -> plik; omija problemy ze znakami specjalnymi)
 powershell -NoProfile -Command "[IO.File]::WriteAllBytes('%APP%\\config.yaml',[Convert]::FromBase64String('${cfgB64}'))"
+if errorlevel 1 (echo BLAD: nie udalo sie zapisac konfiguracji. & pause & exit /b 1)
 
 echo Pobieram program...
 curl.exe -fsSL -o "%APP%\\blg-connector.exe" "${RELEASE_BASE}/%ASSET%"
@@ -189,22 +193,21 @@ rem Pomocnicze pliki: log + ukryte okno
 > "%APP%\\run-blg.cmd" echo @"%APP%\\blg-connector.exe" -config "%APP%\\config.yaml" ^>^> "%APP%\\connector.log" 2^>^&1
 > "%APP%\\run-blg.vbs" echo CreateObject("Wscript.Shell").Run """%APP%\\run-blg.cmd""", 0, False
 
-rem Autostart przy logowaniu + start teraz (bez okna)
-schtasks /Create /F /TN "BLG Connector" /SC ONLOGON /TR "wscript \\"%APP%\\run-blg.vbs\\"" >nul
+rem Autostart przy logowaniu (klucz HKCU Run - nie wymaga uprawnien administratora)
+reg add "HKCU\\Software\\Microsoft\\Windows\\CurrentVersion\\Run" /v BLGConnector /t REG_SZ /d "wscript \\"%APP%\\run-blg.vbs\\"" /f >nul
 if errorlevel 1 (
-  echo BLAD: nie udalo sie dodac autostartu. Uruchom ten plik jako administrator
-  echo prawy przycisk myszy - Uruchom jako administrator.
+  echo BLAD: nie udalo sie dodac autostartu.
   pause
   exit /b 1
 )
-schtasks /Run /TN "BLG Connector" >nul
-if errorlevel 1 (
-  echo UWAGA: nie udalo sie uruchomic uslugi teraz - zaloguj sie ponownie, aby ja uruchomic.
-)
+
+rem Start teraz (bez okna)
+wscript "%APP%\\run-blg.vbs"
 
 echo.
 echo OK - gotowe! Connector dziala w tle i wstaje automatycznie po zalogowaniu.
 echo Log: %APP%\\connector.log - mozesz wrocic do przegladarki.
 pause
 `;
+  return bat.replace(/\n/g, "\r\n");
 }
