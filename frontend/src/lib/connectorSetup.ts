@@ -1,8 +1,10 @@
 /**
- * Pure helpers for the "Connect a printer" wizard (F38): detect the user's OS,
- * pick the right connector binary, build a ready-to-run config.yaml, and the
- * one-line start command. No React, no I/O — everything a step needs is a
- * plain string, so the wizard never edits files by hand.
+ * Pure helpers shared by the "Connect a printer" wizard (F38/F40): detect the
+ * user's OS/family and build a ready-to-embed config.yaml. No React, no I/O.
+ * The per-OS installer script/binary naming and download commands now live in
+ * `installerSetup.ts` (F40's one-file installer) — this module only keeps the
+ * pieces still shared with it (`buildConfigYaml`, the `PrinterChoice` type)
+ * plus OS auto-detection for the wizard's first step.
  */
 
 export type ConnectorOS =
@@ -21,25 +23,6 @@ export type OSDetection = {
 };
 
 export type PrinterChoice = { mode: "test" } | { mode: "ip"; ip: string; port?: number };
-
-const ASSET: Record<ConnectorOS, string> = {
-  "mac-apple": "blg-connector-macos-apple",
-  "mac-intel": "blg-connector-macos-intel",
-  windows: "blg-connector-windows-amd64.exe",
-  "linux-amd64": "blg-connector-linux-amd64",
-  "linux-arm64": "blg-connector-linux-arm64",
-  "linux-arm": "blg-connector-linux-arm",
-};
-
-const RELEASE_BASE = "https://github.com/AmigoUK/BarcodeLabelGen/releases/latest/download";
-
-export function assetFor(os: ConnectorOS): string {
-  return ASSET[os];
-}
-
-export function downloadUrlFor(os: ConnectorOS): string {
-  return `${RELEASE_BASE}/${assetFor(os)}`;
-}
 
 export function detectOS(nav: { platform?: string; userAgent?: string } = navigator): OSDetection {
   const p = (nav.platform || "").toLowerCase();
@@ -84,14 +67,4 @@ export function buildConfigYaml(opts: {
     `    port: ${printer.port}`,
     "",
   ].join("\n");
-}
-
-export function runCommandFor(os: ConnectorOS, asset: string): string {
-  if (os === "windows") {
-    return `cd $HOME\\Downloads; .\\${asset} -config config.yaml`;
-  }
-  if (os === "mac-apple" || os === "mac-intel") {
-    return `cd ~/Downloads && xattr -d com.apple.quarantine ${asset} 2>/dev/null; chmod +x ${asset} && ./${asset} -config config.yaml`;
-  }
-  return `cd ~/Downloads && chmod +x ${asset} && ./${asset} -config config.yaml`;
 }

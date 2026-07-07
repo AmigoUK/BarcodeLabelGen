@@ -1,8 +1,9 @@
 /**
- * F38 — "Connect a printer" wizard. Guides a non-technical user from zero to a
- * connected connector: detect OS → name the computer (creates device+token) →
- * download the binary + a ready config.yaml → run one command → live "connected"
- * detection → optional real printer. No manual file editing anywhere.
+ * F38/F40 — "Connect a printer" wizard. Guides a non-technical user from zero
+ * to a connected connector: detect OS → name the computer (creates
+ * device+token) → download ONE self-contained installer (F40) → run it →
+ * live "connected" detection → discovered printers (polled) → optional
+ * virtual-printer guide. No manual file editing anywhere.
  */
 
 import { useEffect, useMemo, useState } from "react";
@@ -10,19 +11,12 @@ import { useTranslation } from "react-i18next";
 import { Button } from "../components/ui/Button";
 import { Input } from "../components/ui/Input";
 import { Modal } from "../components/ui/Modal";
-import { useCreateDevice, useDeviceOnline } from "../hooks/useDevices";
+import { useCreateDevice, useDeviceOnline, useDevices } from "../hooks/useDevices";
 import type { CreateDeviceResponse } from "../lib/types";
-import {
-  type ConnectorOS,
-  type PrinterChoice,
-  assetFor,
-  buildConfigYaml,
-  detectOS,
-  downloadUrlFor,
-  runCommandFor,
-} from "../lib/connectorSetup";
+import { detectOS } from "../lib/connectorSetup";
+import { type InstallerFamily, installerFor } from "../lib/installerSetup";
 
-type Step = "os" | "name" | "download" | "run" | "waiting" | "success" | "printer";
+type Step = "os" | "name" | "install" | "waiting" | "success" | "printers" | "virtual";
 const WAIT_TIMEOUT_MS = 75_000;
 
 function download(filename: string, text: string) {
@@ -35,18 +29,24 @@ function download(filename: string, text: string) {
   URL.revokeObjectURL(url);
 }
 
+/** The literal one-line command shown on the virtual-printer step (mac/linux). */
+function virtualCommandFor(family: "mac" | "linux"): string {
+  return family === "mac"
+    ? "bash ~/Pobrane/Podlacz-BLG.command --virtual-printer"
+    : "bash ~/Pobrane/podlacz-blg.sh --virtual-printer";
+}
+
 export function ConnectPrinterWizard({ open, onClose }: { open: boolean; onClose: () => void }) {
   const { t } = useTranslation();
   const create = useCreateDevice();
+  const devices = useDevices();
 
   const [step, setStep] = useState<Step>("os");
-  const [os, setOs] = useState<ConnectorOS | null>(null);
-  const [macChip, setMacChip] = useState(false); // showing the Apple/Intel sub-choice
+  const [family, setFamily] = useState<InstallerFamily | null>(null);
   const [name, setName] = useState("");
   const [created, setCreated] = useState<CreateDeviceResponse | null>(null);
   const [waitedOut, setWaitedOut] = useState(false);
   const [recheckNonce, setRecheckNonce] = useState(0);
-  const [printerMode, setPrinterMode] = useState<"test" | "ip">("test");
   const [printerIp, setPrinterIp] = useState("");
 
   const deviceId = created?.device.id ?? null;
@@ -56,12 +56,10 @@ export function ConnectPrinterWizard({ open, onClose }: { open: boolean; onClose
   useEffect(() => {
     if (!open) {
       setStep("os");
-      setOs(null);
-      setMacChip(false);
+      setFamily(null);
       setName("");
       setCreated(null);
       setWaitedOut(false);
-      setPrinterMode("test");
       setPrinterIp("");
     }
   }, [open]);
@@ -79,27 +77,41 @@ export function ConnectPrinterWizard({ open, onClose }: { open: boolean; onClose
     return () => clearTimeout(h);
   }, [step, created, recheckNonce]);
 
+  // Poll the devices list while the printers step is open, so newly-detected
+  // local printers show up without the user having to reopen the wizard.
+  useEffect(() => {
+    if (step !== "printers") return;
+    const h = setInterval(() => void devices.refetch(), 5000);
+    return () => clearInterval(h);
+  }, [step, devices]);
+
   const serverUrl = window.location.origin;
-  const asset = os ? assetFor(os) : "";
-  const configText = useMemo(() => {
-    if (!os || !created) return "";
-    const printer: PrinterChoice =
-      printerMode === "ip" && printerIp.trim()
-        ? { mode: "ip", ip: printerIp.trim() }
-        : { mode: "test" };
-    return buildConfigYaml({ serverUrl, token: created.token, os, printer });
-  }, [os, created, serverUrl, printerMode, printerIp]);
+  const livePrinters = devices.data?.find((d) => d.id === created?.device.id)?.printers ?? [];
+
+  const installer = useMemo(() => {
+    if (!family || !created) return null;
+    return installerFor(family, { serverUrl, token: created.token, printer: { mode: "test" } });
+  }, [family, created, serverUrl]);
 
   async function createAndAdvance() {
     const res = await create.mutateAsync(name.trim() || t("wizard.namePlaceholder"));
     setCreated(res);
-    setStep("download");
+    setStep("install");
   }
 
-  function chooseOs(next: ConnectorOS) {
-    setOs(next);
-    setMacChip(false);
+  function chooseFamily(next: InstallerFamily) {
+    setFamily(next);
     setStep("name");
+  }
+
+  function downloadWithIpPrinter() {
+    if (!family || !created || !printerIp.trim()) return;
+    const { filename, content } = installerFor(family, {
+      serverUrl,
+      token: created.token,
+      printer: { mode: "ip", ip: printerIp.trim() },
+    });
+    download(filename, content);
   }
 
   const detection = useMemo(() => detectOS(), []);
@@ -110,55 +122,26 @@ export function ConnectPrinterWizard({ open, onClose }: { open: boolean; onClose
         <div className="space-y-3">
           <p className="text-lg font-semibold">{t("wizard.osQuestion")}</p>
           <p className="text-sm text-slate-400">{t("wizard.osHint")}</p>
-          {!macChip ? (
-            <div className="grid grid-cols-2 gap-2">
-              <OsTile
-                emoji="🍎"
-                title="Mac"
-                sub={detection.family === "mac" ? t("wizard.detected") : "Apple / Intel"}
-                onClick={() => setMacChip(true)}
-              />
-              <OsTile
-                emoji="🪟"
-                title="Windows"
-                sub="10 / 11"
-                onClick={() => chooseOs("windows")}
-              />
-              <OsTile
-                emoji="🐧"
-                title="Linux"
-                sub="amd64 / Raspberry Pi"
-                onClick={() => chooseOs("linux-amd64")}
-              />
-              <OsTile
-                emoji="🔧"
-                title={t("wizard.linuxArm")}
-                sub="arm64 / arm"
-                onClick={() => chooseOs("linux-arm64")}
-              />
-            </div>
-          ) : (
-            <div className="space-y-2">
-              <p className="text-sm text-slate-300">{t("wizard.macChip")}</p>
-              <div className="grid grid-cols-2 gap-2">
-                <OsTile
-                  emoji="🍏"
-                  title="Apple (M1–M4)"
-                  sub={t("wizard.macApple")}
-                  onClick={() => chooseOs("mac-apple")}
-                />
-                <OsTile
-                  emoji="🖥"
-                  title="Intel"
-                  sub={t("wizard.macIntel")}
-                  onClick={() => chooseOs("mac-intel")}
-                />
-              </div>
-              <button className="text-sm text-indigo-400" onClick={() => setMacChip(false)}>
-                ← {t("common.back")}
-              </button>
-            </div>
-          )}
+          <div className="grid grid-cols-2 gap-2">
+            <OsTile
+              emoji="🍎"
+              title="Mac"
+              sub={detection.family === "mac" ? t("wizard.detected") : "macOS"}
+              onClick={() => chooseFamily("mac")}
+            />
+            <OsTile
+              emoji="🪟"
+              title="Windows"
+              sub={detection.family === "windows" ? t("wizard.detected") : "10 / 11"}
+              onClick={() => chooseFamily("windows")}
+            />
+            <OsTile
+              emoji="🐧"
+              title="Linux"
+              sub={detection.family === "linux" ? t("wizard.detected") : "amd64 / arm64"}
+              onClick={() => chooseFamily("linux")}
+            />
+          </div>
         </div>
       )}
 
@@ -183,26 +166,19 @@ export function ConnectPrinterWizard({ open, onClose }: { open: boolean; onClose
         </div>
       )}
 
-      {step === "download" && os && (
+      {step === "install" && family && installer && (
         <div className="space-y-3">
-          <p className="text-lg font-semibold">{t("wizard.downloadTitle")}</p>
-          <p className="text-sm text-slate-400">{t("wizard.downloadHint")}</p>
-          <a
-            href={downloadUrlFor(os)}
-            className="block rounded-lg border border-slate-700 bg-slate-900 px-4 py-3 hover:border-indigo-500"
-          >
-            📦 <span className="font-medium">{t("wizard.dlProgram")}</span>
-            <span className="block text-xs text-slate-500">{asset}</span>
-          </a>
+          <p className="text-lg font-semibold">{t("wizard.installTitle")}</p>
+          <p className="text-sm text-slate-400">{t("wizard.installHint")}</p>
           <button
-            onClick={() => download("config.yaml", configText)}
+            onClick={() => download(installer.filename, installer.content)}
             className="block w-full rounded-lg border border-slate-700 bg-slate-900 px-4 py-3 text-left hover:border-indigo-500"
           >
-            ⚙️ <span className="font-medium">{t("wizard.dlConfig")}</span>
-            <span className="block text-xs text-slate-500">
-              config.yaml — {t("wizard.dlConfigSub")}
-            </span>
+            📦 <span className="font-medium">{t("wizard.installDownload")}</span>
+            <span className="block text-xs text-slate-500">{installer.filename}</span>
           </button>
+          <p className="text-sm text-slate-300">{t(`wizard.installRun.${family}`)}</p>
+          {family === "mac" && <p className="text-xs text-slate-500">{t("wizard.unsignedNote")}</p>}
           <p className="rounded-md border border-indigo-900 bg-indigo-950/40 px-3 py-2 text-xs text-indigo-300">
             🔒 {t("wizard.tokenPrivacy")}
           </p>
@@ -210,31 +186,7 @@ export function ConnectPrinterWizard({ open, onClose }: { open: boolean; onClose
             <Button variant="secondary" onClick={() => setStep("name")}>
               ← {t("common.back")}
             </Button>
-            <Button onClick={() => setStep("run")}>{t("common.next")} →</Button>
-          </div>
-        </div>
-      )}
-
-      {step === "run" && os && (
-        <div className="space-y-3">
-          <p className="text-lg font-semibold">{t("wizard.runTitle")}</p>
-          <p className="text-sm text-slate-400">{t("wizard.runHint")}</p>
-          <div className="flex items-center gap-2 rounded-lg border border-slate-700 bg-slate-900 p-3">
-            <code className="flex-1 overflow-x-auto whitespace-nowrap font-mono text-xs text-slate-200">
-              {runCommandFor(os, asset)}
-            </code>
-            <Button onClick={() => void navigator.clipboard?.writeText(runCommandFor(os, asset))}>
-              {t("common.copy")}
-            </Button>
-          </div>
-          <p className="rounded-md border border-amber-900 bg-amber-950/40 px-3 py-2 text-xs text-amber-300">
-            💡 {t("wizard.keepOpen")}
-          </p>
-          <div className="flex justify-between pt-2">
-            <Button variant="secondary" onClick={() => setStep("download")}>
-              ← {t("common.back")}
-            </Button>
-            <Button onClick={() => setStep("waiting")}>{t("wizard.checkConnection")} →</Button>
+            <Button onClick={() => setStep("waiting")}>{t("common.next")} →</Button>
           </div>
         </div>
       )}
@@ -289,49 +241,106 @@ export function ConnectPrinterWizard({ open, onClose }: { open: boolean; onClose
             {t("wizard.connectedHint", { name: created?.device.name ?? "" })}
           </p>
           <div className="flex justify-center gap-2 pt-2">
-            <Button variant="secondary" onClick={() => setStep("printer")}>
-              {t("wizard.addPrinter")}
+            <Button variant="secondary" onClick={() => setStep("printers")}>
+              {t("wizard.addPrinter")} →
             </Button>
-            <Button onClick={onClose}>{t("wizard.done")} ✓</Button>
+            <Button onClick={onClose}>{t("wizard.finish")}</Button>
           </div>
         </div>
       )}
 
-      {step === "printer" && os && (
+      {step === "printers" && family && (
         <div className="space-y-3">
-          <p className="text-lg font-semibold">{t("wizard.printerTitle")}</p>
-          <p className="text-sm text-slate-400">{t("wizard.printerHint")}</p>
-          <label className="flex items-center gap-2 text-sm">
-            <input
-              type="radio"
-              checked={printerMode === "ip"}
-              onChange={() => setPrinterMode("ip")}
-            />
-            {t("wizard.printerHasIp")}
-          </label>
-          {printerMode === "ip" && (
-            <Input
-              value={printerIp}
-              onChange={(e) => setPrinterIp(e.target.value)}
-              placeholder="192.168.1.50"
-            />
+          <p className="text-lg font-semibold">{t("wizard.printersTitle")}</p>
+          <p className="text-sm text-slate-400">{t("wizard.printersHint")}</p>
+
+          {livePrinters.length === 0 ? (
+            <p className="rounded-md border border-slate-700 bg-slate-900 px-3 py-2 text-sm text-slate-400">
+              {t("wizard.printersEmpty")}
+            </p>
+          ) : (
+            <ul className="space-y-1">
+              {livePrinters.map((p) => (
+                <li
+                  key={p.name}
+                  className="flex items-center justify-between rounded-md border border-slate-700 bg-slate-900 px-3 py-2 text-sm"
+                >
+                  <span>{p.name}</span>
+                  {p.kind === "local" && (
+                    <span className="rounded-full bg-indigo-950/60 px-2 py-0.5 text-xs text-indigo-300">
+                      {t("wizard.printersLocalBadge")}
+                    </span>
+                  )}
+                </li>
+              ))}
+            </ul>
           )}
-          <label className="flex items-center gap-2 text-sm">
-            <input
-              type="radio"
-              checked={printerMode === "test"}
-              onChange={() => setPrinterMode("test")}
-            />
-            {t("wizard.printerTest")}
-          </label>
-          <p className="text-sm text-slate-400">{t("wizard.printerRedownload")}</p>
+
+          <details className="rounded border border-indigo-900/60 bg-slate-900/40 p-2">
+            <summary className="cursor-pointer text-xs font-medium text-indigo-300">
+              {t("wizard.advancedIp")}
+            </summary>
+            <div className="mt-2 space-y-2">
+              <Input
+                value={printerIp}
+                onChange={(e) => setPrinterIp(e.target.value)}
+                placeholder="192.168.1.50"
+              />
+              <Button
+                variant="secondary"
+                onClick={downloadWithIpPrinter}
+                disabled={!printerIp.trim()}
+              >
+                {t("wizard.downloadWithPrinter")}
+              </Button>
+              <p className="text-[10px] text-slate-500">{t("wizard.rerunHint")}</p>
+            </div>
+          </details>
+
+          <button
+            className="text-sm text-indigo-400 hover:text-indigo-300"
+            onClick={() => setStep("virtual")}
+          >
+            {t("wizard.virtualLink")}
+          </button>
+
+          <div className="flex justify-end pt-2">
+            <Button onClick={onClose}>{t("wizard.finish")}</Button>
+          </div>
+        </div>
+      )}
+
+      {step === "virtual" && family && (
+        <div className="space-y-3">
+          <p className="text-lg font-semibold">{t("wizard.virtualTitle")}</p>
+          {family === "windows" ? (
+            <ol className="space-y-1 text-sm text-slate-300">
+              <li>1. {t("wizard.virtualWinStep1")}</li>
+              <li>2. {t("wizard.virtualWinStep2")}</li>
+              <li>3. {t("wizard.virtualWinStep3")}</li>
+              <li>4. {t("wizard.virtualWinStep4")}</li>
+            </ol>
+          ) : (
+            <div className="space-y-2">
+              <p className="text-sm text-slate-400">{t("wizard.virtualCmd")}</p>
+              <div className="flex items-center gap-2 rounded-lg border border-slate-700 bg-slate-900 p-3">
+                <code className="flex-1 overflow-x-auto whitespace-nowrap font-mono text-xs text-slate-200">
+                  {virtualCommandFor(family)}
+                </code>
+                <Button
+                  onClick={() => void navigator.clipboard?.writeText(virtualCommandFor(family))}
+                >
+                  {t("common.copy")}
+                </Button>
+              </div>
+              <p className="text-sm text-slate-400">{t("wizard.virtualHintUnix")}</p>
+            </div>
+          )}
           <div className="flex justify-between pt-2">
-            <Button variant="secondary" onClick={onClose}>
-              {t("wizard.skip")}
+            <Button variant="secondary" onClick={() => setStep("printers")}>
+              ← {t("common.back")}
             </Button>
-            <Button onClick={() => download("config.yaml", configText)}>
-              {t("wizard.downloadNewConfig")}
-            </Button>
+            <Button onClick={onClose}>{t("wizard.finish")}</Button>
           </div>
         </div>
       )}
