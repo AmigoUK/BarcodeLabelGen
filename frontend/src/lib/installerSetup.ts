@@ -193,7 +193,7 @@ rem Autostart przy logowaniu + start teraz (bez okna)
 schtasks /Create /F /TN "BLG Connector" /SC ONLOGON /TR "wscript \\"%APP%\\run-blg.vbs\\"" >nul
 if errorlevel 1 (
   echo BLAD: nie udalo sie dodac autostartu. Uruchom ten plik jako administrator
-  echo (prawy przycisk - Uruchom jako administrator).
+  echo prawy przycisk myszy - Uruchom jako administrator.
   pause
   exit /b 1
 )
