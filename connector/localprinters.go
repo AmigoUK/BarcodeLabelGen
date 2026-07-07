@@ -65,3 +65,14 @@ func mergedPrinters(cfg *Config, local []string) []Printer {
 	}
 	return out
 }
+
+// Refresh re-reads the system queues. Errors (no CUPS, no lpstat) leave the
+// previous snapshot untouched — a discovery hiccup must not unlist printers
+// that jobs may be in flight for; a missing subsystem simply yields nothing.
+func (l *LocalPrinters) Refresh() {
+	names, err := listSystemPrinters()
+	if err != nil {
+		return
+	}
+	l.set(names)
+}

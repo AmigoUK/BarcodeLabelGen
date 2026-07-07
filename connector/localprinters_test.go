@@ -1,6 +1,12 @@
 package main
 
-import "testing"
+import (
+	"os"
+	"path/filepath"
+	"reflect"
+	"strings"
+	"testing"
+)
 
 func TestValidQueueName(t *testing.T) {
 	valid := []string{"Zebra_ZD421", "HP.LaserJet-2", "a", "Q+plus"}
@@ -62,5 +68,80 @@ func TestMergedPrinters(t *testing.T) {
 	last := got[3]
 	if last.Name != "Office" || last.Kind != KindLocal || last.Port != 9100 {
 		t.Errorf("discovered = %+v", last)
+	}
+}
+
+// fakeBin writes an executable shell script into a dir prepended to PATH,
+// so listSystemPrinters/printLocal exercise real exec plumbing.
+func fakeBin(t *testing.T, dir, name, script string) {
+	t.Helper()
+	path := filepath.Join(dir, name)
+	if err := os.WriteFile(path, []byte("#!/bin/sh\n"+script), 0o755); err != nil {
+		t.Fatal(err)
+	}
+}
+
+func TestListSystemPrinters(t *testing.T) {
+	dir := t.TempDir()
+	fakeBin(t, dir, "lpstat", `echo "Zebra_ZD421"
+echo "bad name with spaces"
+echo ""
+echo "Office"`)
+	t.Setenv("PATH", dir+string(os.PathListSeparator)+os.Getenv("PATH"))
+	names, err := listSystemPrinters()
+	if err != nil {
+		t.Fatal(err)
+	}
+	want := []string{"Zebra_ZD421", "Office"}
+	if !reflect.DeepEqual(names, want) {
+		t.Fatalf("names = %v, want %v", names, want)
+	}
+}
+
+func TestLocalPrintersRefresh(t *testing.T) {
+	dir := t.TempDir()
+	fakeBin(t, dir, "lpstat", `echo "Zebra_ZD421"`)
+	t.Setenv("PATH", dir+string(os.PathListSeparator)+os.Getenv("PATH"))
+	var l LocalPrinters
+	l.Refresh()
+	if !l.Has("Zebra_ZD421") {
+		t.Fatal("Refresh did not pick up the fake queue")
+	}
+}
+
+func TestPrintLocal(t *testing.T) {
+	dir := t.TempDir()
+	argsFile := filepath.Join(dir, "args")
+	dataFile := filepath.Join(dir, "data")
+	fakeBin(t, dir, "lp", `echo "$@" > `+argsFile+`
+cat > `+dataFile)
+	t.Setenv("PATH", dir+string(os.PathListSeparator)+os.Getenv("PATH"))
+
+	if err := printLocal("Zebra_ZD421", "^XA^FDx^FS^XZ", 3); err != nil {
+		t.Fatal(err)
+	}
+	args, _ := os.ReadFile(argsFile)
+	wantArgs := "-d Zebra_ZD421 -o raw -n 3 -"
+	if strings.TrimSpace(string(args)) != wantArgs {
+		t.Errorf("lp args = %q, want %q", strings.TrimSpace(string(args)), wantArgs)
+	}
+	data, _ := os.ReadFile(dataFile)
+	if string(data) != "^XA^FDx^FS^XZ\n" {
+		t.Errorf("stdin payload = %q", string(data))
+	}
+}
+
+func TestPrintLocalErrors(t *testing.T) {
+	dir := t.TempDir()
+	fakeBin(t, dir, "lp", `echo "lp: The printer or class does not exist." >&2
+exit 1`)
+	t.Setenv("PATH", dir+string(os.PathListSeparator)+os.Getenv("PATH"))
+
+	err := printLocal("Ghost", "^XA^XZ", 1)
+	if err == nil || !strings.Contains(err.Error(), "does not exist") {
+		t.Fatalf("err = %v, want lp stderr in message", err)
+	}
+	if err := printLocal("bad name", "^XA^XZ", 1); err == nil {
+		t.Fatal("invalid queue name must be rejected before exec")
 	}
 }
