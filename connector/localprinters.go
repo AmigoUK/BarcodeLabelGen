@@ -8,7 +8,7 @@ import (
 // Queue names reach `lp -d <name>` / winspool as a single exec arg, so shell
 // injection is impossible — this allow-list guards against CUPS-invalid and
 // just-plain-weird names slipping into job errors and the UI.
-var queueNameRE = regexp.MustCompile(`^[A-Za-z0-9_.+-]{1,127}$`)
+var queueNameRE = regexp.MustCompile(`^[A-Za-z0-9_.+-]([A-Za-z0-9_.+ -]{0,125}[A-Za-z0-9_.+-])?$`)
 
 func validQueueName(name string) bool { return queueNameRE.MatchString(name) }
 

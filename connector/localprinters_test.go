@@ -9,14 +9,14 @@ import (
 )
 
 func TestValidQueueName(t *testing.T) {
-	valid := []string{"Zebra_ZD421", "HP.LaserJet-2", "a", "Q+plus"}
+	valid := []string{"Zebra_ZD421", "HP.LaserJet-2", "a", "Q+plus", "has space"}
 	for _, n := range valid {
 		if !validQueueName(n) {
 			t.Errorf("validQueueName(%q) = false, want true", n)
 		}
 	}
-	invalid := []string{"", "has space", "slash/name", "hash#name", "semi;colon",
-		"dollar$", "back`tick", string(make([]byte, 200))}
+	invalid := []string{"", "slash/name", "hash#name", "semi;colon",
+		"dollar$", "back`tick", string(make([]byte, 200)), " leading", "trailing "}
 	for _, n := range invalid {
 		if validQueueName(n) {
 			t.Errorf("validQueueName(%q) = true, want false", n)
@@ -84,7 +84,7 @@ func fakeBin(t *testing.T, dir, name, script string) {
 func TestListSystemPrinters(t *testing.T) {
 	dir := t.TempDir()
 	fakeBin(t, dir, "lpstat", `echo "Zebra_ZD421"
-echo "bad name with spaces"
+echo "bad/name"
 echo ""
 echo "Office"`)
 	t.Setenv("PATH", dir+string(os.PathListSeparator)+os.Getenv("PATH"))
