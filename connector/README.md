@@ -171,6 +171,8 @@ w BLG pojawi się automatycznie jako „drukarka z tego komputera".
   winspool. Sterowniki i filtry systemowe są omijane (raw).
 - Przy konflikcie nazw z `config.yaml` wygrywa konfiguracja YAML.
 - Brak CUPS/`lpstat` = po prostu brak wykrytych drukarek (bez błędu).
+- Przy aktualizacji: najpierw serwer, potem connector — starszy serwer
+  odrzuca wpisy drukarek lokalnych z pustym hostem.
 
 ## Lokalne API (szybka ścieżka przeglądarki)
 

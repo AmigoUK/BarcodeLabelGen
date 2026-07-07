@@ -18,7 +18,8 @@ _Nothing yet._
   printers. A USB printer (e.g. Zebra ZD421) appears automatically as "printer
   from this computer" — zero configuration. Print via raw system spooler; name
   conflicts defer to YAML config. Kind badge shows the printer origin. No
-  migration needed.
+  migration needed. Upgrade order: server before connectors — an older server
+  rejects local printer entries (empty host) in the state report.
 - **`SHA256SUMS` on every release** — the release workflow now generates and
   attaches a checksum file next to the connector binaries so downloads can be
   integrity-checked (added retroactively to v0.21.3 from the published assets).

@@ -52,7 +52,9 @@ func main() {
 	client := NewClient(cfg.ServerURL, cfg.Token)
 
 	local := &LocalPrinters{}
-	local.Refresh()
+	if err := local.Refresh(); err != nil {
+		log.Printf("printer discovery unavailable: %v", err)
+	}
 	localAPI := NewLocalAPI(cfg, local)
 
 	server := &http.Server{Addr: cfg.Listen, Handler: localAPI.Handler(), ReadHeaderTimeout: 5 * time.Second}
@@ -74,7 +76,7 @@ func main() {
 			case <-ctx.Done():
 				return
 			case <-t.C:
-				local.Refresh()
+				_ = local.Refresh()
 			}
 		}
 	}()

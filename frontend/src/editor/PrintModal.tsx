@@ -260,7 +260,9 @@ export function PrintModal({ open, onClose, canvas }: Props) {
               >
                 {reportedPrinters.map((p) => (
                   <option key={p.name} value={p.name}>
-                    {p.name} ({p.host}){p.kind === "local" ? ` — ${t("print.localPrinter")}` : ""}
+                    {p.name}
+                    {p.host ? ` (${p.host})` : ""}
+                    {p.kind === "local" ? ` — ${t("print.localPrinter")}` : ""}
                   </option>
                 ))}
               </Select>

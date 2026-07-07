@@ -88,8 +88,9 @@ func (a *LocalAPI) handleStatus(w http.ResponseWriter, r *http.Request) {
 	lastPollOK := a.lastPollOK
 	a.mu.Unlock()
 
-	names := make([]string, 0, len(a.cfg.Printers))
-	for _, p := range a.cfg.Printers {
+	merged := mergedPrinters(a.cfg, a.local.Snapshot())
+	names := make([]string, 0, len(merged))
+	for _, p := range merged {
 		names = append(names, p.Name)
 	}
 	payload := map[string]any{

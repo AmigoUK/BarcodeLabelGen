@@ -1,16 +1,14 @@
 package main
 
-import (
-	"regexp"
-	"sync"
+import "sync"
+
+// maxPrinters and maxPrinterNameLen mirror the server schema
+// (AgentStateRequest.printers max_length=50, AgentPrinter.name max_length=100)
+// so a device with many discovered queues can't be rejected wholesale.
+const (
+	maxPrinters       = 50
+	maxPrinterNameLen = 100
 )
-
-// Queue names reach `lp -d <name>` / winspool as a single exec arg, so shell
-// injection is impossible — this allow-list guards against CUPS-invalid and
-// just-plain-weird names slipping into job errors and the UI.
-var queueNameRE = regexp.MustCompile(`^[A-Za-z0-9_.+-]([A-Za-z0-9_.+ -]{0,125}[A-Za-z0-9_.+-])?$`)
-
-func validQueueName(name string) bool { return queueNameRE.MatchString(name) }
 
 // LocalPrinters is a concurrency-safe cache of system print queue names,
 // refreshed by a ticker in main and read by the heartbeat + job resolution.
@@ -45,7 +43,11 @@ func (l *LocalPrinters) Has(name string) bool {
 // mergedPrinters is what ReportState and the local API expose: config
 // printers (kind computed from host, YAML wins name clashes) + discovered
 // system queues as kind=local. Port 9100 on locals only satisfies the
-// server schema (1–65535); it is never dialed.
+// server schema (1–65535); it is never dialed. The result respects the
+// server schema limits: AgentPrinter.name max 100 chars, AgentStateRequest
+// max 50 printers — config printers are added first, so they always win a
+// spot; overlong or overflow discovered names are dropped rather than
+// causing the whole report to be rejected.
 func mergedPrinters(cfg *Config, local []string) []Printer {
 	out := make([]Printer, 0, len(cfg.Printers)+len(local))
 	seen := make(map[string]bool, len(cfg.Printers))
@@ -61,7 +63,14 @@ func mergedPrinters(cfg *Config, local []string) []Printer {
 		if seen[name] {
 			continue
 		}
+		if len(name) > maxPrinterNameLen {
+			continue
+		}
+		seen[name] = true
 		out = append(out, Printer{Name: name, Kind: KindLocal, Port: 9100})
+	}
+	if len(out) > maxPrinters {
+		out = out[:maxPrinters]
 	}
 	return out
 }
@@ -82,10 +91,13 @@ func resolvePrinter(cfg *Config, local *LocalPrinters, name string) (Printer, bo
 // Refresh re-reads the system queues. Errors (no CUPS, no lpstat) leave the
 // previous snapshot untouched — a discovery hiccup must not unlist printers
 // that jobs may be in flight for; a missing subsystem simply yields nothing.
-func (l *LocalPrinters) Refresh() {
+// The error is returned so callers can log it (once, at startup) without
+// affecting this invariant.
+func (l *LocalPrinters) Refresh() error {
 	names, err := listSystemPrinters()
 	if err != nil {
-		return
+		return err
 	}
 	l.set(names)
+	return nil
 }

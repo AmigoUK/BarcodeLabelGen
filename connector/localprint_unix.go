@@ -7,9 +7,18 @@ import (
 	"context"
 	"fmt"
 	"os/exec"
+	"regexp"
 	"strconv"
 	"strings"
 )
+
+// Queue names reach `lp -d <name>` as a single exec arg, so shell injection
+// is impossible — this allow-list guards against CUPS-invalid and
+// just-plain-weird names slipping into job errors and the UI. The length
+// cap (100) mirrors the server schema's AgentPrinter.name max_length.
+var queueNameRE = regexp.MustCompile(`^[A-Za-z0-9_.+-]([A-Za-z0-9_.+ -]{0,98}[A-Za-z0-9_.+-])?$`)
+
+func validQueueName(name string) bool { return queueNameRE.MatchString(name) }
 
 // listSystemPrinters enumerates CUPS destinations. `lpstat -e` prints one
 // queue name per line; names that fail validQueueName are skipped (they

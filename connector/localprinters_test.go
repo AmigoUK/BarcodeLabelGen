@@ -1,6 +1,7 @@
 package main
 
 import (
+	"fmt"
 	"os"
 	"path/filepath"
 	"reflect"
@@ -68,6 +69,40 @@ func TestMergedPrinters(t *testing.T) {
 	last := got[3]
 	if last.Name != "Office" || last.Kind != KindLocal || last.Port != 9100 {
 		t.Errorf("discovered = %+v", last)
+	}
+}
+
+func TestMergedPrintersRespectsSchemaLimits(t *testing.T) {
+	cfg := &Config{Printers: []Printer{
+		{Name: "drukarka", Host: "192.168.1.50", Port: 9100},
+		{Name: "spool", Host: "file:///tmp/x"},
+	}}
+
+	discovered := make([]string, 0, 62)
+	for i := range 60 {
+		discovered = append(discovered, fmt.Sprintf("Q%02d", i))
+	}
+	discovered = append(discovered, strings.Repeat("x", 101)) // over the 100-char name cap
+	discovered = append(discovered, "Q00")                    // duplicate within the discovered list
+
+	got := mergedPrinters(cfg, discovered)
+
+	if len(got) != maxPrinters {
+		t.Fatalf("len = %d, want %d (schema cap)", len(got), maxPrinters)
+	}
+	if got[0].Name != "drukarka" || got[1].Name != "spool" {
+		t.Fatalf("config printers must win the first slots: %+v, %+v", got[0], got[1])
+	}
+
+	seen := map[string]int{}
+	for _, p := range got {
+		seen[p.Name]++
+	}
+	if seen["Q00"] != 1 {
+		t.Errorf("duplicated discovered name appears %d times, want 1", seen["Q00"])
+	}
+	if seen[strings.Repeat("x", 101)] != 0 {
+		t.Error("a 101-char discovered name must be skipped, not just truncated in")
 	}
 }
 
