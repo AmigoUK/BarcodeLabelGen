@@ -1,6 +1,8 @@
 # BarcodeLabelGen — Pomoc
 
-Krótki przewodnik po programie. Czytaj sekcjami, w kolejności, albo skacz od razu do interesującego cię feature'u.
+Ten przewodnik pomoże Ci poznać program krok po kroku — nawet jeśli nigdy wcześniej nie używałaś/eś podobnego narzędzia. Możesz czytać po kolei od góry albo od razu przejść do sekcji, która Cię interesuje.
+
+Jeśli czegoś tu zabraknie, zajrzyj też do [FAQ](FAQ.pl.md) albo napisz na **dev@attv.uk**.
 
 ---
 
@@ -8,26 +10,41 @@ Krótki przewodnik po programie. Czytaj sekcjami, w kolejności, albo skacz od r
 
 ### Logowanie
 
-1. Otwórz adres aplikacji w przeglądarce.
-2. Wpisz email i hasło, które dał ci administrator.
-3. Przy pierwszym logowaniu program poprosi cię o ustawienie własnego hasła (min. 10 znaków). To jednorazowe — kolejne logowania od razu pokazują panel.
+1. Otwórz adres aplikacji w przeglądarce (dostajesz go od administratora).
+2. Wpisz swój email i hasło, które dał Ci administrator.
+3. Kliknij **Zaloguj**.
 
 ![Ekran logowania](screenshots/help/pl/login.png)
 
 *kadr: formularz Email + Hasło z przyciskiem „Zaloguj" i przełącznikiem języka PL/EN w prawym górnym rogu.*
 
-### Pulpit
+4. Jeśli logujesz się **pierwszy raz**, program poprosi Cię o ustawienie własnego hasła (minimum 10 znaków). To zdarza się tylko raz — przy kolejnych logowaniach od razu zobaczysz swój panel.
 
-Po zalogowaniu trafiasz na **Pulpit**. To tylko ekran powitalny — żeby zacząć pracę kliknij **Szablony** w lewym menu.
+![ekran wymuszonej zmiany hasła po pierwszym logowaniu — dwa pola (nowe hasło / powtórz hasło), informacja „minimum 10 znaków" i przycisk „Ustaw hasło".](screenshots/help/pl/set-new-password.png)
+
+### Pulpit — ekran startowy
+
+Po zalogowaniu widzisz **Pulpit**. To tylko ekran powitalny — nie musisz tu nic ustawiać. Żeby zacząć pracę, kliknij **Szablony** w menu po lewej stronie.
+
+![Pulpit tuż po zalogowaniu z lewym menu bocznym; pozycja „Szablony" w menu wyróżniona strzałką jako miejsce, w które trzeba kliknąć.](screenshots/help/pl/dashboard-empty.png)
 
 ### Tworzenie pierwszego szablonu
 
-1. **Szablony** → **Nowy szablon**.
-2. Wpisz nazwę (np. "Cennik produktów").
-3. Wybierz format etykiety:
-   - **Predefiniowane** — gotowe rozmiary (A4, Zebra 2×1″ itd.).
-   - **Własny rozmiar** — wpisz szerokość i wysokość w mm i wybierz orientację.
-4. Klik **Utwórz** — otwiera się edytor.
+**Szablon** to Twój projekt etykiety — robisz go raz, a potem możesz go używać wielokrotnie (np. za jednym razem wydrukować 200 różnych produktów).
+
+1. Kliknij **Szablony** w lewym menu.
+2. Kliknij przycisk **Nowy szablon** w prawym górnym rogu.
+
+![strona Szablony z przyciskiem „Nowy szablon" w prawym górnym rogu, wyraźnie podświetlonym/zaznaczonym.](screenshots/help/pl/new-template-button.png)
+
+3. Wpisz nazwę szablonu, np. „Cennik produktów".
+4. Wybierz format etykiety:
+   - **Predefiniowane** — gotowe, popularne rozmiary (A4, Zebra 2×1″ itd.). Wybierz to, jeśli nie masz pewności, jakiego rozmiaru potrzebujesz.
+   - **Własny rozmiar** — wpisz szerokość i wysokość w milimetrach i wybierz orientację (pionowa/pozioma). Wybierz to, jeśli Twoje etykiety mają niestandardowy rozmiar.
+
+![okno „Nowy szablon" z wypełnioną nazwą i widocznym wyborem między „Predefiniowane" a „Własny rozmiar"; przy zaznaczonej opcji „Własny rozmiar" widoczne pola szerokość/wysokość w mm.](screenshots/help/pl/new-template-dialog.png)
+
+5. Kliknij **Utwórz**. Otworzy się edytor — możesz od razu zacząć projektować etykietę.
 
 ---
 
@@ -38,13 +55,13 @@ Po zalogowaniu trafiasz na **Pulpit**. To tylko ekran powitalny — żeby zaczą
 | Pozycja | Co tu znajdziesz |
 |---|---|
 | **Pulpit** | Ekran startowy. |
-| **Szablony** | Twoje szablony w folderach + przyciski *Nowy szablon* i *Importuj*. |
-| **Biblioteka** | Gotowe projekty na start + szablony udostępnione przez innych (sekcja 2a). |
-| **Urządzenia** | Konektory druku i Inbox przechwyconych etykiet (sekcja 7a). |
-| **Pomoc** | Ten przewodnik + FAQ, bez wychodzenia z programu. |
-| **Administracja → Użytkownicy** | (tylko admin) zarządzanie kontami. |
+| **Szablony** | Twoje szablony, poukładane w folderach, plus przyciski *Nowy szablon* i *Importuj*. |
+| **Biblioteka** | Gotowe projekty na start oraz szablony udostępnione przez innych (sekcja 2a). |
+| **Urządzenia** | Konektory druku i skrzynka przechwyconych etykiet (sekcja 7a). |
+| **Pomoc** | Ten przewodnik + FAQ — bez wychodzenia z programu. |
+| **Administracja → Użytkownicy** | (tylko dla administratora) zarządzanie kontami. |
 
-W nagłówku po prawej: twój email, przełącznik języka **PL/EN** i przycisk **Wyloguj**.
+W nagłówku po prawej stronie znajdziesz: swój email, przełącznik języka **PL/EN** i przycisk **Wyloguj**.
 
 ![Lista szablonów](screenshots/help/pl/templates.png)
 
@@ -52,26 +69,28 @@ W nagłówku po prawej: twój email, przełącznik języka **PL/EN** i przycisk 
 
 ### Edytor — układ ekranu
 
-Po otwarciu szablonu widzisz:
+Po otwarciu szablonu zobaczysz pięć obszarów ekranu:
 
-- **Toolbar (góra)** — Zapisz, Cofnij/Ponów, autozapis, **Generuj serię**, **⬇ Eksportuj** (plik szablonu), **📐 rozmiar etykiety**, **⤓ Importuj ZPL**, **⤒ ZPL** (eksport), **Pobierz PDF**.
-- **Lewy panel (Dodaj)** — przyciski wstawiania obiektów na etykietę.
-- **Canvas (środek)** — twoja etykieta w skali 1:1 (mm).
-- **Pasek wyrównania (nad canvasem)** — wyrównywanie i kolejność warstw.
-- **Prawy panel (Właściwości)** — ustawienia zaznaczonego obiektu.
+- **Pasek narzędzi (góra)** — Zapisz, Cofnij/Ponów, informacja o autozapisie, **Generuj serię**, **⬇ Eksportuj** (plik szablonu), **📐 rozmiar etykiety**, **⤓ Importuj ZPL**, **⤒ ZPL** i **⤒ TSPL** (eksport dla drukarek etykiet — więcej w sekcji 7a), **Pobierz PDF**.
+- **Lewy panel („Dodaj")** — przyciski do wstawiania obiektów na etykietę (tekst, kod kreskowy, obraz itd.).
+- **Canvas (środek)** — Twoja etykieta w skali 1:1, w milimetrach — to, co widzisz, odpowiada rzeczywistemu rozmiarowi wydruku.
+- **Pasek wyrównania (nad canvasem)** — wyrównywanie obiektów i zmiana ich kolejności.
+- **Prawy panel („Właściwości")** — ustawienia obiektu, który akurat zaznaczyłaś/eś.
 
 ![Edytor — widok ogólny](screenshots/help/pl/editor-overview.png)
 
-*kadr: cały edytor z otwartym szablonem; podpisane strzałkami: toolbar, panel Dodaj, canvas, pasek wyrównania, panel Właściwości.*
+*kadr: cały edytor z otwartym szablonem; podpisane strzałkami: pasek narzędzi, panel Dodaj, canvas, pasek wyrównania, panel Właściwości.*
 
-### Pasek wyrównania — co która grupa robi
+### Pasek wyrównania — co robi która grupa przycisków
 
-- **Strona** — wyrównuje obiekt do krawędzi/środka strony.
-- **Zaznaczenie** — wyrównuje obiekty względem siebie (potrzebne ≥2 zaznaczone).
-- **Warstwa** — zmienia kolejność (przód/tył) zaznaczonych obiektów.
-- **Rozłóż** (3+ obiektów) — równe odstępy w poziomie/pionie.
+- **Strona** — wyrównuje zaznaczony obiekt do krawędzi lub środka strony.
+- **Zaznaczenie** — wyrównuje obiekty względem siebie (potrzeba co najmniej 2 zaznaczonych).
+- **Warstwa** — zmienia, który obiekt jest z przodu, a który z tyłu (więcej w sekcji 4).
+- **Rozłóż** — równe odstępy między obiektami w poziomie lub w pionie (potrzeba co najmniej 3 zaznaczonych).
 
-Każda ikona ma podpowiedź (najedź myszką).
+![zbliżenie na pasek wyrównania nad canvasem z czterema grupami przycisków — Strona, Zaznaczenie, Warstwa, Rozłóż — każda podpisana strzałką.](screenshots/help/pl/alignment-bar-groups.png)
+
+Każda ikona ma podpowiedź — najedź na nią myszką, a zobaczysz, co robi.
 
 ---
 
@@ -79,72 +98,133 @@ Każda ikona ma podpowiedź (najedź myszką).
 
 ### Foldery — porządek we własnych szablonach
 
-Na stronie **Szablony** po lewej masz pasek folderów: **Wszystkie**, Twoje foldery (z licznikami) i **Bez folderu**. Foldery są **prywatne** — każdy użytkownik ma swoje.
+Na stronie **Szablony**, po lewej stronie, masz pasek folderów: **Wszystkie**, Twoje foldery (z liczbą szablonów w każdym) i **Bez folderu**. Foldery są **prywatne** — każdy użytkownik widzi tylko swoje.
 
-- **Nowy folder** — przycisk na dole paska.
-- **Przenoszenie**: najedź na kafelek szablonu → **⚙** → wybierz folder → Zapisz.
-- **Edycja (✎)** — zmiana nazwy i **kolor folderu** (paleta 8 kolorów): kolorowa kropka pojawia się przy folderze na pasku i na kafelkach jego szablonów.
-- **Usunięcie (✕)** — **nie kasuje szablonów**, wracają do „Bez folderu".
+![pasek folderów po lewej stronie strony Szablony — pozycje „Wszystkie", dwa przykładowe foldery z kolorowymi kropkami i licznikami, „Bez folderu" oraz przycisk „Nowy folder" na dole.](screenshots/help/pl/folder-rail.png)
+
+1. Aby założyć nowy folder, kliknij **Nowy folder** na dole paska.
+2. Aby przenieść szablon do folderu: najedź myszką na jego kafelek, kliknij ikonę **⚙**, wybierz folder z listy i kliknij **Zapisz**.
+
+![kafelek szablonu z otwartym menu ⚙, widoczna lista folderów do wyboru i przycisk „Zapisz".](screenshots/help/pl/folder-menu.png)
+
+3. Aby zmienić nazwę lub kolor folderu, kliknij ikonę **✎** przy folderze. Do wyboru masz 8 kolorów — kolorowa kropka pojawi się przy folderze na pasku i na kafelkach jego szablonów.
+
+![okno edycji folderu (✎) z polem nazwy i paletą 8 kolorowych kropek do wyboru.](screenshots/help/pl/folder-edit.png)
+
+4. Usunięcie folderu (ikona **✕**) **nie kasuje szablonów** — po prostu wracają do „Bez folderu".
 
 ### Biblioteka — gotowe projekty i szablony od innych
 
 Pozycja **Biblioteka** w menu ma dwie sekcje:
 
-- **Gotowe projekty** — wbudowane startery (etykieta produktu z EAN i datą, adres wysyłki, cena półkowa, termin przydatności, etykieta magazynowa z QR, naklejka inwentarzowa).
-- **Od użytkowników** — szablony, które inni udostępnili (widać autora).
+- **Gotowe projekty** — przygotowane wzory na start: etykieta produktu z kodem EAN i datą, adres wysyłki, cena półkowa, termin przydatności, etykieta magazynowa z kodem QR, naklejka inwentarzowa.
+- **Od użytkowników** — szablony, które udostępnili inni użytkownicy (widzisz, kto jest autorem).
 
-Przycisk **„Użyj"** zawsze tworzy **Twoją własną kopię** i otwiera ją w edytorze — oryginału nie da się zepsuć.
+![strona Biblioteka z dwiema sekcjami — „Gotowe projekty" u góry i „Od użytkowników" niżej — każda pozycja z przyciskiem „Użyj".](screenshots/help/pl/library-page.png)
+
+Przycisk **„Użyj"** zawsze tworzy **Twoją własną kopię** i od razu otwiera ją w edytorze — nie da się przypadkiem zepsuć oryginału.
 
 ### Udostępnianie własnego szablonu
 
-Szablony → najedź na kafelek → **⚙** → zaznacz **„Udostępnij w Bibliotece"**. W tym samym oknie możesz też wgrać **grafikę wyróżniającą** — obrazek podglądowy pokazywany na kafelku listy i w Bibliotece. Od tej chwili wszyscy zalogowani widzą go w Bibliotece i mogą sklonować; **edytujesz tylko Ty**. Udostępniony szablon ma na liście ikonę 📚. Odznacz, aby wycofać z Biblioteki.
+Chcesz, żeby inni w firmie mogli skorzystać z Twojego szablonu? Udostępnij go w Bibliotece:
+
+1. Na stronie **Szablony** najedź myszką na kafelek szablonu i kliknij **⚙**.
+2. Zaznacz **„Udostępnij w Bibliotece"**.
+3. Opcjonalnie wgraj **grafikę wyróżniającą** — to obrazek podglądowy, który będzie widoczny na kafelku listy i w Bibliotece.
+
+![menu ⚙ kafelka szablonu z zaznaczonym polem „Udostępnij w Bibliotece" i widocznym polem do wgrania grafiki wyróżniającej.](screenshots/help/pl/share-template.png)
+
+Od tej chwili wszyscy zalogowani użytkownicy widzą szablon w Bibliotece i mogą go sklonować — ale **edytować oryginał możesz tylko Ty**. Udostępniony szablon ma na liście ikonę 📚. Odznacz pole, aby wycofać go z Biblioteki.
 
 ---
 
 ## 3. Tworzenie etykiety — przewodnik po obiektach
 
-Wszystkie poniższe są w **lewym panelu**, sekcja *Dodaj*.
+Wszystko poniżej znajdziesz w **lewym panelu**, w sekcji *Dodaj*. Każdy przycisk wstawia inny typ **obiektu** — czyli elementu, który możesz dowolnie przesuwać i edytować na etykiecie.
 
 ### T — Tekst
 
-**Co robi:** Pojedyncza linia tekstu o stałym rozmiarze.
-**Kiedy:** Etykiety / nagłówki / krótkie napisy.
-**Jak:** Klik **T Tekst**, potem zaznacz na canvasie i edytuj treść w prawym panelu.
+**Co robi:** Wstawia pojedynczą linię tekstu o stałym rozmiarze — nie zawija się, jeśli tekst jest za długi.
+**Kiedy używać:** Nagłówki, krótkie napisy, stałe informacje.
+**Jak:**
+
+1. Kliknij **T Tekst** w lewym panelu.
+2. Zaznacz nowy obiekt na canvasie.
+3. W prawym panelu wpisz treść w polu tekstowym.
+
+![canvas z zaznaczonym obiektem Tekst; prawy panel z polem Treść i przykładowym tekstem.](screenshots/help/pl/object-text.png)
 
 ### ¶ — Blok tekstu
 
-**Co robi:** Wieloliniowy tekst, który automatycznie zawija się w ramce; opcjonalnie *auto-skalowanie* zmniejsza/zwiększa font żeby się zmieścił.
-**Kiedy:** Opisy produktu o zmiennej długości (idealne do `{{description}}` ze spreadsheetu).
-**Jak:** Klik **¶ Blok tekstu**. W prawym panelu zaznacz **Auto-skalowanie** i ustaw min/max font.
+**Co robi:** Wstawia wieloliniowy tekst, który automatycznie zawija się w ramce. Możesz też włączyć **auto-skalowanie** — program sam zmniejszy lub zwiększy font, żeby tekst zmieścił się w ramce.
+**Kiedy używać:** Opisy produktów o zmiennej długości — świetnie sprawdza się z `{{description}}` pobieranym z arkusza (patrz sekcja 6).
+**Jak:**
+
+1. Kliknij **¶ Blok tekstu**.
+2. W prawym panelu zaznacz **Auto-skalowanie** i ustaw minimalny oraz maksymalny rozmiar fontu.
+
+![canvas z zaznaczonym Blokiem tekstu; prawy panel z zaznaczonym checkboxem Auto-skalowanie oraz polami min/max font.](screenshots/help/pl/object-textblock.png)
 
 ### ▭ — Prostokąt, ╱ — Linia
 
-**Co robi:** Geometria pomocnicza (ramki, separatory).
-**Jak:** Klik → przeciągnij w canvasie żeby zmienić rozmiar; ustaw kolor/obrys w prawym panelu.
+**Co robi:** Dodaje prostą geometrię — ramki, separatory, podziałki.
+**Jak:**
+
+1. Kliknij ▭ lub ╱.
+2. Przeciągnij na canvasie, żeby ustawić rozmiar.
+3. W prawym panelu ustaw kolor wypełnienia i obrysu.
+
+![canvas z narysowanym prostokątem i linią; prawy panel z wyborem koloru wypełnienia i obrysu.](screenshots/help/pl/object-shapes.png)
 
 ### ▤ — Kod kreskowy
 
-**Co robi:** Generuje kod kreskowy z podanej wartości.
-**Kiedy:** Każdy katalog produktów z kodem.
-**Jak:** Klik **▤ Kod kreskowy**, w prawym panelu wybierz typ (EAN-13, Code128 itd.) i wpisz dane. Możesz wpisać `{{sku}}` żeby wartość pobrać z arkusza.
+**Co robi:** Generuje **kod kreskowy** (czytelny dla skanera kod graficzny reprezentujący np. numer produktu) na podstawie podanej wartości.
+**Kiedy używać:** Każdy katalog produktów, który ma swoje kody.
+**Jak:**
+
+1. Kliknij **▤ Kod kreskowy**.
+2. W prawym panelu wybierz typ kodu (EAN-13, Code128 itd.).
+3. Wpisz dane — możesz też wpisać `{{sku}}`, żeby wartość była pobierana automatycznie z arkusza (patrz sekcja 6).
+
+![canvas z zaznaczonym obiektem Kod kreskowy; prawy panel z listą typów kodu (EAN-13, Code128) i polem Dane z przykładową wartością.](screenshots/help/pl/object-barcode.png)
 
 ### ▦ — Tabela
 
-**Co robi:** Siatka wierszy×kolumn z tekstem w komórkach — do etykiet typu cecha–wartość, wartości odżywcze, mini-lista pozycji.
-**Jak:** Klik **▦ Tabela**. W prawym panelu ustaw liczbę wierszy/kolumn, wpisz treść komórek (możesz używać `{{kolumna}}` i `{{date+x}}` — pod siatką pojawiają się chipy), ustaw szerokości kolumn w mm, font i ramkę. Zaznacz **Pogrubiony nagłówek**, aby wyróżnić pierwszy wiersz.
-**Druk:** tabela renderuje się natywnie w PDF i jest emitowana jako natywny ZPL (ramka `^GB` + tekst komórek). Uwaga: obrót tabeli nie jest wspierany w ZPL (eksportuje się bez obrotu).
+**Co robi:** Wstawia siatkę wierszy i kolumn z tekstem w komórkach — przydatna do etykiet typu cecha–wartość, tabelek wartości odżywczych albo krótkiej listy pozycji.
+**Jak:**
+
+1. Kliknij **▦ Tabela**.
+2. W prawym panelu ustaw liczbę wierszy i kolumn.
+3. Wpisz treść komórek — możesz używać placeholderów `{{kolumna}}` i dat `{{date+x}}` (patrz sekcje 6 i 7); pod siatką pojawią się kolorowe chipy z podglądem.
+4. Ustaw szerokości kolumn (w mm), font i ramkę.
+5. Zaznacz **Pogrubiony nagłówek**, jeśli chcesz wyróżnić pierwszy wiersz.
+
+![canvas z zaznaczoną Tabelą; prawy panel z polami liczby wierszy/kolumn, edytowaną komórką zawierającą `{{kolumna}}` i zaznaczonym checkboxem Pogrubiony nagłówek.](screenshots/help/pl/object-table.png)
+
+**Warto wiedzieć o druku:** tabela drukuje się poprawnie zarówno w PDF, jak i przy eksporcie do ZPL (patrz sekcja 7a). Jedno ograniczenie: obrócona tabela nie jest wspierana w ZPL — przy eksporcie wraca do pozycji bez obrotu.
 
 ### 🖼 — Obraz
 
-**Co robi:** Wgrywa PNG/JPG/SVG i wstawia na canvas. Drukuje się w PDF.
-**Kiedy:** Logo, ilustracje, ikony, zdjęcia produktu.
-**Jak:** Klik **🖼 Obraz** → wybierz plik. Maks 5 MB.
+**Co robi:** Wgrywa plik graficzny (PNG, JPG lub SVG) i wstawia go na canvas. Drukuje się normalnie w PDF.
+**Kiedy używać:** Logo firmy, ikony, zdjęcia produktu.
+**Jak:**
+
+1. Kliknij **🖼 Obraz**.
+2. Wybierz plik z komputera (maksymalnie 5 MB).
+
+![canvas z wgranym logo jako obiekt Obraz; prawy panel z podstawowymi informacjami o pliku.](screenshots/help/pl/object-image.png)
 
 ### 🌄 — Tło (referencja)
 
-**Co robi:** Wgrywa obraz jako **zablokowane tło na cały rozmiar etykiety**, które jest **widoczne tylko w edytorze, ale NIE drukuje się w PDF**.
-**Kiedy:** Etykiety przyszły z drukarni z już wydrukowanym logo. Skanujesz wzór, wgrywasz jako tło, ustawiasz tekst pasujący do logo, generujesz PDF — drukarka dodrukowuje tylko nowy tekst, logo się nie dubluje.
-**Jak:** Klik **🌄 Tło**, wybierz plik. Tło ląduje na samym dole stosu, zablokowane (bez uchwytów). Żeby zmienić: zaznacz, w prawym panelu odznacz **Zablokuj pozycję** lub zaznacz **Drukuj w PDF**.
+**Co robi:** Wgrywa obraz jako **zablokowane tło na cały rozmiar etykiety** — widoczne tylko w edytorze, jako pomoc wizualna. Tło **nie drukuje się** w PDF.
+**Kiedy używać:** Twoje etykiety przyszły z drukarni z już wydrukowanym logo. Skanujesz taki wzór, wgrywasz go jako tło, ustawiasz nowy tekst dokładnie tam, gdzie powinien być, generujesz PDF — drukarka dodrukowuje tylko nowy tekst, a logo nie dubluje się na wydruku.
+**Jak:**
+
+1. Kliknij **🌄 Tło**.
+2. Wybierz plik. Tło ląduje na samym dole stosu obiektów i jest zablokowane — nie ma uchwytów do przesuwania.
+3. Żeby je zmienić: zaznacz je, potem w prawym panelu odznacz **Zablokuj pozycję** albo zaznacz **Drukuj w PDF**, jeśli jednak chcesz, żeby się wydrukowało.
+
+![canvas z wgranym Tłem wypełniającym całą etykietę, wyglądającym na zablokowane/przygaszone; prawy panel z checkboxami Zablokuj pozycję i Drukuj w PDF blisko góry.](screenshots/help/pl/object-background.png)
 
 ---
 
@@ -152,123 +232,167 @@ Wszystkie poniższe są w **lewym panelu**, sekcja *Dodaj*.
 
 ### Zaznaczanie
 
-- Pojedynczy klik = zaznacz jeden.
-- **Shift + klik** = dodaj do zaznaczenia (multi-select).
-- **Ctrl/Cmd + A** = zaznacz wszystko.
+- Pojedynczy klik = zaznacz jeden obiekt.
+- **Shift + klik** = dodaj kolejny obiekt do zaznaczenia (tzw. multi-select — zaznaczenie kilku naraz).
+- **Ctrl/Cmd + A** = zaznacz wszystkie obiekty na etykiecie.
+
+![canvas z trzema zaznaczonymi obiektami naraz (niebieskie obwódki zaznaczenia), pokazujący zaznaczenie wielokrotne przez Shift+klik.](screenshots/help/pl/multiselect.png)
 
 ### Przesuwanie i skalowanie
 
-- Przeciągaj zaznaczony obiekt myszką.
-- Uchwyty na rogach = skalowanie; uchwyt nad obiektem = obrót.
-- Obiekt **zablokowany** nie ma uchwytów — ale dalej można go zaznaczyć żeby odblokować w prawym panelu.
+- Przeciągaj zaznaczony obiekt myszką, żeby go przesunąć.
+- Uchwyty na rogach służą do zmiany rozmiaru; uchwyt nad obiektem służy do obrotu.
+- Obiekt **zablokowany** nie ma uchwytów — ale wciąż możesz go zaznaczyć i odblokować w prawym panelu.
 
-### Cofanie
+![zaznaczony obiekt na canvasie z widocznymi uchwytami do zmiany rozmiaru na rogach i uchwytem obrotu nad obiektem.](screenshots/help/pl/resize-handles.png)
 
-- **Ctrl/Cmd + Z** = cofnij.
-- **Ctrl/Cmd + Shift + Z** lub **Ctrl/Cmd + Y** = ponów.
+### Cofanie zmian
 
-Jedna operacja = jeden krok historii (np. wyrównanie 5 obiektów cofa się jednym Ctrl+Z).
+- **Ctrl/Cmd + Z** = cofnij ostatnią zmianę.
+- **Ctrl/Cmd + Shift + Z** lub **Ctrl/Cmd + Y** = przywróć cofniętą zmianę.
 
-### Duplikowanie
+Jedna operacja to jeden krok historii — np. wyrównanie 5 obiektów naraz cofniesz jednym Ctrl+Z.
 
-Dwa szybkie sposoby zrobienia kopii zaznaczonego obiektu (lub całego multi-selectu):
+![zbliżenie na przyciski Cofnij i Ponów w pasku narzędzi.](screenshots/help/pl/undo-redo-buttons.png)
 
-- **Alt + przeciąganie** — przytrzymaj **Alt** (lub **Option** na Mac) i przeciągnij zaznaczony obiekt. Oryginał zostaje w miejscu, klon ląduje pod kursorem w momencie puszczenia myszki. Multi-select zachowuje względne pozycje — przeciągnij jeden z 3 zaznaczonych, dostaniesz 3 klony w nowej lokalizacji.
-- **Ctrl/Cmd + D** — duplikuje zaznaczone "w miejscu" z drobnym przesunięciem (+5 mm w prawo i w dół). Selekcja od razu skacze na klony, więc kolejne Ctrl+D buduje schodek kopii w prawo-w-dół.
+### Duplikowanie (robienie kopii)
 
-Klon dziedziczy wszystko: font, kolor, rotację, flagi *Zablokuj* / *Drukuj w PDF*, a obrazy współdzielą ten sam Asset (jedna binarka → wiele obiektów). Pełne duplikowanie multi-selectu cofniesz jednym Ctrl+Z.
+Dwa szybkie sposoby na skopiowanie zaznaczonego obiektu (albo całego zaznaczenia wielu obiektów):
 
-### Kolejność warstw (z-order)
+- **Alt + przeciąganie** — przytrzymaj **Alt** (na Mac: **Option**) i przeciągnij zaznaczony obiekt. Oryginał zostaje na miejscu, a kopia ląduje tam, gdzie puścisz myszkę.
+- **Ctrl/Cmd + D** — tworzy kopię „w miejscu", przesuniętą o 5 mm w prawo i w dół. Zaznaczenie od razu przeskakuje na nową kopię, więc kolejne Ctrl+D buduje schodek kopii.
 
-W **pasku wyrównania**, grupa **Warstwa**:
+![canvas w trakcie przeciągania z wciśniętym Alt — widoczny oryginalny obiekt w miejscu startowym i tworzona kopia pod kursorem.](screenshots/help/pl/duplicate-altdrag.png)
 
-- ⤓ **Na sam dół** — wsadź zaznaczone pod resztę.
-- ↓ **Niżej** — przesuń o jedno pod sąsiada.
-- ↑ **Wyżej** — przesuń o jedno nad sąsiada.
-- ⤒ **Na sam wierzch** — nad wszystko.
+Kopia dziedziczy wszystko: font, kolor, obrót, ustawienia *Zablokuj* i *Drukuj w PDF*. Obrazy współdzielą ten sam plik źródłowy, więc nie zajmują dodatkowego miejsca.
 
-Multi-select zachowuje względną kolejność zaznaczonych.
+### Kolejność warstw (co jest na wierzchu)
 
-### Lock + Drukuj w PDF (prawy panel)
+W **pasku wyrównania**, w grupie **Warstwa**:
 
-Każdy obiekt ma na górze prawego panelu dwa checkboxy:
+- ⤓ **Na sam dół** — chowa zaznaczony obiekt pod resztę.
+- ↓ **Niżej** — przesuwa o jedną pozycję w dół.
+- ↑ **Wyżej** — przesuwa o jedną pozycję w górę.
+- ⤒ **Na sam wierzch** — stawia obiekt nad wszystkimi innymi.
 
-- **🔒 Zablokuj pozycję** — wyłącza przesuwanie i skalowanie (ale dalej można edytować font, kolor itd.).
-- **🖨 Drukuj w PDF** — domyślnie zaznaczone. Odznaczone = obiekt widać tylko w edytorze, w PDF się nie pojawi (renderer go pomija). Obiekty nie-drukowane są wyblakłe (50% przezroczystości) żebyś od razu widział.
+![zbliżenie na grupę Warstwa w pasku wyrównania z czterema ikonami podpisanymi strzałkami.](screenshots/help/pl/layer-buttons.png)
+
+### Blokada i drukowanie (prawy panel)
+
+Na samej górze prawego panelu każdy obiekt ma dwa pola wyboru:
+
+- **🔒 Zablokuj pozycję** — wyłącza przesuwanie i zmianę rozmiaru (nadal można edytować font, kolor itd.).
+- **🖨 Drukuj w PDF** — domyślnie zaznaczone. Jeśli je odznaczysz, obiekt będzie widoczny tylko w edytorze i nie pojawi się w wygenerowanym PDF. Takie obiekty są wyblakłe na canvasie, żebyś od razu widziała/widział, że nie wydrukują się.
+
+![góra prawego panelu z checkboxami 🔒 Zablokuj pozycję i 🖨 Drukuj w PDF; Drukuj w PDF odznaczone, a odpowiadający obiekt na canvasie wyblakły.](screenshots/help/pl/lock-print-checkboxes.png)
 
 ### Autozapis
 
-Edytor sam zapisuje co kilka sekund. Status w toolbarze:
-- **Niezapisane zmiany** — coś jest do zapisania.
-- **Autozapis…** — w trakcie wysyłania.
-- **Autozapisano 12:34** — ostatni zapis.
+Edytor sam zapisuje Twoją pracę co kilka sekund. Status widzisz w pasku narzędzi:
 
-Możesz też ręcznie kliknąć **Zapisz**.
+- **Niezapisane zmiany** — jest coś do zapisania.
+- **Autozapis…** — trwa wysyłanie.
+- **Autozapisano 12:34** — ostatni udany zapis.
+
+![zbliżenie na obszar statusu autozapisu w pasku narzędzi, pokazujące kolejno trzy stany: „Niezapisane zmiany", „Autozapis…", „Autozapisano 12:34".](screenshots/help/pl/autosave-status.png)
+
+Możesz też w każdej chwili kliknąć **Zapisz** ręcznie.
 
 ### Historia wersji
 
-Każde **ręczne** zapisanie (przycisk **Zapisz** lub **Ctrl+S**) tworzy wersję szablonu. Autozapis nadpisuje bieżący stan i **nie** zaśmieca historii. Przycisk **🕘 Historia** w toolbarze pokazuje listę wersji (numer, data, autor) — kliknij **Przywróć**, aby wrócić do wybranej. Przywrócenie zapisuje bieżący stan jako nową wersję („restored from vN"), więc jest odwracalne. Program trzyma 30 ostatnich wersji na szablon.
+Każdy **ręczny** zapis (przycisk **Zapisz** albo **Ctrl+S**) tworzy nową **wersję** szablonu — czyli migawkę tego, jak wyglądał w danym momencie. Autozapis nadpisuje bieżący stan i nie tworzy dodatkowych wersji, dzięki czemu lista pozostaje krótka i czytelna.
+
+1. Kliknij **🕘 Historia** w pasku narzędzi.
+2. Zobaczysz listę wersji: numer, datę i autora.
+3. Kliknij **Przywróć** przy tej, do której chcesz wrócić.
+
+![panel Historia otwarty, z listą kilku wersji (numer, data, autor) i przyciskiem Przywróć przy jednej z nich.](screenshots/help/pl/version-history.png)
+
+Przywrócenie zapisuje bieżący stan jako nową wersję, więc niczego nie tracisz bezpowrotnie — program trzyma 30 ostatnich wersji na szablon.
 
 ### Zmiana rozmiaru etykiety
 
-Rozmiar ustawiony przy tworzeniu szablonu **można zmienić w każdej chwili**: w toolbarze kliknij przycisk **📐 {szerokość}×{wysokość}**.
+Rozmiar wybrany przy tworzeniu szablonu **można zmienić w każdej chwili**.
 
-- Wpisz nową szerokość i wysokość w mm (1–1000), albo kliknij jeden z gotowych presetów (40×100, 50×30, 100×150, 105×148, 210×297).
-- Obiekty **nie są przeskalowywane** — zachowują pozycje w mm. Po zmniejszeniu etykiety elementy poza krawędzią po prostu przesuwasz z powrotem.
+1. W pasku narzędzi kliknij przycisk **📐 {szerokość}×{wysokość}**.
+2. Wpisz nową szerokość i wysokość w mm (od 1 do 1000) albo kliknij jeden z gotowych presetów (40×100, 50×30, 100×150, 105×148, 210×297).
+3. Kliknij **Zastosuj**.
 
 ![Okno „Rozmiar etykiety"](screenshots/help/pl/label-size.png)
 
 *kadr: modal z polami Szerokość/Wysokość i rzędem presetów-chipów; kursor nad przyciskiem „Zastosuj".*
 
+Obiekty **nie są przeskalowywane** — zachowują swoje pozycje w milimetrach. Jeśli zmniejszysz etykietę, po prostu przeciągnij z powrotem elementy, które wystają poza nową krawędź.
+
 ---
 
 ## 5. Pobieranie PDF — pojedyncza etykieta
 
-Chcesz najpierw zobaczyć wynik? Kliknij **👁 Podgląd** — PDF pokaże się w oknie aplikacji z przyciskiem **Pobierz PDF**. Albo od razu **Pobierz PDF** w toolbarze. Renderowanie jest synchroniczne (kilka sekund), plik PDF zaczyna się ściągać.
+Chcesz najpierw zobaczyć wynik? Kliknij **👁 Podgląd** — PDF pojawi się w oknie aplikacji razem z przyciskiem **Pobierz PDF**.
 
-Jeśli któryś tekst nie zmieścił się w bloku, zobaczysz chip **N ostrzeżeń** — najedź żeby zobaczyć szczegóły.
+![okno podglądu PDF w aplikacji z wyrenderowaną etykietą i przyciskiem Pobierz PDF pod spodem.](screenshots/help/pl/preview-pdf.png)
 
-Placeholdery kolumn (`{{name}}`) w pojedynczym PDF zostają jako tekst — dane podmienia dopiero generowanie serii. **Placeholdery daty** (`{{date+14d}}`, patrz sekcja 7) są natomiast obliczane także tutaj.
+Możesz też od razu kliknąć **Pobierz PDF** w pasku narzędzi — plik zacznie się ściągać po kilku sekundach.
+
+Jeśli jakiś tekst nie zmieścił się w swoim bloku, zobaczysz w pasku narzędzi chip **„N ostrzeżeń"**. Najedź na niego myszką, żeby zobaczyć szczegóły.
+
+![pasek narzędzi z widocznym chipem „N ostrzeżeń" i otwartym dymkiem podpowiedzi ze szczegółami przycięcia tekstu.](screenshots/help/pl/warnings-chip.png)
+
+Uwaga: placeholdery kolumn (`{{name}}` — miejsce, w które program sam wstawi dane z arkusza) w pojedynczym PDF zostają jako zwykły tekst — prawdziwe dane podstawia dopiero **generowanie serii** (sekcja 6). Placeholdery daty (`{{date+14d}}`, sekcja 7) są natomiast obliczane od razu, także tutaj.
 
 ---
 
 ## 6. Generowanie serii — wiele etykiet z jednego szablonu
 
-To główny feature programu. Pozwala wygenerować np. 200 etykiet z jednego szablonu, gdzie każda dostaje inne dane z arkusza/bazy.
+To jest **główna funkcja programu**. Pozwala wygenerować np. 200 etykiet z jednego szablonu, gdzie każda dostaje inne dane — np. inną nazwę produktu i inny kod kreskowy — pobrane z arkusza albo z bazy danych.
 
-### Krok 0 — przygotowanie szablonu
+### Krok 0 — przygotuj szablon
 
-Wstaw w Text lub Barcode placeholder w postaci `{{nazwa_kolumny}}`, np.:
-- Text: `{{name}}`
-- Barcode data: `{{sku}}`
+W obiekcie Tekst albo Kod kreskowy wstaw **placeholder** — czyli miejsce, w które program sam wstawi dane z Twojego arkusza — w postaci `{{nazwa_kolumny}}`, np.:
 
-Każde wystąpienie zostanie podmienione wartością z odpowiedniej kolumny.
+- Tekst: `{{name}}`
+- Dane kodu kreskowego: `{{sku}}`
+
+Każde takie wystąpienie zostanie podmienione wartością z odpowiedniej kolumny.
 
 ![Wykryte pola dynamiczne](screenshots/help/pl/dynamic-fields.png)
 
 *kadr: prawy panel Właściwości z polem tekstowym zawierającym `{{name}}` i `{{date+14d}}`; poniżej dwa chipy — fioletowy `{{name}}` i zielony `{{date+14d}} → 18.07.2026`.*
 
-### Krok 1 — Wgraj dane
+### Krok 1 — wgraj dane
 
-Toolbar → **Generuj serię** → Krok 1 (Wgraj dane).
+1. W pasku narzędzi kliknij **Generuj serię**.
+2. W Kroku 1 wybierz plik z danymi.
+
+![Krok 1 kreatora Generuj serię z polem do wyboru/przeciągnięcia pliku i tabelką dopuszczalnych formatów.](screenshots/help/pl/series-step1-upload.png)
 
 Akceptowane formaty:
 
-| Format | Maks rozmiar | Maks wierszy |
+| Format | Maksymalny rozmiar pliku | Maksymalna liczba wierszy |
 |---|---|---|
 | `.csv` | 10 MB | 1000 |
 | `.xls` / `.xlsx` | 10 MB | 1000 |
 | `.db` / `.sqlite` / `.sqlite3` | 50 MB | 1000 (na zapytanie) |
 
-#### CSV / Excel
+#### Jeśli wgrywasz CSV lub Excel
 
-Plik trafia na serwer i od razu jest parsowany. Widzisz kolumny i liczbę wierszy. Klik **Dalej**.
+Plik trafia na serwer i od razu jest odczytywany. Zobaczysz listę wykrytych kolumn i liczbę wierszy.
 
-#### SQLite
+![podgląd po wgraniu pliku CSV — lista wykrytych kolumn jako mała tabelka, liczba wierszy i przycisk „Dalej".](screenshots/help/pl/series-csv-preview.png)
 
-Po uploadzie program pokazuje **listę tabel** (posortowane: najpierw te z największą liczbą wierszy). Wybierz tabelę z danymi i kliknij **Użyj tego źródła**.
+Kliknij **Dalej**.
 
-Jeśli potrzebujesz filtrowania na poziomie SQL (np. tylko produkty z konkretnej kategorii, lub JOIN dwóch tabel), rozwiń **Pokaż zaawansowane** i wpisz zapytanie SELECT, np.:
+#### Jeśli wgrywasz SQLite (bazę danych)
+
+**SQLite** to plik z bazą danych — jeśli ktoś w firmie eksportuje dane z systemu magazynowego do takiego pliku, możesz go użyć bezpośrednio, bez konwersji na CSV.
+
+1. Po wgraniu pliku program pokaże **listę tabel** w bazie, posortowaną tak, że tabele z największą liczbą wierszy są na górze.
+2. Wybierz tabelę, która zawiera dane, których potrzebujesz.
+3. Kliknij **Użyj tego źródła**.
+
+![lista tabel po wgraniu pliku SQLite, posortowana według liczby wierszy, z przyciskiem „Użyj tego źródła" przy jednej z pozycji.](screenshots/help/pl/series-sqlite-tables.png)
+
+Jeśli potrzebujesz węższego wyboru danych (np. tylko produkty z jednej kategorii), rozwiń **Pokaż zaawansowane** i wpisz zapytanie SELECT — to polecenie języka baz danych, które mówi programowi dokładnie, jakie dane pobrać, np.:
 
 ```sql
 SELECT sku, name, price
@@ -276,33 +400,46 @@ FROM products
 WHERE category = 'labels' AND price > 0
 ```
 
-**Bezpieczeństwo:** Połączenie jest read-only. Akceptowany jest tylko pojedynczy SELECT — `INSERT`, `UPDATE`, `DELETE`, `DROP`, `ATTACH`, `PRAGMA` są blokowane. Maksymalnie 1000 wierszy w wyniku — większe odrzucone z prośbą o `WHERE`/`LIMIT`.
+![rozwinięty panel „Pokaż zaawansowane" z wpisanym zapytaniem SQL w polu tekstowym i przyciskiem „Użyj tego źródła".](screenshots/help/pl/series-sqlite-sql.png)
 
-### Krok 2 — Mapowanie pól
+**Bezpieczeństwo danych:** połączenie z bazą jest tylko do odczytu. Program przyjmuje wyłącznie polecenia odczytujące dane (SELECT) — żadne polecenie mogące coś zmienić lub skasować nie zostanie wykonane. Wynik może mieć maksymalnie 1000 wierszy.
 
-Program wykrywa wszystkie placeholdery `{{...}}` z szablonu. Jeśli nazwa placeholdera == nazwa kolumny, mapowanie wstawia się automatycznie. Jeśli różne — wybierz ręcznie z listy.
+### Krok 2 — dopasuj pola (mapowanie)
 
-### Krok 3 — Filtr (opcjonalny)
-
-Możesz odsiać wiersze przed generowaniem, np. *price > 10* albo *category contains "tea"*. Klik **Sprawdź filtr** pokazuje ile wierszy się załapie. Pomiń ten krok jeśli chcesz wszystkie.
+Program sam wykrywa wszystkie placeholdery `{{...}}` z Twojego szablonu. Jeśli nazwa placeholdera pasuje dokładnie do nazwy kolumny w danych, dopasowanie ustawia się samo. Jeśli nazwy się różnią, wybierz kolumnę ręcznie z listy.
 
 ![Kreator serii — mapowanie](screenshots/help/pl/series-map.png)
 
 *kadr: krok 2 kreatora z listą placeholderów po lewej i selectami kolumn po prawej; przy `{{date}}` widoczna zielona podpowiedź „Opcjonalne — bez mapowania użyta zostanie dzisiejsza data".*
 
-### Krok 4 — Generuj PDF
+### Krok 3 — filtr (opcjonalnie)
 
-Klik **Generuj PDF**. Powstaje zadanie w tle, pasek pokazuje postęp. Po zakończeniu PDF ściąga się automatycznie.
+Jeśli nie chcesz drukować wszystkich wierszy z arkusza, możesz je odsiać, np. tylko produkty droższe niż 10 zł albo takie, których nazwa zawiera słowo „herbata".
 
-Jeśli któreś etykiety mają teksty nie mieszczące się w blokach, zobaczysz listę ostrzeżeń (które wiersze, które obiekty) — PDF i tak powstaje.
+1. Wybierz kolumnę, warunek (np. „większe niż") i wartość.
+2. Kliknij **Sprawdź filtr**, żeby zobaczyć, ile wierszy się załapie.
+
+![Krok 3 Filtr z wybraną kolumną, warunkiem i wartością (np. price > 10) oraz wynikiem po kliknięciu „Sprawdź filtr" pokazującym liczbę pasujących wierszy.](screenshots/help/pl/series-filter.png)
+
+Możesz też pominąć ten krok, jeśli chcesz wygenerować etykiety dla wszystkich wierszy.
+
+### Krok 4 — wygeneruj PDF
+
+Kliknij **Generuj PDF**. Program zaczyna pracować w tle, a pasek postępu pokazuje, ile zostało. Po zakończeniu PDF zaczyna się pobierać automatycznie.
+
+![Krok 4 z paskiem postępu generowania w trakcie pracy i statusem tekstowym.](screenshots/help/pl/series-progress.png)
+
+Jeśli w niektórych etykietach tekst nie zmieścił się w swoim bloku, zobaczysz listę ostrzeżeń — które wiersze, które obiekty. PDF i tak zostanie wygenerowany dla wszystkich etykiet.
+
+![lista ostrzeżeń po wygenerowaniu serii, z wyszczególnieniem konkretnych wierszy i obiektów z przyciętym tekstem.](screenshots/help/pl/series-warnings-list.png)
 
 ---
 
 ## 7. Placeholdery daty — `{{date+…}}`
 
-Oprócz kolumn z arkusza możesz wstawiać **daty liczone automatycznie w momencie generowania** — idealne do terminów przydatności („zużyć do") i dat produkcji. Działają wszędzie: w pojedynczym PDF, w serii i w eksporcie ZPL.
+Oprócz kolumn z arkusza możesz wstawić **daty liczone automatycznie w momencie generowania etykiety** — idealne do terminów przydatności („zużyć do") i dat produkcji. Działają wszędzie: w pojedynczym PDF, w serii i w eksporcie ZPL.
 
-### Składnia
+### Jak to zapisać
 
 | Wpisujesz | Dostajesz (przy generowaniu 04.07.2026) |
 |---|---|
@@ -314,13 +451,13 @@ Oprócz kolumn z arkusza możesz wstawiać **daty liczone automatycznie w momenc
 | `{{date+14d:DD/MM/YY}}` | 18/07/26 (własny format) |
 | `{{date+3m:YYYY-MM-DD}}` | 2026-10-04 |
 
-- Jednostki przesunięcia: **d** = dni, **m** = miesiące, **y** = lata; działa `+` i `-`.
-- Format (opcjonalnie, po dwukropku) składasz z klocków **DD**, **MM**, **YY**, **YYYY** — separatory (kropki, ukośniki, myślniki, spacje) przechodzą bez zmian. Bez formatu dostajesz `DD.MM.YYYY`.
-- Koniec miesiąca jest bezpieczny: 31 stycznia + 1 miesiąc = 28/29 lutego (nie „31 lutego").
+- Jednostki przesunięcia: **d** = dni, **m** = miesiące, **y** = lata. Działa zarówno `+`, jak i `-`.
+- Format zapisu daty (opcjonalny, po dwukropku) budujesz z klocków **DD**, **MM**, **YY**, **YYYY** — separatory (kropki, ukośniki, myślniki, spacje) zostają bez zmian. Bez podania formatu dostajesz `DD.MM.YYYY`.
+- Koniec miesiąca jest bezpieczny: 31 stycznia + 1 miesiąc da 28 lub 29 lutego — program nigdy nie stworzy nieistniejącej daty typu „31 lutego".
 
-### Skąd wiesz, że zadziała?
+### Skąd wiesz, że to zadziała
 
-Po wpisaniu placeholdera w prawym panelu pojawia się **zielony chip z podglądem obliczonej daty** (fioletowe chipy to zwykłe kolumny z arkusza). Najedź na chip — tooltip przypomina, że finalna wartość liczy się przy generowaniu.
+Po wpisaniu placeholdera w prawym panelu pojawia się **zielony chip z podglądem obliczonej daty** (fioletowe chipy to zwykłe kolumny z arkusza). Najedź na chip myszką — podpowiedź przypomni, że ostateczna wartość liczy się dopiero w momencie generowania.
 
 ![Zielony chip daty](screenshots/help/pl/date-chip.png)
 
@@ -328,63 +465,121 @@ Po wpisaniu placeholdera w prawym panelu pojawia się **zielony chip z podgląde
 
 ### Dobrze wiedzieć
 
-- **Kolumna o nazwie `date`** w arkuszu ma pierwszeństwo dla gołego `{{date}}` — formy z przesunięciem (`{{date+14d}}`) zawsze liczą się automatycznie.
-- Data liczy się **w momencie generowania PDF/ZPL**, według czasu serwera — nie w momencie zapisania szablonu.
-- W kreatorze serii pola datowe **nie wymagają mapowania** na kolumnę.
+- Jeśli w arkuszu masz **kolumnę o nazwie `date`**, to ona ma pierwszeństwo dla gołego `{{date}}`. Formy z przesunięciem (`{{date+14d}}`) zawsze liczą się automatycznie, niezależnie od kolumn w arkuszu.
+- Data liczy się **w momencie generowania** PDF lub ZPL, według zegara serwera — nie w momencie, gdy zapisujesz szablon.
+- W kreatorze serii pola datowe **nie wymagają mapowania** na żadną kolumnę.
 
 ---
 
-## 7a. ZPL — drukarki etykiet Zebra
+## 7a. Drukowanie na drukarkach etykiet (ZPL i TSPL)
 
-**ZPL** to język drukarek etykiet (Zebra i zgodne). Program potrafi w obie strony: zaimportować istniejącą etykietę ZPL do edytora i wyeksportować twój projekt jako ZPL.
+Etykiety drukowane na specjalnych drukarkach etykiet (np. Zebra, TSC, Toshiba) nie używają zwykłego PDF-a — mówią własnym językiem poleceń. Program potrafi ten język zarówno **czytać** (import), jak i **pisać** (eksport), więc nie musisz znać się na nim samodzielnie.
 
-### Import ZPL
+### ZPL — drukarki Zebra i zgodne
 
-Toolbar → **⤓ Importuj ZPL**.
+**ZPL** to specjalny język, którym rozmawiają drukarki etykiet marki Zebra (i modele zgodne z nią). Program potrafi zaimportować istniejącą etykietę zapisaną w ZPL do edytora oraz wyeksportować Twój projekt jako kod ZPL.
 
-1. Wklej kod ZPL (np. z innego systemu albo od dostawcy etykiet).
-2. Wybierz **DPI drukarki** — jeśli nie wiesz, zostaw **Wykryj automatycznie** (program porówna wymiary z kodu z rozmiarem twojej etykiety).
-3. Klik **Sprawdź** — zobaczysz liczbę rozpoznanych obiektów i wykryte DPI; jeśli etykieta z kodu jest większa niż twoja, dostaniesz podpowiedź.
-4. Klik **Importuj** — obiekty lądują na canvasie. **Uwaga:** import zastępuje obecną zawartość etykiety.
+#### Import ZPL
 
-Zmienne drukarkowe w pojedynczych klamrach (np. `{NAZWA}`) przechodzą bez zmian, a polecenia, których edytor nie modeluje, są zachowywane i wracają przy eksporcie.
+1. W pasku narzędzi kliknij **⤓ Importuj ZPL**.
+2. Wklej kod ZPL — np. otrzymany od dostawcy etykiet albo z innego systemu.
+3. Wybierz **DPI drukarki** — to gęstość wydruku, czyli liczba kropek na milimetr, jaką drukuje drukarka. Jeśli nie wiesz, jakie DPI ma Twoja drukarka, zostaw **Wykryj automatycznie** — program porówna wymiary z kodu z rozmiarem Twojej etykiety i sam je odgadnie.
+4. Kliknij **Sprawdź** — zobaczysz liczbę rozpoznanych obiektów i wykryte DPI. Jeśli etykieta z kodu jest większa niż Twoja, dostaniesz podpowiedź.
+5. Kliknij **Importuj** — obiekty lądują na canvasie.
 
 ![Okno importu ZPL](screenshots/help/pl/zpl-import.png)
 
 *kadr: modal z wklejonym kodem ZPL, selektem DPI ustawionym na „Wykryj automatycznie" i wynikiem analizy „12 obiektów · 203 dpi".*
 
-### Eksport ZPL
+**Uwaga:** import zastępuje obecną zawartość etykiety — jeśli coś już zaprojektowałaś/eś, zrób najpierw kopię (sekcja 8a).
 
-Toolbar → **⤒ ZPL**. Dwa tryby:
+#### Eksport ZPL
 
-- **Szablon (zmienne)** — jeden kod ZPL z twojego projektu; placeholdery kolumn `{{...}}` zostają w kodzie (podmienisz je we własnym systemie), a **placeholdery daty są od razu obliczone**. Przyciski **Kopiuj** i **Pobierz .zpl**.
-- **Wsad (dataset)** — wybierz wgrany wcześniej plik danych, a program wygeneruje jeden plik `.zpl` z etykietą dla każdego wiersza (podmienione i kolumny, i daty).
+W pasku narzędzi kliknij **⤒ ZPL**. Do wyboru masz dwa tryby:
 
-Wybierz DPI zgodne z twoją drukarką (203 lub 300).
+- **Szablon (zmienne)** — jeden kod ZPL z Twojego projektu. Placeholdery kolumn `{{...}}` zostają w kodzie jako tekst (podmienisz je we własnym systemie), a placeholdery daty są od razu obliczone. Do dyspozycji masz przyciski **Kopiuj** i **Pobierz .zpl**.
+- **Wsad (dataset)** — wybierz wcześniej wgrany plik danych, a program wygeneruje jeden plik `.zpl` z osobną etykietą dla każdego wiersza (podmienione i kolumny, i daty).
 
 ![Okno eksportu ZPL](screenshots/help/pl/zpl-export.png)
 
 *kadr: modal w trybie „Szablon (zmienne)" z podglądem wygenerowanego kodu i przyciskami Kopiuj / Pobierz .zpl.*
 
-### Druk bezpośredni — konektor
+Wybierz DPI zgodne z Twoją drukarką (zwykle 203 lub 300).
 
-Zamiast pobierać plik `.zpl`, możesz drukować **prosto z edytora** przyciskiem **🖨 Drukuj**:
+### TSPL — drukarki TSC i Toshiba
 
-1. Na komputerze w sieci z drukarkami zainstaluj agenta **blg-connector** (binarka w Assets każdego wydania na GitHubie; konfiguracja: `connector/README.md`).
-2. W aplikacji: **Urządzenia → Dodaj urządzenie** → skopiuj token do `config.yaml` agenta. Urządzenie przejdzie na **Online** i zgłosi listę drukarek.
-3. W edytorze: **🖨 Drukuj** → wybierz urządzenie, drukarkę, liczbę kopii i DPI → **Drukuj**. Okno pokaże postęp: *w kolejce → agent odebrał → wydrukowano* (lub błąd z powodem).
+**TSPL** to odpowiednik ZPL dla drukarek marki TSC i Toshiba — inny dialekt tego samego pomysłu: język poleceń zrozumiały dla drukarki etykiet.
 
-**Szybka ścieżka:** jeśli konektor działa **na tym samym komputerze**, na którym otwarta jest przeglądarka, dialog wykryje go automatycznie i pokaże opcję **⚡ Ten komputer — druk natychmiastowy** (domyślnie wybraną) — etykieta idzie wtedy prosto na drukarkę, bez rundy przez serwer.
+1. W pasku narzędzi kliknij **⤒ TSPL**.
+2. Wybierz DPI drukarki (203 lub 300).
+3. Zobaczysz na bieżąco podgląd wygenerowanego kodu.
+4. Kliknij **Kopiuj** albo **Pobierz .txt**.
 
-Placeholdery daty są obliczane w momencie druku; placeholdery kolumn zostają w kodzie (druk pojedynczej etykiety, nie serii).
+![okno „Export TSPL" z wyborem DPI (203/300), podglądem wygenerowanego kodu TSPL i przyciskami Kopiuj / Pobierz .txt.](screenshots/help/pl/tspl-export.png)
+
+Eksport TSPL działa tylko dla pojedynczej etykiety (bez trybu Wsad) i nie ma jeszcze importu w drugą stronę — to funkcja na wcześniejszym etapie rozwoju niż ZPL.
+
+### Najprościej: kreator „Podłącz drukarkę"
+
+Nie chcesz ręcznie tworzyć pliku ustawień ani przeklejać kodów? Aplikacja ma **kreator**, który przeprowadzi Cię przez wszystko krok po kroku — sam pobierze właściwy program, przygotuje gotowy plik ustawień i poda jedną komendę do skopiowania. Wejdź w **Urządzenia** i kliknij **🖨 Podłącz drukarkę**.
+
+1. **Wybierz swój komputer.** Kreator sam wykrywa system (Mac / Windows / Linux) — potwierdź jednym kliknięciem.
+
+![krok 1 kreatora — pytanie „Na jakim komputerze podłączasz drukarkę?" z kafelkami Mac, Windows, Linux i Linux (ARM).](screenshots/help/pl/connect-wizard-os.png)
+
+2. **Nazwij ten komputer** (np. „Komputer w biurze") — to tylko etykieta, żebyś rozpoznał go na liście.
+
+![krok 2 kreatora — pole „Nazwij ten komputer" z przykładową nazwą.](screenshots/help/pl/connect-wizard-name.png)
+
+3. **Pobierz dwa pliki** — program łączący oraz gotowy plik ustawień (adres serwera i Twój kod są już w nim wpisane; nic nie trzeba edytować).
+
+![krok 3 kreatora — dwa przyciski pobierania: program i plik ustawień, z notką o prywatności klucza.](screenshots/help/pl/connect-wizard-download.png)
+
+4. **Uruchom program** — skopiuj jedną gotową komendę i wklej ją w Terminalu (na Macu kreator chowa w niej zdjęcie systemowej blokady). Zostaw to okno otwarte.
+
+![krok 4 kreatora — pole z komendą do skopiowania, przycisk Kopiuj i przypomnienie „zostaw okno otwarte".](screenshots/help/pl/connect-wizard-run.png)
+
+5. **Poczekaj na połączenie** — kreator sam wykryje, gdy komputer się zgłosi, i pokaże „Połączono".
+
+![krok 5 kreatora — komunikat „Czekam, aż Twój komputer się zgłosi…" ze wskaźnikiem oczekiwania.](screenshots/help/pl/connect-wizard-waiting.png)
+
+6. **Wskaż drukarkę (opcjonalnie)** — podaj adres IP drukarki albo zostaw tryb testowy (wydruki zapisywane do pliku), żeby najpierw wszystko sprawdzić.
+
+![krok 6 kreatora — „Gdzie jest Twoja drukarka?" z polem na adres IP i opcją trybu testowego.](screenshots/help/pl/connect-wizard-printer.png)
+
+Gdy komputer pokaże się jako **Online**, drukujesz z edytora dokładnie tak, jak opisano niżej.
+
+### Sposób zaawansowany: ręczna konfiguracja konektora
+
+Jeśli wolisz zrobić to ręcznie (albo automatyzujesz wiele stanowisk), możesz drukować **prosto z edytora** (dotyczy ZPL — nie TSPL) dzięki **konektorowi** — małemu programowi instalowanemu na komputerze w tej samej sieci co drukarki, który łączy aplikację z drukarką.
+
+1. Zainstaluj agenta **blg-connector** na komputerze podłączonym do sieci z drukarkami (plik do pobrania w sekcji Assets każdego wydania na GitHubie; instrukcja konfiguracji: `connector/README.md`).
+2. W aplikacji przejdź do **Urządzenia → Dodaj urządzenie**.
+
+![okno „Dodaj urządzenie" z wygenerowanym tokenem (kodem) do skopiowania do pliku config.yaml agenta.](screenshots/help/pl/connector-add-device.png)
+
+3. Skopiuj wygenerowany **token** (unikalny kod dostępu) do pliku `config.yaml` agenta. Urządzenie przejdzie w stan **Online** i zgłosi listę podłączonych drukarek.
+4. W edytorze kliknij **🖨 Drukuj**, wybierz urządzenie, drukarkę, liczbę kopii i DPI, a potem kliknij **Drukuj**.
+
+![okno druku w edytorze z wyborem urządzenia, drukarki, liczby kopii i DPI, przyciskiem „Drukuj" oraz widocznym paskiem postępu (w kolejce → agent odebrał → wydrukowano).](screenshots/help/pl/connector-print-dialog.png)
+
+Okno pokaże na żywo postęp: *w kolejce → agent odebrał → wydrukowano* (albo błąd wraz z powodem).
+
+**Szybka ścieżka:** jeśli konektor działa **na tym samym komputerze**, na którym masz otwartą przeglądarkę, program wykryje go automatycznie i zaproponuje opcję **⚡ Ten komputer — druk natychmiastowy**. Etykieta idzie wtedy prosto na drukarkę, bez rundy przez serwer.
+
+![okno druku z zaznaczoną domyślnie opcją „⚡ Ten komputer — druk natychmiastowy".](screenshots/help/pl/connector-fastpath.png)
+
+Placeholdery daty są obliczane w momencie druku; placeholdery kolumn zostają w kodzie (bo to druk pojedynczej etykiety, nie serii).
 
 ### Wirtualna drukarka — przejmij etykiety z innych programów
 
-Konektor potrafi też działać **w drugą stronę**: udaje drukarkę sieciową, a wszystko, co inne aplikacje (ERP, Word, stary program magazynowy) na nią wydrukują, trafia do **Inboxa** na stronie **Urządzenia**.
+Konektor potrafi działać też **w drugą stronę**: udaje zwykłą drukarkę sieciową, a wszystko, co inne aplikacje (system magazynowy, Word, stary program) na nią wydrukują, trafia do **Inboxa** (skrzynki odbiorczej) na stronie **Urządzenia**.
 
-1. W `config.yaml` agenta włącz sekcję `capture` (instrukcja krok po kroku, razem z konfiguracją drukarki w Windows: `connector/README.md`).
+1. W pliku `config.yaml` agenta włącz sekcję `capture` (instrukcja krok po kroku razem z konfiguracją drukarki w Windows znajduje się w `connector/README.md`).
 2. Wydrukuj coś z dowolnej aplikacji na tę wirtualną drukarkę.
-3. **Urządzenia → Inbox** → **Otwórz w edytorze** — etykieta staje się normalnym szablonem: rozmiar wykryty z kodu, teksty i kody kreskowe edytowalne.
+3. Przejdź do **Urządzenia → Inbox** i kliknij **Otwórz w edytorze** — etykieta staje się zwykłym szablonem: rozmiar wykryty z kodu, teksty i kody kreskowe od razu edytowalne.
+
+![strona Urządzenia → Inbox z listą kilku przechwyconych etykiet (miniatury, znaczniki czasu) i przyciskiem „Otwórz w edytorze".](screenshots/help/pl/devices-inbox.png)
 
 Z Inboxa możesz też skopiować surowy kod ZPL albo usunąć wpis. Program przechowuje maksymalnie 200 ostatnich przechwyceń na urządzenie.
 
@@ -392,11 +587,15 @@ Z Inboxa możesz też skopiować surowy kod ZPL albo usunąć wpis. Program prze
 
 ## 7c. Historia wygenerowanych plików
 
-Menu → **Historia**. Każde wygenerowanie — pojedyncza etykieta (**Pobierz PDF**) i seria (PDF lub wsadowy ZPL) — trafia na listę: nazwa szablonu, typ, liczba etykiet, rozmiar, data. Kliknij **Pobierz**, aby pobrać plik ponownie, albo **Usuń**, aby skasować wpis. Pliki są dostępne przez **30 dni**, potem są automatycznie usuwane.
+W menu kliknij **Historia**. Każde wygenerowanie — pojedyncza etykieta (**Pobierz PDF**) i cała seria (PDF albo wsadowy ZPL) — trafia na listę: nazwa szablonu, typ, liczba etykiet, rozmiar, data.
+
+![strona Historia z listą wygenerowanych plików — kolumny nazwa szablonu, typ, liczba etykiet, rozmiar, data — i przyciskami Pobierz oraz Usuń w wierszu.](screenshots/help/pl/generated-history.png)
+
+Kliknij **Pobierz**, aby pobrać plik ponownie bez generowania go od nowa, albo **Usuń**, aby skasować wpis. Pliki są dostępne przez **30 dni**, potem są automatycznie usuwane.
 
 ---
 
-## 8. Administracja (tylko admin)
+## 8. Administracja (tylko administrator)
 
 Lewe menu → **Administracja → Użytkownicy**.
 
@@ -406,61 +605,79 @@ Lewe menu → **Administracja → Użytkownicy**.
 
 ### Tworzenie użytkownika
 
-1. Klik **Utwórz konto**.
-2. Wpisz email + hasło tymczasowe (min. 10 znaków, możesz wygenerować losowe).
+1. Kliknij **Utwórz konto**.
+2. Wpisz email i hasło tymczasowe (minimum 10 znaków; możesz też wygenerować losowe).
 3. Wybierz rolę:
-   - **Administrator** — pełny dostęp + zarządzanie użytkownikami.
-   - **Edytor** — tworzy/edytuje swoje szablony i dataset'y.
-   - **Tylko podgląd** — może otwierać i podglądać, ale nie zapisuje.
-4. Po kliknięciu *Utwórz* program pokaże hasło tymczasowe **tylko raz** — przekaż je użytkownikowi.
+   - **Administrator** — pełny dostęp, w tym zarządzanie użytkownikami.
+   - **Edytor** — tworzy i edytuje własne szablony oraz zestawy danych.
+   - **Tylko podgląd** — może otwierać i oglądać, ale nie zapisuje zmian.
+
+![okno „Utwórz konto" z polami Email, hasło tymczasowe (z przyciskiem „Generuj") i rozwijaną listą Rola (Administrator/Edytor/Tylko podgląd).](screenshots/help/pl/admin-create-user.png)
+
+4. Po kliknięciu **Utwórz** program pokaże hasło tymczasowe **tylko raz** — od razu przekaż je nowemu użytkownikowi.
 
 ### Reset hasła
 
-Klik **Resetuj hasło** przy koncie → wygeneruj nowe tymczasowe → przekaż użytkownikowi. Przy następnym logowaniu zostanie zmuszony je zmienić.
+1. Przy koncie użytkownika kliknij **Resetuj hasło**.
+2. Program wygeneruje nowe hasło tymczasowe — przekaż je użytkownikowi.
 
-### Aktywacja / dezaktywacja
+![wiersz użytkownika z kliknietym przyciskiem „Resetuj hasło" i oknem pokazującym nowo wygenerowane hasło tymczasowe, wyświetlone tylko raz.](screenshots/help/pl/admin-reset-password.png)
 
-Toggle **Aktywne** w wierszu użytkownika. Nie możesz dezaktywować własnego konta (zabezpieczenie).
+Przy następnym logowaniu użytkownik zostanie poproszony o ustawienie własnego hasła.
+
+### Aktywacja / dezaktywacja konta
+
+Przełącznik **Aktywne** w wierszu użytkownika włącza lub wyłącza dostęp do konta. Nie możesz dezaktywować własnego konta — to zabezpieczenie przed przypadkowym zablokowaniem samej/samego siebie.
+
+![zbliżenie na przełącznik „Aktywne" w wierszu użytkownika, włączony (zielony); dla wiersza własnego konta przełącznik wyszarzony/nieaktywny.](screenshots/help/pl/admin-active-toggle.png)
 
 ---
 
 ## 8a. Import / eksport szablonów
 
-Każdy szablon możesz zapisać jako jeden plik `.blg-template.json` (rozmiar etykiety + pozycje wszystkich obiektów + ich treść + obrazki zakodowane w pliku). Plik jest przenośny: zarchiwizujesz go, wyślesz mailem albo zaimportujesz na drugiej instancji BarcodeLabelGen.
+Każdy szablon możesz zapisać jako jeden plik `.blg-template.json` — zawiera rozmiar etykiety, pozycje wszystkich obiektów, ich treść oraz obrazki zakodowane wprost w pliku. Taki plik jest przenośny: możesz go zarchiwizować, wysłać mailem albo zaimportować na innej instalacji BarcodeLabelGen.
 
 ### Eksport
 
-Dwa miejsca:
-- **Szablony** → najedź na kafelek szablonu → ikona **⬇** w prawym dolnym rogu.
-- W edytorze → toolbar → przycisk **⬇ Eksportuj** (obok *Pobierz PDF*).
+Masz dwie możliwości:
 
-Pobiera się plik `<nazwa>.blg-template.json` — najlepiej trzymaj go w katalogu backupów.
+- Na stronie **Szablony**: najedź myszką na kafelek szablonu i kliknij ikonę **⬇** w prawym dolnym rogu.
+- W edytorze: w pasku narzędzi kliknij **⬇ Eksportuj** (obok *Pobierz PDF*).
+
+![zbliżenie na przycisk ⬇ Eksportuj w pasku narzędzi edytora, obok przycisku Pobierz PDF.](screenshots/help/pl/editor-export-button.png)
+
+Pobierze się plik `<nazwa>.blg-template.json` — najlepiej trzymaj go w folderze z backupami.
 
 ### Import
 
-**Szablony** → **⬆ Importuj** otwiera 2-krokowe okno:
+Na stronie **Szablony** kliknij **⬆ Importuj** — otworzy się okno w dwóch krokach:
 
-1. **Wybór pliku** — podaj `.blg-template.json`. Program sprawdza poprawność i pokazuje podgląd.
-2. **Konfiguracja** — możesz:
-   - zmienić **nazwę** nowego szablonu (domyślnie nazwa z pliku; jeśli kolizja → automatyczny suffix „(kopia)"),
-   - **nadpisać rozmiar** (puste = oryginalny),
-   - **odznaczyć obiekty** które nie mają zostać zaimportowane (czeklista — każdy obiekt z ikoną typu i preview treści),
-   - dla każdego **duplikatu obrazka** wybrać: *Użyj istniejącego* (oszczędność miejsca) lub *Utwórz nową kopię*.
+1. **Wybór pliku** — wskaż plik `.blg-template.json`. Program sprawdzi jego poprawność i pokaże podgląd.
 
-Klik **Importuj** → tworzy nowy szablon i otwiera go w edytorze.
+![Krok 1 okna importu z wybranym plikiem .blg-template.json, znacznikiem poprawności i podglądem zawartości.](screenshots/help/pl/import-step1.png)
 
-### Typowe przypadki użycia
+2. **Konfiguracja** — możesz tu:
+   - zmienić nazwę nowego szablonu (domyślnie ta z pliku; przy powtórzeniu nazwy program doda dopisek „(kopia)"),
+   - nadpisać rozmiar etykiety (puste pole = zostaw oryginalny),
+   - odznaczyć obiekty, których nie chcesz importować (lista z ikoną typu i podglądem treści przy każdym),
+   - dla każdego powtarzającego się obrazka wybrać: **Użyj istniejącego** (oszczędza miejsce) albo **Utwórz nową kopię**.
 
-- **Backup przed dużą zmianą** — eksportuj, zostaw plik w archiwum, edytuj swobodnie. Coś poszło źle → reimportuj.
-- **Klonowanie układu na inny rozmiar** — eksport, import z nadpisanym rozmiarem (np. ta sama etykieta dla A6 i 100×50 mm).
-- **Przeniesienie szablonu między instancjami** (dev → prod) — eksport po jednej stronie, import po drugiej.
-- **Wybiórczy import** — bierzesz układ kodu kreskowego + 2-3 pola z gotowego szablonu, resztę odznaczasz.
+![Krok 2 okna importu z polem nazwy, polami nadpisania szerokości/wysokości, listą obiektów z checkboxami i wyborem Użyj istniejącego / Utwórz nową kopię przy zdublowanym obrazku.](screenshots/help/pl/import-step2.png)
+
+3. Kliknij **Importuj** — program tworzy nowy szablon i otwiera go w edytorze.
+
+### Typowe sytuacje, w których się to przydaje
+
+- **Backup przed dużą zmianą** — wyeksportuj, zostaw plik w archiwum, edytuj bez obaw. Jeśli coś pójdzie nie tak — zaimportuj z powrotem.
+- **Kopiowanie układu na inny rozmiar** — wyeksportuj, zaimportuj z nadpisanym rozmiarem (np. ta sama etykieta w wersji na A6 i na 100×50 mm).
+- **Przeniesienie szablonu między instalacjami** (np. testowa → produkcyjna) — wyeksportuj po jednej stronie, zaimportuj po drugiej.
+- **Wybiórczy import** — bierzesz np. tylko układ kodu kreskowego i 2-3 pola z gotowego szablonu, resztę odznaczasz.
 
 ### Limity i bezpieczeństwo
 
-- Maks. 20 MB plik, 50 obiektów, 20 obrazków (5 MB każdy).
-- Obrazki są weryfikowane: sha256 musi się zgadzać z zawartością base64. Pliki manipulowane są odrzucane.
-- Nowy szablon zawsze trafia do twojego konta (niezależnie kto wyeksportował plik).
+- Maksymalnie 20 MB plik, 50 obiektów, 20 obrazków (po 5 MB każdy).
+- Obrazki są weryfikowane specjalną sumą kontrolną (**sha256** — cyfrowy „odcisk palca" pliku, który potwierdza, że nie został zmieniony). Pliki, które ktoś ręcznie zmodyfikował, są odrzucane.
+- Nowy szablon zawsze trafia na Twoje konto, niezależnie od tego, kto wyeksportował plik.
 
 ## 9. Skróty klawiaturowe
 
@@ -470,7 +687,7 @@ Klik **Importuj** → tworzy nowy szablon i otwiera go w edytorze.
 | Ctrl/Cmd + Z | Cofnij |
 | Ctrl/Cmd + Shift + Z | Ponów |
 | Ctrl/Cmd + A | Zaznacz wszystko (w canvasie) |
-| Ctrl/Cmd + D | Duplikuj zaznaczone (offset +5 mm) |
+| Ctrl/Cmd + D | Duplikuj zaznaczone (przesunięcie +5 mm) |
 | Alt + przeciąganie | Duplikuj zaznaczone pod kursorem |
 | Delete / Backspace | Usuń zaznaczone |
 | Shift + klik | Dodaj do zaznaczenia |
@@ -479,6 +696,6 @@ Klik **Importuj** → tworzy nowy szablon i otwiera go w edytorze.
 
 ## 10. Wsparcie
 
-Programem zarządza **Tomasz "Amigo" Lewandowski** — kontakt: dev@attv.uk · www.attv.uk.
+Programem zarządza **Tomasz „Amigo" Lewandowski** — kontakt: dev@attv.uk · www.attv.uk.
 
 Kod źródłowy: github.com/AmigoUK/BarcodeLabelGen

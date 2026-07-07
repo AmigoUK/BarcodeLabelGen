@@ -1,311 +1,311 @@
 # BarcodeLabelGen — FAQ
 
-Najczęstsze pytania pogrupowane od najprostszych do zaawansowanych. Brak odpowiedzi tutaj? Zajrzyj do [HELP.pl.md](HELP.pl.md) albo napisz na dev@attv.uk.
+Najczęstsze pytania, od najprostszych do bardziej zaawansowanych. Każda odpowiedź jest krótka — jeśli chcesz zobaczyć konkretne kroki ze zrzutami ekranu, zajrzyj do [przewodnika Pomoc](HELP.pl.md), do sekcji podanej w nawiasie. Nie znalazłaś/eś odpowiedzi? Napisz na **dev@attv.uk**.
 
 ---
 
 ## Podstawy
 
 ### Po co jest ten program?
-Robisz w nim szablony etykiet (rozmiar w mm, dowolny tekst, kody kreskowe, obrazy) i potem generujesz **wiele etykiet z jednego szablonu** — każdą z innymi danymi z arkusza lub bazy SQLite.
+Tworzysz w nim szablony etykiet — rozmiar w milimetrach, dowolny tekst, kody kreskowe, obrazy — a potem generujesz **wiele etykiet z jednego szablonu naraz**, każdą z innymi danymi pobranymi z arkusza (np. Excela) albo z bazy danych. (Zobacz *Pomoc*, sekcja 6.)
 
-### Czemu po pierwszym logowaniu kazano mi zmienić hasło?
-Administrator dał ci hasło tymczasowe. Pierwsze logowanie zawsze wymusza zmianę na własne (min. 10 znaków). To jednorazowo.
+### Czemu po pierwszym logowaniu program kazał mi zmienić hasło?
+Administrator dał Ci hasło tymczasowe — czyli takie na start, do jednorazowego użycia. Pierwsze logowanie zawsze wymusza ustawienie własnego hasła (minimum 10 znaków). To zdarza się tylko raz. (Zobacz *Pomoc*, sekcja 1.)
 
-### Gdzie jest "Nowy szablon"?
+### Gdzie jest przycisk „Nowy szablon"?
 Lewe menu → **Szablony** → przycisk **Nowy szablon** w prawym górnym rogu listy.
 
 ### Czy mogę zmienić rozmiar etykiety po utworzeniu szablonu?
-Tak. W edytorze kliknij w toolbarze przycisk **📐 {szerokość}×{wysokość}**, wpisz nowe wymiary w mm albo wybierz preset i kliknij **Zastosuj**. Obiekty zachowują pozycje w mm (nie są przeskalowywane).
+Tak. W edytorze kliknij przycisk **📐 {szerokość}×{wysokość}** w pasku narzędzi, wpisz nowe wymiary w mm albo wybierz gotowy preset i kliknij **Zastosuj**. Obiekty zachowują swoje pozycje w mm — nie są przeskalowywane. (Zobacz *Pomoc*, sekcja 4.)
 
 ### Czy mogę cofnąć się do wcześniejszej wersji szablonu?
-Tak — **🕘 Historia** w edytorze. Każdy ręczny zapis (Zapisz/Ctrl+S) tworzy wersję; kliknij **Przywróć** przy wybranej. Autozapis nie tworzy wersji, więc lista jest krótka i czytelna (trzymamy 30 ostatnich).
+Tak — kliknij **🕘 Historia** w edytorze. Każdy ręczny zapis (przycisk Zapisz albo Ctrl+S) tworzy wersję, czyli migawkę tego, jak wyglądał szablon w danym momencie; kliknij **Przywróć** przy tej, do której chcesz wrócić. Autozapis nie tworzy wersji, więc lista jest krótka i czytelna — program trzyma 30 ostatnich. (Zobacz *Pomoc*, sekcja 4.)
 
 ### Jak zapisać szablon?
-Edytor zapisuje sam (autozapis co kilka sekund — status widać w toolbarze). Możesz też ręcznie **Ctrl/Cmd + S**.
+Edytor zapisuje sam — to tzw. autozapis, co kilka sekund; status widać w pasku narzędzi. Możesz też ręcznie nacisnąć **Ctrl/Cmd + S**.
 
 ---
 
 ## Edytor i obiekty
 
 ### Jaka jest różnica między **Tekst** (T) a **Blok tekstu** (¶)?
-- **Tekst** — jedna linia, stały rozmiar fontu, nie zawija.
-- **Blok tekstu** — wieloliniowy, zawija się w ramce o zadanej szerokości. Dodatkowo można włączyć **Auto-skalowanie**, które dopasowuje font do długości tekstu (potrzebne gdy z bazy przychodzą krótkie i długie nazwy).
+- **Tekst** — jedna linia, stały rozmiar fontu, nie zawija się.
+- **Blok tekstu** — wiele linii, zawija się w ramce o zadanej szerokości. Można dodatkowo włączyć **auto-skalowanie**, które samo dopasowuje rozmiar fontu do długości tekstu — przydatne, gdy z bazy przychodzą raz krótkie, raz długie nazwy.
 
 ### Co znaczy `{{nazwa_kolumny}}` w polu tekstowym?
-To **placeholder**. Przy generowaniu serii zostanie podmieniony wartością z odpowiedniej kolumny w arkuszu/bazie. Działa w polu Text **i** w polu *Dane* obiektu Barcode.
+To **placeholder** — miejsce, w które program sam wstawi dane z odpowiedniej kolumny Twojego arkusza lub bazy, ale dopiero podczas generowania serii etykiet. Działa zarówno w polu Tekst, jak i w polu *Dane* obiektu Kod kreskowy. (Zobacz *Pomoc*, sekcja 6.)
 
 ### Co znaczy zielony chip pod polem tekstowym?
-Zielony chip oznacza **placeholder daty** (np. `{{date+14d}}`) i od razu pokazuje obliczoną wartość. Fioletowe chipy to zwykłe kolumny z arkusza. Szczegóły składni dat: przewodnik, sekcja 7.
+Zielony „chip" (mały kolorowy znacznik) oznacza **placeholder daty** (np. `{{date+14d}}`) i od razu pokazuje, jaka data z niego wyjdzie. Fioletowe chipy to zwykłe kolumny z arkusza. Szczegóły zapisu dat: *Pomoc*, sekcja 7.
 
 ### Jak dodać tabelę?
-Lewy panel → **▦ Tabela**. Treść komórek, liczbę wierszy/kolumn i szerokości kolumn edytujesz w prawym panelu. W komórkach działają placeholdery `{{kolumna}}` i daty `{{date+x}}` — przy generowaniu serii kolumny podmieniają się jak w zwykłym tekście.
+Lewy panel → **▦ Tabela**. Treść komórek, liczbę wierszy/kolumn i szerokości kolumn ustawiasz w prawym panelu. W komórkach działają placeholdery `{{kolumna}}` i daty `{{date+x}}` — przy generowaniu serii kolumny podmieniają się tak samo jak w zwykłym tekście. (Zobacz *Pomoc*, sekcja 3.)
 
 ### Polskie znaki w PDF wychodziły jako kwadraciki — czy to naprawione?
-Tak (od v0.13.0). PDF osadza teraz fonty z pełnym zestawem polskich znaków (ż, ł, ć, ę, ą, ź, ń, ś). Jeśli widzisz kwadraciki, upewnij się, że działasz na wersji ≥0.13.0 (`/api/health`).
+Tak, od wersji v0.13.0. PDF osadza teraz czcionki z pełnym zestawem polskich znaków (ż, ł, ć, ę, ą, ź, ń, ś). Jeśli nadal widzisz kwadraciki, sprawdź na stronie `/api/health`, czy działasz na wersji 0.13.0 lub nowszej.
 
-### Jak wstawić logo, które jest na każdej etykiecie?
-Lewy panel → **🖼 Obraz** → wybierz plik PNG/JPG/SVG. Logo będzie się drukować na każdej etykiecie.
+### Jak wstawić logo, które ma się drukować na każdej etykiecie?
+Lewy panel → **🖼 Obraz** → wybierz plik PNG, JPG lub SVG. Logo będzie drukować się na każdej wygenerowanej etykiecie.
 
 ### Jaka jest różnica między **🖼 Obraz** a **🌄 Tło (referencja)**?
 - **🖼 Obraz** — zwykły obraz, drukuje się w PDF.
-- **🌄 Tło** — pełnowymiarowy obraz, **zablokowany** (nie da się przesunąć) i **NIE drukuje się** w PDF. Używaj gdy etykiety przyszły z drukarni z już nadrukowanym logo i chcesz tylko pozycjonować nowy tekst — tło widzisz w edytorze jako wzorzec, ale finalny PDF zawiera tylko twoje dodatki.
+- **🌄 Tło** — obraz na cały rozmiar etykiety, **zablokowany** (nie da się go przesunąć) i **NIE drukuje się** w PDF. Używaj go, gdy Twoje etykiety przyszły z drukarni z już wydrukowanym logo, a Ty chcesz tylko poprawnie ustawić nowy tekst — w edytorze widzisz tło jako wzorzec, ale finalny PDF zawiera wyłącznie Twoje dodatki. (Zobacz *Pomoc*, sekcja 3.)
 
 ### Jak nie drukować jakiegoś obiektu w PDF?
-Zaznacz obiekt → w prawym panelu, na samej górze, odznacz **🖨 Drukuj w PDF**. Obiekt zostanie wyblakły w edytorze (sygnał że jest tylko podglądowy) i renderer go pominie.
+Zaznacz obiekt → w prawym panelu, na samej górze, odznacz **🖨 Drukuj w PDF**. Obiekt zrobi się wyblakły w edytorze — to sygnał, że jest tylko podglądowy — a program pominie go w wydruku.
 
-### Jak zablokować obiekt żeby się nie przesuwał?
-Zaznacz → w prawym panelu zaznacz **🔒 Zablokuj pozycję**. Uchwyty znikną, nie da się przeciągać ani skalować — ale dalej można zaznaczyć i zmieniać font/kolor. Żeby odblokować — odznacz checkbox.
+### Jak zablokować obiekt, żeby przypadkiem się nie przesunął?
+Zaznacz go → w prawym panelu zaznacz **🔒 Zablokuj pozycję**. Uchwyty znikną, nie da się przeciągać ani skalować — ale wciąż można zaznaczyć obiekt i zmienić np. font czy kolor. Żeby odblokować, odznacz ten sam checkbox.
 
 ### Jak zmienić kolejność obiektów (co jest na wierzchu)?
-Pasek wyrównania nad canvasem, grupa **Warstwa**:
-- ⤓ na sam dół, ↓ niżej, ↑ wyżej, ⤒ na sam wierzch.
+Pasek wyrównania nad canvasem, grupa **Warstwa**: ⤓ na sam dół, ↓ niżej, ↑ wyżej, ⤒ na sam wierzch.
 
-### Jak rozłożyć równomiernie 5 obiektów w poziomie?
-Zaznacz wszystkie 5 (Shift + klik) → pasek wyrównania → przycisk **Rozłóż poziomo** (działa od 3+ obiektów).
+### Jak rozłożyć równomiernie kilka obiektów w poziomie?
+Zaznacz je wszystkie (Shift + klik) → pasek wyrównania → przycisk **Rozłóż poziomo** (działa od 3 zaznaczonych obiektów wzwyż).
 
-### Cofnąłem za dużo. Jak to przywrócić?
-**Ctrl/Cmd + Shift + Z** lub **Ctrl/Cmd + Y**.
+### Cofnąłem/am za dużo. Jak to przywrócić?
+**Ctrl/Cmd + Shift + Z** albo **Ctrl/Cmd + Y**.
 
 ### Jak szybko zrobić kopię obiektu?
 Dwa sposoby:
-- **Alt + przeciąganie** — przytrzymaj Alt (Option na Mac) i przeciągnij zaznaczony obiekt. Oryginał zostaje, klon ląduje pod kursorem. Działa też dla multi-select — zachowuje względne pozycje.
-- **Ctrl/Cmd + D** — duplikuje w miejscu z przesunięciem +5 mm. Selekcja przeskakuje na klony, więc kolejne Ctrl+D buduje schodek kopii.
+- **Alt + przeciąganie** — przytrzymaj Alt (na Mac: Option) i przeciągnij zaznaczony obiekt. Oryginał zostaje na miejscu, kopia ląduje pod kursorem. Działa też dla kilku zaznaczonych obiektów naraz.
+- **Ctrl/Cmd + D** — robi kopię w miejscu, przesuniętą o 5 mm. Zaznaczenie przeskakuje na kopię, więc kolejne Ctrl+D buduje schodek kopii.
 
-Klon dziedziczy wszystkie ustawienia (font, kolor, lock, *Drukuj w PDF*); obrazy współdzielą Asset.
+Kopia dziedziczy wszystkie ustawienia (font, kolor, blokadę, *Drukuj w PDF*); obrazy współdzielą jeden plik źródłowy.
 
 ---
 
 ## Generowanie serii (CSV / Excel)
 
 ### Jakie pliki mogę wgrać?
-CSV, XLS, XLSX. Maksymalnie **10 MB** i **1000 wierszy** na plik (limit MVP).
+CSV, XLS lub XLSX. Maksymalnie **10 MB** i **1000 wierszy** na plik (limit obecnej wersji programu).
 
-### Pierwszy wiersz arkusza to nagłówki?
-Tak, pierwszy wiersz musi zawierać nazwy kolumn — to one stają się dostępne jako `{{nazwa}}` w mapowaniu.
+### Czy pierwszy wiersz arkusza musi być nagłówkiem?
+Tak — pierwszy wiersz musi zawierać nazwy kolumn. To one stają się dostępne jako `{{nazwa}}` przy mapowaniu w Kroku 2.
 
 ### Mam więcej niż 1000 wierszy. Co zrobić?
-Podziel arkusz na partie po max 1000 wierszy i wygeneruj kilka PDF.
+Podziel arkusz na partie po maksymalnie 1000 wierszy i wygeneruj kilka osobnych PDF-ów.
 
 ### Mapowanie nie znalazło mojej kolumny.
-Sprawdź czy nazwa placeholdera (`{{...}}`) odpowiada dokładnie nagłówkowi kolumny — case-sensitive, bez spacji ekstra. Jeśli nazwy są różne (np. placeholder `{{name}}`, kolumna `Product Name`), wybierz mapowanie ręcznie z listy w Kroku 2.
+Sprawdź, czy nazwa placeholdera (`{{...}}`) odpowiada dokładnie nagłówkowi kolumny — wielkość liter ma znaczenie, a dodatkowe spacje przeszkadzają. Jeśli nazwy się różnią (np. placeholder `{{name}}`, a kolumna `Nazwa produktu`), wybierz mapowanie ręcznie z listy w Kroku 2.
 
-### PDF wyszedł z `{{name}}` w treści zamiast prawdziwą nazwą.
-To znaczy że placeholder się nie zmapował. W Kroku 2 (Mapowanie) musisz dla każdego placeholdera wybrać kolumnę.
+### PDF wyszedł z `{{name}}` w treści zamiast prawdziwej nazwy.
+To znaczy, że placeholder się nie zmapował. W Kroku 2 (Mapowanie) musisz dla każdego placeholdera wybrać kolumnę.
 
-### Czy mogę odsiać tylko niektóre wiersze?
-Tak — Krok 3 (Filtr). Wybierz kolumnę, operator (równe / zawiera / większe niż / itd.) i wartość. Klik **Sprawdź filtr** żeby zobaczyć ile wierszy się załapie.
+### Czy mogę wygenerować etykiety tylko dla niektórych wierszy?
+Tak — Krok 3 (Filtr). Wybierz kolumnę, warunek (np. „równe", „zawiera", „większe niż") i wartość. Kliknij **Sprawdź filtr**, żeby zobaczyć, ile wierszy się załapie.
 
 ---
 
 ## Foldery i Biblioteka
 
 ### Jak uporządkować szablony w foldery?
-Strona **Szablony** → pasek po lewej → **Nowy folder**. Potem najedź na kafelek szablonu → **⚙** → wybierz folder → Zapisz. Foldery są prywatne (każdy ma swoje) i jednopoziomowe.
+Strona **Szablony** → pasek po lewej → **Nowy folder**. Potem najedź na kafelek szablonu → **⚙** → wybierz folder → **Zapisz**. Foldery są prywatne (każdy ma swoje) i jednopoziomowe.
 
-### Usunąłem folder — co z szablonami?
-Nic im nie jest: wracają do „Bez folderu".
+### Usunęłam/em folder — co się stanie z szablonami w środku?
+Nic złego — po prostu wracają do „Bez folderu". Żaden szablon nie znika.
 
-### Jak podzielić się szablonem z innymi?
-Kafelek → **⚙** → **„Udostępnij w Bibliotece"**. Inni zobaczą go w **Bibliotece** i sklonują przyciskiem „Użyj" — edytować może tylko właściciel. Odznacz, aby wycofać.
+### Jak podzielić się szablonem z innymi w firmie?
+Kafelek szablonu → **⚙** → zaznacz **„Udostępnij w Bibliotece"**. Inni zobaczą go w **Bibliotece** i będą mogli sklonować go przyciskiem „Użyj" — edytować oryginał może tylko właściciel. Odznacz pole, żeby wycofać udostępnienie.
 
-### Czy „Użyj" w Bibliotece zmienia oryginał?
-Nie — „Użyj" zawsze tworzy Twoją niezależną kopię (z dopiskiem „(kopia)"). Obrazki są kopiowane do Twojej biblioteki plików.
+### Czy przycisk „Użyj" w Bibliotece zmienia oryginał?
+Nie — „Użyj" zawsze tworzy Twoją niezależną kopię (z dopiskiem „(kopia)"). Obrazy z szablonu są kopiowane do Twojej własnej biblioteki plików.
 
-### Skąd się biorą „Gotowe projekty"?
-To startery wbudowane w aplikację (aktualizowane razem z nią). Zawierają pola `{{...}}` i daty `{{date+x}}` — po sklonowaniu podmień przykładowe wartości na swoje.
+### Skąd się biorą „Gotowe projekty" w Bibliotece?
+To gotowe wzory wbudowane w aplikację (aktualizowane razem z nią). Zawierają przykładowe placeholdery `{{...}}` i daty `{{date+x}}` — po sklonowaniu po prostu podmień przykładowe wartości na własne.
 
 ---
 
 ## Placeholdery daty
 
 ### Jak wstawić datę przydatności „dziś + 30 dni"?
-W polu tekstowym (albo w danych kodu kreskowego) wpisz `{{date+30d}}`. Przy generowaniu PDF/ZPL program podstawi datę o 30 dni późniejszą od dzisiejszej, np. `03.08.2026`.
+W polu tekstowym (albo w danych kodu kreskowego) wpisz `{{date+30d}}`. Podczas generowania PDF-a lub ZPL program wstawi datę 30 dni późniejszą niż dzisiejsza, np. `03.08.2026`.
 
-### Jakie przesunięcia mogę używać?
-`d` = dni, `m` = miesiące, `y` = lata, z plusem lub minusem: `{{date+14d}}`, `{{date-7d}}`, `{{date+3m}}`, `{{date+1y}}`. Samo `{{date}}` to dzisiejsza data.
+### Jakie przesunięcia dat mogę używać?
+`d` = dni, `m` = miesiące, `y` = lata — z plusem albo minusem: `{{date+14d}}`, `{{date-7d}}`, `{{date+3m}}`, `{{date+1y}}`. Samo `{{date}}` to dzisiejsza data.
 
-### Jak zmienić format daty?
-Dodaj format po dwukropku, z klocków DD/MM/YY/YYYY: `{{date+14d:DD/MM/YY}}` → `18/07/26`, `{{date:YYYY-MM-DD}}` → `2026-07-04`. Bez formatu dostajesz `DD.MM.YYYY`.
+### Jak zmienić format wyświetlanej daty?
+Dodaj format po dwukropku, z klocków DD/MM/YY/YYYY: `{{date+14d:DD/MM/YY}}` → `18/07/26`, `{{date:YYYY-MM-DD}}` → `2026-07-04`. Bez podanego formatu dostajesz `DD.MM.YYYY`.
 
 ### Kiedy dokładnie liczy się data?
-W momencie **generowania** (PDF lub ZPL), według daty serwera — nie w momencie pisania szablonu. Zielony chip w edytorze to tylko podgląd na dziś.
+W momencie **generowania** (PDF-a albo ZPL), według zegara serwera — nie w momencie, gdy piszesz szablon. Zielony chip w edytorze to tylko podgląd na dziś, żebyś od razu widziała/widział, jak to będzie wyglądać.
 
-### Co jeśli 31 stycznia dodam 1 miesiąc?
-Dostaniesz 28 (lub 29) lutego — program nie tworzy nieistniejących dat.
+### Co się stanie, jeśli do 31 stycznia dodam 1 miesiąc?
+Dostaniesz 28 (albo 29) lutego — program nigdy nie tworzy dat, które nie istnieją.
 
-### Mam w arkuszu kolumnę o nazwie `date`. Co wygra?
-Dla gołego `{{date}}` wygrywa **kolumna z arkusza** (jak dotychczas). Formy z przesunięciem lub formatem (`{{date+14d}}`, `{{date:YYYY-MM-DD}}`) zawsze liczą się automatycznie.
+### Mam w arkuszu kolumnę o nazwie `date`. Która wersja wygrywa?
+Dla gołego `{{date}}` wygrywa **kolumna z arkusza** (tak jak wcześniej). Formy z przesunięciem lub formatem (`{{date+14d}}`, `{{date:YYYY-MM-DD}}`) zawsze liczą się automatycznie, niezależnie od kolumny.
 
 ### Czemu w kreatorze serii pole `{{date}}` nie wymaga mapowania?
-Bo bez mapowania program podstawi dzisiejszą datę. Mapujesz tylko jeśli chcesz brać daty z kolumny arkusza.
+Bo bez mapowania program sam podstawi dzisiejszą datę. Mapujesz je tylko wtedy, gdy chcesz brać daty z kolumny w arkuszu.
 
 ---
 
-## ZPL / drukarki Zebra
+## ZPL i TSPL / drukarki etykiet
 
 ### Co to jest ZPL i po co mi to?
-ZPL to język drukarek etykiet (Zebra i zgodne). Jeśli drukujesz na takiej drukarce albo dostajesz gotowe etykiety w ZPL z innego systemu, program potrafi je **importować do edytora** i **eksportować twój projekt jako ZPL**.
+**ZPL** to specjalny język, którym rozmawiają drukarki etykiet marki Zebra (i modele zgodne). Jeśli drukujesz na takiej drukarce, albo dostajesz gotowe etykiety w ZPL z innego systemu, program potrafi je **zaimportować do edytora** i **wyeksportować Twój projekt jako ZPL**. (Zobacz *Pomoc*, sekcja 7a.)
 
 ### Jak zaimportować etykietę ZPL?
-Edytor → toolbar → **⤓ Importuj ZPL** → wklej kod → **Sprawdź** → **Importuj**. Uwaga: import zastępuje obecną zawartość canvasu.
+Edytor → pasek narzędzi → **⤓ Importuj ZPL** → wklej kod → **Sprawdź** → **Importuj**. Uwaga: import zastępuje obecną zawartość canvasu.
 
 ### Nie znam DPI drukarki, z której pochodzi kod.
-Zostaw w oknie importu opcję **Wykryj automatycznie** — program porówna wymiary z kodu (`^PW`/`^LL`) z rozmiarem twojej etykiety i dobierze 203 lub 300 dpi.
+Zostaw w oknie importu opcję **Wykryj automatycznie**. **DPI** to gęstość wydruku — liczba kropek na milimetr, jaką drukuje drukarka; program porówna wymiary z kodu (`^PW`/`^LL`) z rozmiarem Twojej etykiety i sam dobierze 203 albo 300 dpi.
 
 ### Co się dzieje ze zmiennymi typu `{NAZWA}` w pojedynczych klamrach?
-Przechodzą nietknięte w obie strony (import i eksport) — to zmienne drukarkowe twojego systemu. Podwójne klamry `{{...}}` to placeholdery tego programu.
+Przechodzą nietknięte w obie strony (import i eksport) — to zmienne drukarkowe Twojego własnego systemu, nie mają nic wspólnego z placeholderami programu. Podwójne klamry `{{...}}` to placeholdery BarcodeLabelGen.
 
 ### Czym różni się eksport „Szablon (zmienne)" od „Wsad (dataset)"?
-- **Szablon** — jeden kod ZPL; placeholdery kolumn zostają w kodzie, daty są od razu obliczone. Do wklejenia we własny system.
-- **Wsad** — wybierasz wgrany plik danych i dostajesz jeden `.zpl` z etykietą na każdy wiersz (wszystko podmienione).
+- **Szablon** — jeden kod ZPL; placeholdery kolumn zostają w kodzie (podmienisz je we własnym systemie), a daty są od razu obliczone.
+- **Wsad** — wybierasz wcześniej wgrany plik danych i dostajesz jeden plik `.zpl` z osobną etykietą dla każdego wiersza (wszystko już podmienione).
+
+### Czy program obsługuje też drukarki TSC albo Toshiba?
+Tak — przez **TSPL**, odpowiednik ZPL dla tych marek. W edytorze kliknij **⤒ TSPL**, wybierz DPI (203 lub 300) i pobierz albo skopiuj wygenerowany kod. To na razie prostsza funkcja niż ZPL: eksport działa tylko dla pojedynczej etykiety (bez trybu Wsad), nie ma jeszcze importu, a druk bezpośredni przez konektor obsługuje na razie tylko ZPL, nie TSPL.
 
 ### Czy mogę drukować bezpośrednio na drukarkę Zebra z programu?
-Tak — przez **konektor** (`blg-connector`), mały program instalowany na komputerze w sieci z drukarkami. Skonfiguruj go raz (strona **Urządzenia** → token + plik `config.yaml`), a potem w edytorze klikasz **🖨 Drukuj**, wybierasz urządzenie i drukarkę — etykieta trafia do kolejki, agent odbiera ją i wysyła na drukarkę. Instrukcja: `connector/README.md` w repozytorium.
+Tak — przez **konektor** (`blg-connector`), czyli mały program instalowany na komputerze w tej samej sieci co drukarki, który łączy aplikację z drukarką. Skonfiguruj go raz (strona **Urządzenia** → token, czyli unikalny kod dostępu, + plik `config.yaml`), a potem w edytorze klikasz **🖨 Drukuj**, wybierasz urządzenie i drukarkę — etykieta trafia do kolejki, agent ją odbiera i wysyła na drukarkę. Instrukcja instalacji: plik `connector/README.md` w repozytorium projektu.
 
 ### Przycisk Drukuj mówi, że urządzenie jest offline.
-Agent na tym komputerze nie zgłosił się od ponad minuty — sprawdź, czy `blg-connector` działa i ma połączenie z serwerem. Zadanie możesz mimo to wysłać: poczeka w kolejce, aż agent wróci.
+Agent (program konektora) na tym komputerze nie zgłosił się od ponad minuty — sprawdź, czy `blg-connector` działa i ma połączenie z serwerem. Zadanie druku możesz mimo to wysłać: poczeka w kolejce, aż agent wróci.
 
-### Zadanie druku skończyło się błędem „printer unreachable".
-Agent nie mógł połączyć się z drukarką po TCP (port 9100). Sprawdź IP drukarki w `config.yaml` agenta i czy drukarka jest włączona; potem wyślij zadanie ponownie.
+### Zadanie druku skończyło się błędem „printer unreachable" (drukarka nieosiągalna).
+Agent nie mógł połączyć się z drukarką przez sieć. Sprawdź adres IP drukarki w pliku `config.yaml` agenta i czy drukarka jest włączona, a potem wyślij zadanie ponownie.
 
-### Jak przenieść etykietę ze starego programu (ERP/Word) do edytora?
-Skonfiguruj **wirtualną drukarkę** konektora (sekcja `capture` w `config.yaml` + drukarka ZDesigner na porcie TCP/IP `127.0.0.1:9101` w Windows — krok po kroku w `connector/README.md`). Wydrukuj etykietę ze starego programu na tę drukarkę, a pojawi się w **Urządzenia → Inbox**, skąd otworzysz ją w edytorze.
+### Jak przenieść etykietę ze starego programu (system magazynowy/Word) do edytora?
+Skonfiguruj **wirtualną drukarkę** konektora — krok po kroku opisane w `connector/README.md`. Wydrukuj etykietę ze starego programu na tę wirtualną drukarkę, a pojawi się w **Urządzenia → Inbox**, skąd otworzysz ją w edytorze.
 
 ### Przechwycona etykieta nie ma loga/grafiki w edytorze.
-Bitmapy ze sterownika (`^GF`) przechodzą jako nieedytowalny passthrough — wydrukują się poprawnie, ale edytor pokazuje tylko teksty, kody i kształty, które potrafi zamodelować. Grafika w trybie binarnym (`^GFB`) nie jest wspierana — zostaw w sterowniku tryb ASCII/hex.
+Grafika ze sterownika drukarki przechodzi jako nieedytowalny element — wydrukuje się poprawnie, ale edytor pokaże tylko teksty, kody kreskowe i kształty, które potrafi rozpoznać i pozwolić Ci edytować.
 
-### Coś wydrukowałem na wirtualną drukarkę i nic nie doszło.
-Sprawdź log agenta. Najczęstsze powody: zadanie nie zawierało `^XA` (sterownik nie generuje ZPL — użyj ZDesigner), zadanie przekroczyło 2 MB, albo serwer był niedostępny — wtedy zadanie czeka w lokalnym spoolu agenta i zostanie wysłane automatycznie do 30 s po powrocie łączności.
+### Coś wydrukowałam/em na wirtualną drukarkę i nic nie doszło.
+Sprawdź log (dziennik zdarzeń) agenta na komputerze z konektorem. Najczęstsze przyczyny: zadanie nie zawierało poprawnego kodu drukarki, było za duże, albo serwer był chwilowo niedostępny — w tym ostatnim przypadku zadanie czeka lokalnie i wysyła się samo, gdy połączenie wróci.
 
 ---
 
 ## Generowanie serii (SQLite)
 
 ### Jak wgrać bazę SQLite?
-Krok 1 wizardu Generuj Serię — wybierz plik z rozszerzeniem `.db`, `.sqlite` lub `.sqlite3`. Limit **50 MB**.
+**SQLite** to plik z całą bazą danych w jednym pliku. Krok 1 kreatora Generuj Serię — wybierz plik z rozszerzeniem `.db`, `.sqlite` lub `.sqlite3`. Limit rozmiaru: **50 MB**.
 
 ### Co zobaczę po wgraniu?
-Listę tabel z bazy, posortowanych: najwięcej wierszy na górze. Każda pozycja pokazuje liczbę kolumn i wierszy.
+Listę tabel z bazy, posortowaną tak, że tabele z największą liczbą wierszy są na górze. Każda pozycja pokazuje liczbę kolumn i wierszy.
 
-### Czemu pierwszy raz wybrałem tabelę i dostałem `table 'X' returned 0 rows`?
-Wybrałeś tabelę bez danych (np. `basket_contents` z 0 wierszy). W tabeli musi być co najmniej 1 wiersz, żeby było co generować. Wybierz inną — sortowanie powinno wypchnąć tabele z danymi na górę listy.
+### Wybrałam/em tabelę i dostałam/em komunikat, że ma 0 wierszy.
+Wybrałaś/eś pustą tabelę. Musi w niej być co najmniej 1 wiersz danych, żeby było co generować — wybierz inną, sortowanie powinno wypychać tabele z danymi na górę listy.
 
-### Jak napisać własne zapytanie SELECT?
+### Jak napisać własne zapytanie do bazy?
 Pod listą tabel rozwiń **Pokaż zaawansowane: własne zapytanie SQL** i wpisz np.:
 ```sql
 SELECT sku, UPPER(name) AS name, price FROM products WHERE price > 10
 ```
-Klik **Użyj tego źródła**.
+Kliknij **Użyj tego źródła**.
 
 ### Jakie zapytania są dozwolone?
-Tylko **pojedynczy SELECT** (opcjonalnie poprzedzony `WITH ... AS (...)`). Połączenie jest read-only. Blokowane są: `INSERT`, `UPDATE`, `DELETE`, `DROP`, `ALTER`, `CREATE`, `ATTACH`, `DETACH`, `PRAGMA`, `VACUUM`, `REINDEX`, transakcje.
+Tylko **pojedyncze zapytanie odczytujące dane (SELECT)**. Połączenie z bazą jest tylko do odczytu — żadne polecenie, które mogłoby coś zmienić lub skasować, nie zostanie wykonane, nawet jeśli spróbujesz je wpisać.
 
-### Dostałem `result exceeds 1000-row limit`. Co teraz?
-Wynik twojego SELECT ma więcej niż 1000 wierszy (limit MVP). Dodaj `WHERE`, żeby zawęzić, albo `LIMIT 1000` na końcu.
+### Dostałam/em komunikat, że wynik przekracza limit 1000 wierszy. Co teraz?
+Twoje zapytanie zwróciło więcej niż 1000 wierszy. Dodaj warunek `WHERE`, żeby zawęzić wynik, albo dopisz `LIMIT 1000` na końcu.
 
-### Czy mogę używać JOIN?
-Tak — JOIN jest standardowym SELECT. Przykład:
+### Czy mogę łączyć dane z dwóch tabel naraz (JOIN)?
+Tak, to standardowa funkcja zapytań SQL. Przykład:
 ```sql
 SELECT p.sku, p.name, c.category_description
 FROM products p JOIN categories c ON p.category_id = c.category_id
 ```
 
-### Czy zmiany w bazie są zapisywane?
-**Nie.** Połączenie jest read-only — żadne polecenie modyfikujące się nie wykona, nawet jeśli przeszłoby walidator.
+### Czy zmiany, które próbuję zrobić w bazie, są zapisywane?
+**Nie.** Połączenie jest tylko do odczytu — żadne polecenie modyfikujące się nie wykona.
 
-### Mój plik .db pokazuje "file is not a valid SQLite database".
-Plik prawdopodobnie nie jest SQLite (np. ma rozszerzenie `.db` ale to inny format). Sprawdź źródło pliku.
+### Mój plik .db pokazuje błąd „to nie jest poprawna baza SQLite".
+Plik prawdopodobnie nie jest w formacie SQLite (np. ma rozszerzenie `.db`, ale w środku jest coś innego). Sprawdź, skąd pochodzi ten plik.
 
 ---
 
 ## Import / eksport szablonów
 
 ### Po co eksportować szablon do pliku?
-Trzy główne powody: **backup** (zachowujesz plik przed dużą zmianą), **klonowanie** (eksport + import z nadpisanym rozmiarem to gotowy szablon na inny format), **przenoszenie** (między instancjami / między userami).
+Trzy główne powody: **backup** (zachowujesz plik na wypadek, gdyby coś poszło nie tak), **klonowanie** (eksport + import z nadpisanym rozmiarem daje gotowy szablon na inny format etykiety), **przenoszenie** (między instalacjami programu albo między użytkownikami).
 
 ### Gdzie jest przycisk eksportu?
-- W liście szablonów (kafelek) — ikona **⬇** w prawym dolnym rogu (pojawia się po najechaniu).
-- W edytorze toolbar — przycisk **⬇ Eksportuj** obok *Pobierz PDF*.
+- Na liście szablonów: najedź na kafelek, kliknij ikonę **⬇** w prawym dolnym rogu.
+- W edytorze: pasek narzędzi → przycisk **⬇ Eksportuj**, obok *Pobierz PDF*.
 
 ### Co dokładnie jest w pliku .blg-template.json?
-Rozmiar etykiety, każdy obiekt (tekst, kod, prostokąt, linia, obraz) z dokładną pozycją i wszystkimi ustawieniami, oraz **wszystkie obrazki** zakodowane base64 w samym pliku. Plik jest samowystarczalny — nie potrzebujesz nic poza tym jednym JSON-em.
+Rozmiar etykiety, każdy obiekt (tekst, kod, prostokąt, linia, obraz) z dokładną pozycją i wszystkimi ustawieniami, oraz wszystkie obrazki zakodowane wprost w pliku. Plik jest samowystarczalny — nie potrzebujesz nic więcej poza tym jednym plikiem.
 
-### Czy mogę zaimportować szablon z innej instancji BarcodeLabelGen?
-Tak. Format pliku (`$schema: "blg-template/v1"`) jest stabilny. Jeśli docelowa instancja nie ma takiego samego formatu etykiety jak źródłowa, użytkownik zostanie ostrzeżony i program podstawi format „Custom".
+### Czy mogę zaimportować szablon z innej instalacji BarcodeLabelGen?
+Tak, format pliku jest stabilny między wersjami. Jeśli docelowa instalacja nie zna dokładnie takiego samego formatu etykiety jak ta, z której eksportowałaś/eś, dostaniesz ostrzeżenie i program użyje formatu „Własny".
 
-### Czy mogę zaimportować tylko część obiektów?
-Tak — w drugim kroku okna importu jest **czeklista**. Domyślnie wszystko jest zaznaczone; odznaczasz to, czego nie chcesz. Pominięte obiekty `image` nie tworzą zbędnych obrazków u Ciebie w bibliotece.
+### Czy mogę zaimportować tylko część obiektów z pliku?
+Tak — w drugim kroku okna importu jest lista z checkboxami. Domyślnie wszystko jest zaznaczone; odznacz to, czego nie chcesz. Pominięte obrazki nie tworzą zbędnych plików w Twojej bibliotece.
 
-### Co się dzieje gdy w pliku jest obrazek, który już mam?
-Program sprawdza duplikat po hashu SHA-256 i pyta Cię: **Użyj istniejącego** (FK pokazuje istniejący obrazek, zero duplikatów na dysku) albo **Utwórz nową kopię** (świeży wpis z tą samą zawartością — przydatne gdy chcesz mieć osobną edytowalną kopię).
+### Co się dzieje, gdy w pliku jest obrazek, który już mam?
+Program sprawdza, czy to ten sam plik (porównując jego cyfrowy „odcisk palca") i pyta Cię: **Użyj istniejącego** (zero duplikatów na dysku) albo **Utwórz nową kopię** (przydatne, gdy chcesz mieć osobną, niezależnie edytowalną kopię).
 
-### Czy mogę zaimportować szablon zmieniając jego rozmiar?
-Tak — w drugim kroku są dwa pola **Szerokość/Wysokość**. Zostaw puste żeby zachować oryginał, albo wpisz nowe wartości. Obiekty zachowują swoje pozycje w mm, więc szablon zachowuje układ ale na innym formacie.
+### Czy mogę zaimportować szablon, zmieniając jednocześnie jego rozmiar?
+Tak — w drugim kroku są pola Szerokość/Wysokość. Zostaw je puste, żeby zachować oryginalny rozmiar, albo wpisz nowe wartości. Obiekty zachowują swoje pozycje w mm, więc układ zostaje ten sam, tylko na innym formacie.
 
-### Dostaję "Couldn't read the file"
-Plik nie jest poprawnym JSON-em (np. uszkodzony, otwarty w edytorze i zapisany z błędem). Spróbuj ponownie wyeksportować źródłowy szablon.
+### Dostaję komunikat „Nie udało się odczytać pliku".
+Plik nie jest poprawnym plikiem JSON — być może jest uszkodzony albo został zmieniony ręcznie i zapisany z błędem. Spróbuj ponownie wyeksportować szablon źródłowy.
 
-### Dostaję "sha256 mismatch"
-Treść base64 w pliku nie zgadza się z zadeklarowanym hashem — plik został zmodyfikowany ręcznie. Program odrzuca takie pliki świadomie (mogłoby to ukrywać podmieniony obrazek). Re-eksportuj ze źródła.
+### Dostaję komunikat o niezgodności sumy kontrolnej (sha256).
+Zawartość obrazka w pliku nie zgadza się z zapisaną w nim sumą kontrolną — cyfrowym „odciskiem palca", który potwierdza, że plik nie został zmieniony. Oznacza to, że plik był ręcznie modyfikowany. Program celowo odrzuca takie pliki — mogłoby to ukrywać podmieniony obrazek. Wyeksportuj plik ponownie ze źródła.
 
-### Limity?
-Plik ≤ 20 MB, szablon ≤ 50 obiektów, ≤ 20 obrazków, każdy obrazek ≤ 5 MB.
+### Jakie są limity?
+Plik do 20 MB, szablon do 50 obiektów, do 20 obrazków, każdy obrazek do 5 MB.
 
 ## Konta i bezpieczeństwo
 
-### Jak admin dodaje nowego użytkownika?
-**Administracja → Użytkownicy → Utwórz konto**. Podaj email, hasło tymczasowe (min. 10 znaków) i rolę. Po utworzeniu hasło wyświetla się **raz** — skopiuj i przekaż użytkownikowi.
+### Jak administrator dodaje nowego użytkownika?
+**Administracja → Użytkownicy → Utwórz konto**. Podaje email, hasło tymczasowe (minimum 10 znaków) i rolę. Po utworzeniu konta hasło wyświetla się **tylko raz** — trzeba je od razu skopiować i przekazać użytkownikowi.
 
 ### Jakie są role i co mogą robić?
-- **Administrator** — wszystko + zarządzanie kontami.
-- **Edytor** — tworzy i edytuje własne szablony i dataset'y, generuje PDF.
+- **Administrator** — wszystko, w tym zarządzanie kontami.
+- **Edytor** — tworzy i edytuje własne szablony i zestawy danych, generuje PDF-y.
 - **Tylko podgląd** — może oglądać, ale nie zapisuje zmian.
 
-### Zapomniałem hasła.
-Poproś admina o reset (Administracja → Użytkownicy → **Resetuj hasło**). Dostaniesz nowe hasło tymczasowe — przy logowaniu program zmusi cię do ustawienia własnego.
+### Zapomniałam/em hasła.
+Poproś administratora o reset hasła (**Administracja → Użytkownicy → Resetuj hasło**). Dostaniesz nowe hasło tymczasowe — przy logowaniu program poprosi Cię o ustawienie własnego.
 
-### Czemu nie mogę dezaktywować swojego własnego konta?
-Bo zostałbyś zablokowany na zewnątrz aplikacji bez możliwości naprawy. Drugiego administratora może dezaktywować inny administrator.
-
----
+### Czemu nie mogę dezaktywować własnego konta?
+Bo zostałabyś/zostałbyś zablokowana/y poza aplikacją bez możliwości naprawy tego samodzielnie. Drugi administrator może dezaktywować kogoś innego, ale nie samego siebie.
 
 ### Gdzie znajdę wcześniej wygenerowane PDF-y?
-Menu → **Historia**. Trzymamy tam wszystkie wygenerowane pliki (pojedyncze i serie, PDF oraz wsadowy ZPL) przez 30 dni — kliknij **Pobierz**, aby ściągnąć ponownie bez generowania od nowa.
+Menu → **Historia**. Program przechowuje tam wszystkie wygenerowane pliki (pojedyncze etykiety i całe serie, PDF-y i wsadowe pliki ZPL) przez 30 dni — kliknij **Pobierz**, żeby ściągnąć plik ponownie bez generowania go od nowa.
 
 ## Problemy techniczne
 
-### "Sesja wygasła — odśwież stronę"
-Token CSRF wygasł (zwykle po długiej nieaktywności). Odśwież F5 i zaloguj się ponownie.
+### „Sesja wygasła — odśwież stronę"
+Token bezpieczeństwa (mały, tymczasowy kod, który chroni Twoją sesję) wygasł — zwykle po dłuższej nieaktywności. Odśwież stronę (klawisz F5) i zaloguj się ponownie.
 
-### Edytor pokazuje "Nie udało się wczytać szablonu"
-Szablon mógł zostać usunięty, albo nie masz do niego dostępu. Wróć na **Szablony** i sprawdź listę.
+### Edytor pokazuje „Nie udało się wczytać szablonu"
+Szablon mógł zostać usunięty, albo nie masz do niego dostępu. Wróć na stronę **Szablony** i sprawdź listę.
 
-### Pobieram PDF i dostaję błąd "pdf_render_failed"
-Coś poszło nie tak po stronie serwera (zwykle nieprawidłowe dane w obiekcie). Sprawdź czy nie masz placeholdera kolumny `{{...}}` w pojedynczej etykiecie (kolumny działają tylko w generowaniu serii, w pojedynczym PDF zostają jako tekst; placeholdery daty liczą się wszędzie).
+### Pobieram PDF i dostaję błąd „pdf_render_failed"
+Coś poszło nie tak po stronie serwera — zwykle chodzi o nieprawidłowe dane w jednym z obiektów. Sprawdź, czy nie masz placeholdera kolumny `{{...}}` w pojedynczej etykiecie — kolumny działają tylko przy generowaniu serii, w pojedynczym PDF-ie zostają jako zwykły tekst (placeholdery dat liczą się wszędzie).
 
-### Generuję serię i widzę `no_rows: filter matched no rows`
-Filtr w Kroku 3 nie złapał żadnego wiersza. Wróć i poluzuj filtr lub go wyłącz.
+### Generuję serię i widzę komunikat, że filtr nie złapał żadnego wiersza.
+Filtr w Kroku 3 był zbyt restrykcyjny. Wróć i poluzuj go albo go wyłącz.
 
-### Autozapis się zatrzymał na "Niezapisane zmiany" i nie idzie dalej.
-Prawdopodobnie sieć padła. Sprawdź połączenie i kliknij ręcznie **Zapisz**.
+### Autozapis utknął na „Niezapisane zmiany" i nic się nie dzieje.
+Prawdopodobnie padło połączenie z siecią. Sprawdź internet i kliknij ręcznie **Zapisz**.
 
-### W generowanym PDF brakuje jednego obiektu, choć w edytorze go widzę.
-Sprawdź czy w prawym panelu nie ma odznaczonego **🖨 Drukuj w PDF** — wtedy obiekt jest tylko podglądowy.
+### W wygenerowanym PDF brakuje jednego obiektu, choć w edytorze go widzę.
+Sprawdź, czy w prawym panelu tego obiektu nie jest odznaczone **🖨 Drukuj w PDF** — wtedy jest on tylko podglądowy.
 
 ### Tekst w bloku jest przycięty.
-Po wygenerowaniu PDF zobaczysz **N ostrzeżeń**. Dwie opcje:
-1. Powiększ ramkę bloku.
-2. Włącz **Auto-skalowanie** w prawym panelu i ustaw min. font.
+Po wygenerowaniu PDF-a zobaczysz chip **„N ostrzeżeń"**. Masz dwie opcje:
+1. Powiększ ramkę bloku tekstu.
+2. Włącz **Auto-skalowanie** w prawym panelu i ustaw minimalny rozmiar fontu.
 
-### Strona programu jest po angielsku, a chcę po polsku.
-Przełącznik języka **PL/EN** jest w prawym górnym rogu nagłówka (także na stronie logowania).
+### Program jest po angielsku, a chcę po polsku.
+Przełącznik języka **PL/EN** jest w prawym górnym rogu nagłówka (dostępny też na stronie logowania).
 
-### Na etykiecie wyszła data wczorajsza/jutrzejsza zamiast dzisiejszej.
-Data liczy się według zegara **serwera**. Jeśli rozjazd się powtarza, poproś administratora o sprawdzenie strefy czasowej serwera (zmienna `TZ` w konfiguracji).
+### Na etykiecie wyszła data wczorajsza albo jutrzejsza zamiast dzisiejszej.
+Data liczy się według zegara **serwera**, na którym działa program. Jeśli ten rozjazd się powtarza, poproś administratora o sprawdzenie ustawień strefy czasowej serwera.
 
 ---
 
 ## Pytania, których nie ma na liście
 
-Napisz do **dev@attv.uk** — opisz co próbujesz zrobić i co zobaczyłeś. Zrzut ekranu mile widziany.
+Napisz do **dev@attv.uk** — opisz, co próbowałaś/eś zrobić i co zobaczyłaś/eś. Zrzut ekranu bardzo się przyda.
