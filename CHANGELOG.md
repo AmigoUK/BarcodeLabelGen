@@ -9,6 +9,19 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 _Nothing yet._
 
+## [0.23.2] — 2026-07-08
+
+### Fixed
+- **macOS install switches to a paste-one-command flow** (second live E2E
+  failure: the user's Archive Utility did not restore the +x bit from the
+  v0.23.1 zip, so the extracted `BLG-Connect.command` still hit "appropriate
+  access privileges"). The wizard now shows a single copy-paste Terminal
+  line — `echo '<base64 of the personalized installer>' | base64 -D | bash`
+  — so the script travels via the clipboard: no file, no exec bit, no
+  quarantine/Gatekeeper, no unzip variance. The virtual-printer step reuses
+  the same mechanism (`… | bash -s -- --virtual-printer`). The zip download
+  remains as an alternative link; the token still never appears in a URL.
+
 ## [0.23.1] — 2026-07-08
 
 ### Fixed
@@ -527,7 +540,8 @@ _Nothing yet._
   label formats, dataset upload (CSV/XLSX/SQLite) with `{{column}}`
   mail-merge, and PDF single-label + batch generation via ReportLab.
 
-[Unreleased]: https://github.com/AmigoUK/BarcodeLabelGen/compare/v0.23.1...HEAD
+[Unreleased]: https://github.com/AmigoUK/BarcodeLabelGen/compare/v0.23.2...HEAD
+[0.23.2]: https://github.com/AmigoUK/BarcodeLabelGen/releases/tag/v0.23.2
 [0.23.1]: https://github.com/AmigoUK/BarcodeLabelGen/releases/tag/v0.23.1
 [0.23.0]: https://github.com/AmigoUK/BarcodeLabelGen/releases/tag/v0.23.0
 [0.22.0]: https://github.com/AmigoUK/BarcodeLabelGen/releases/tag/v0.22.0

@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { installerFor } from "./installerSetup";
+import { installerFor, macPasteCommand } from "./installerSetup";
 
 const OPTS = {
   serverUrl: "https://linuxserv1.tailc29352.ts.net:18003",
@@ -217,5 +217,25 @@ describe("installerArtifact", () => {
     expect(installerFor("mac", OPTS).content).toContain("9110/status");
     expect(installerFor("linux", OPTS).content).toContain("[3/3]");
     expect(installerFor("windows", OPTS).content).toContain("9110/status");
+  });
+});
+
+describe("macPasteCommand", () => {
+  it("decodes back to the exact mac script and pipes to bash", () => {
+    const cmd = macPasteCommand(OPTS);
+    expect(cmd).toMatch(/^echo '[A-Za-z0-9+/=]+' \| base64 -D \| bash$/);
+    const b64 = cmd.match(/^echo '([^']+)'/)![1];
+    const decoded = new TextDecoder().decode(Uint8Array.from(atob(b64), (c) => c.charCodeAt(0)));
+    expect(decoded).toBe(installerFor("mac", OPTS).content);
+  });
+
+  it("passes extra args via bash -s --", () => {
+    expect(macPasteCommand(OPTS, ["--virtual-printer"])).toMatch(
+      /\| bash -s -- --virtual-printer$/,
+    );
+  });
+
+  it("is one line (safe to paste)", () => {
+    expect(macPasteCommand(OPTS)).not.toContain("\n");
   });
 });

@@ -14,7 +14,7 @@ import { Modal } from "../components/ui/Modal";
 import { useCreateDevice, useDeviceOnline, useDevices } from "../hooks/useDevices";
 import type { CreateDeviceResponse } from "../lib/types";
 import { detectOS } from "../lib/connectorSetup";
-import { type InstallerFamily, installerArtifact } from "../lib/installerSetup";
+import { type InstallerFamily, installerArtifact, macPasteCommand } from "../lib/installerSetup";
 
 type Step = "os" | "name" | "install" | "waiting" | "success" | "printers" | "virtual";
 const WAIT_TIMEOUT_MS = 75_000;
@@ -88,6 +88,17 @@ export function ConnectPrinterWizard({ open, onClose }: { open: boolean; onClose
       token: created.token,
       printer: { mode: "test" },
     });
+  }, [family, created, serverUrl]);
+
+  const macCmd = useMemo(() => {
+    if (family !== "mac" || !created) return "";
+    return macPasteCommand({ serverUrl, token: created.token, printer: { mode: "test" } });
+  }, [family, created, serverUrl]);
+  const macVirtualCmd = useMemo(() => {
+    if (family !== "mac" || !created) return "";
+    return macPasteCommand({ serverUrl, token: created.token, printer: { mode: "test" } }, [
+      "--virtual-printer",
+    ]);
   }, [family, created, serverUrl]);
 
   async function createAndAdvance() {
@@ -167,15 +178,36 @@ export function ConnectPrinterWizard({ open, onClose }: { open: boolean; onClose
         <div className="space-y-3">
           <p className="text-lg font-semibold">{t("wizard.installTitle")}</p>
           <p className="text-sm text-slate-400">{t("wizard.installHint")}</p>
-          <button
-            onClick={() => download(installer.filename, installer.blob)}
-            className="block w-full rounded-lg border border-slate-700 bg-slate-900 px-4 py-3 text-left hover:border-indigo-500"
-          >
-            📦 <span className="font-medium">{t("wizard.installDownload")}</span>
-            <span className="block text-xs text-slate-500">{installer.filename}</span>
-          </button>
-          <p className="text-sm text-slate-300">{t(`wizard.installRun.${family}`)}</p>
-          {family === "mac" && <p className="text-xs text-slate-500">{t("wizard.unsignedNote")}</p>}
+          {family === "mac" ? (
+            <>
+              <p className="text-sm text-slate-300">{t("wizard.installRun.mac")}</p>
+              <div className="flex items-center gap-2 rounded-lg border border-slate-700 bg-slate-900 p-3">
+                <code className="max-h-24 flex-1 overflow-auto break-all font-mono text-[10px] leading-tight text-slate-200">
+                  {macCmd}
+                </code>
+                <Button onClick={() => void navigator.clipboard?.writeText(macCmd)}>
+                  {t("common.copy")}
+                </Button>
+              </div>
+              <button
+                onClick={() => download(installer.filename, installer.blob)}
+                className="text-xs text-indigo-400 hover:text-indigo-300"
+              >
+                {t("wizard.installAltFile")}
+              </button>
+            </>
+          ) : (
+            <>
+              <button
+                onClick={() => download(installer.filename, installer.blob)}
+                className="block w-full rounded-lg border border-slate-700 bg-slate-900 px-4 py-3 text-left hover:border-indigo-500"
+              >
+                📦 <span className="font-medium">{t("wizard.installDownload")}</span>
+                <span className="block text-xs text-slate-500">{installer.filename}</span>
+              </button>
+              <p className="text-sm text-slate-300">{t(`wizard.installRun.${family}`)}</p>
+            </>
+          )}
           <p className="rounded-md border border-indigo-900 bg-indigo-950/40 px-3 py-2 text-xs text-indigo-300">
             🔒 {t("wizard.tokenPrivacy")}
           </p>
@@ -322,12 +354,12 @@ export function ConnectPrinterWizard({ open, onClose }: { open: boolean; onClose
               <p className="text-sm text-slate-400">{t("wizard.virtualCmd")}</p>
               <div className="flex items-center gap-2 rounded-lg border border-slate-700 bg-slate-900 p-3">
                 <code className="flex-1 overflow-x-auto whitespace-nowrap font-mono text-xs text-slate-200">
-                  {t(family === "mac" ? "wizard.virtualCmdMac" : "wizard.virtualCmdLinux")}
+                  {family === "mac" ? macVirtualCmd : t("wizard.virtualCmdLinux")}
                 </code>
                 <Button
                   onClick={() =>
                     void navigator.clipboard?.writeText(
-                      t(family === "mac" ? "wizard.virtualCmdMac" : "wizard.virtualCmdLinux"),
+                      family === "mac" ? macVirtualCmd : t("wizard.virtualCmdLinux"),
                     )
                   }
                 >

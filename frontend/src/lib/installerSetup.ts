@@ -65,6 +65,15 @@ export function installerArtifact(
   return { filename, blob: new Blob([content], { type: "text/plain" }) };
 }
 
+/** macOS install path: ONE paste-in-Terminal line. The personalized script
+ *  travels via the clipboard — no file, so no exec bit, no quarantine, no
+ *  unzip implementation variance (each of those bit us on a real Mac). */
+export function macPasteCommand(opts: InstallerOptions, extraArgs: string[] = []): string {
+  const b64 = toBase64(installerFor("mac", opts).content);
+  const args = extraArgs.length ? ` -s -- ${extraArgs.join(" ")}` : "";
+  return `echo '${b64}' | base64 -D | bash${args}`;
+}
+
 function unixScript(family: "mac" | "linux", opts: InstallerOptions): string {
   const cfg = configFor(family, opts);
   const isMac = family === "mac";
