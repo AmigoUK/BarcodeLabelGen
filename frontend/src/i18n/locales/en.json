@@ -379,9 +379,9 @@
     "installHint": "One file, one click — the installer sets everything up and starts the program in the background.",
     "installDownload": "Download the installer",
     "installRun": {
-      "mac": "Open Terminal (Cmd+Space, type Terminal) and paste: bash ~/Downloads/Podlacz-BLG.command — that's the only command; the installer does the rest.",
+      "mac": "Double-click the downloaded BLG-Connect.zip (it unpacks itself), then double-click BLG-Connect.command. When macOS asks: System Settings → Privacy & Security → \"Open Anyway\". Terminal alternative: bash ~/Downloads/BLG-Connect.command",
       "windows": "Run the downloaded file. If the blue SmartScreen window appears: More info → Run anyway.",
-      "linux": "In a terminal: `bash ~/Downloads/podlacz-blg.sh` (the only command — the installer does the rest)."
+      "linux": "In a terminal: `bash ~/Downloads/blg-connect.sh` (the only command — the installer does the rest)."
     },
     "unsignedNote": "The first time it runs, macOS may ask you to grant a few permissions — it's safe to allow them.",
     "tokenPrivacy": "Your private token lives inside the downloaded installer file — don't share that file with anyone.",
@@ -412,8 +412,8 @@
     "virtualWinStep2": "Add a new printer: port \"Standard TCP/IP\", address 127.0.0.1, port 9101.",
     "virtualWinStep3": "In the port settings, turn off SNMP and set the data type to RAW.",
     "virtualWinStep4": "Done — print from any program, the printout lands in this app's Inbox.",
-    "virtualCmdMac": "bash ~/Downloads/Podlacz-BLG.command --virtual-printer",
-    "virtualCmdLinux": "bash ~/Downloads/podlacz-blg.sh --virtual-printer"
+    "virtualCmdMac": "bash ~/Downloads/BLG-Connect.command --virtual-printer",
+    "virtualCmdLinux": "bash ~/Downloads/blg-connect.sh --virtual-printer"
   },
   "print": {
     "title": "Print via connector",

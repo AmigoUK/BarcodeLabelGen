@@ -14,13 +14,13 @@ import { Modal } from "../components/ui/Modal";
 import { useCreateDevice, useDeviceOnline, useDevices } from "../hooks/useDevices";
 import type { CreateDeviceResponse } from "../lib/types";
 import { detectOS } from "../lib/connectorSetup";
-import { type InstallerFamily, installerFor } from "../lib/installerSetup";
+import { type InstallerFamily, installerArtifact } from "../lib/installerSetup";
 
 type Step = "os" | "name" | "install" | "waiting" | "success" | "printers" | "virtual";
 const WAIT_TIMEOUT_MS = 75_000;
 
-function download(filename: string, text: string) {
-  const blob = new Blob([text], { type: "text/plain" });
+function download(filename: string, payload: Blob | string) {
+  const blob = typeof payload === "string" ? new Blob([payload], { type: "text/plain" }) : payload;
   const url = URL.createObjectURL(blob);
   const a = document.createElement("a");
   a.href = url;
@@ -83,7 +83,11 @@ export function ConnectPrinterWizard({ open, onClose }: { open: boolean; onClose
 
   const installer = useMemo(() => {
     if (!family || !created) return null;
-    return installerFor(family, { serverUrl, token: created.token, printer: { mode: "test" } });
+    return installerArtifact(family, {
+      serverUrl,
+      token: created.token,
+      printer: { mode: "test" },
+    });
   }, [family, created, serverUrl]);
 
   async function createAndAdvance() {
@@ -99,12 +103,12 @@ export function ConnectPrinterWizard({ open, onClose }: { open: boolean; onClose
 
   function downloadWithIpPrinter() {
     if (!family || !created || !printerIp.trim()) return;
-    const { filename, content } = installerFor(family, {
+    const { filename, blob } = installerArtifact(family, {
       serverUrl,
       token: created.token,
       printer: { mode: "ip", ip: printerIp.trim() },
     });
-    download(filename, content);
+    download(filename, blob);
   }
 
   const detection = useMemo(() => detectOS(), []);
@@ -164,7 +168,7 @@ export function ConnectPrinterWizard({ open, onClose }: { open: boolean; onClose
           <p className="text-lg font-semibold">{t("wizard.installTitle")}</p>
           <p className="text-sm text-slate-400">{t("wizard.installHint")}</p>
           <button
-            onClick={() => download(installer.filename, installer.content)}
+            onClick={() => download(installer.filename, installer.blob)}
             className="block w-full rounded-lg border border-slate-700 bg-slate-900 px-4 py-3 text-left hover:border-indigo-500"
           >
             📦 <span className="font-medium">{t("wizard.installDownload")}</span>

@@ -10,7 +10,7 @@ const OPTS = {
 describe("installerFor", () => {
   it("mac: .command with arch autodetect, checksum, LaunchAgent, quarantine strip", () => {
     const { filename, content } = installerFor("mac", OPTS);
-    expect(filename).toBe("Podlacz-BLG.command");
+    expect(filename).toBe("BLG-Connect.command");
     expect(content.startsWith("#!/bin/bash")).toBe(true);
     expect(content).toContain('case "$(uname -m)"');
     expect(content).toContain("blg-connector-macos-apple");
@@ -29,7 +29,7 @@ describe("installerFor", () => {
 
   it("linux: .sh with three arch cases, systemd --user, linger", () => {
     const { filename, content } = installerFor("linux", OPTS);
-    expect(filename).toBe("podlacz-blg.sh");
+    expect(filename).toBe("blg-connect.sh");
     expect(content).toContain("blg-connector-linux-amd64");
     expect(content).toContain("blg-connector-linux-arm64");
     expect(content).toContain("blg-connector-linux-arm");
@@ -44,7 +44,7 @@ describe("installerFor", () => {
 
   it("windows: .bat with base64 config (decodes to the YAML), checksum, HKCU Run + vbs autostart", () => {
     const { filename, content } = installerFor("windows", OPTS);
-    expect(filename).toBe("Podlacz-BLG.bat");
+    expect(filename).toBe("BLG-Connect.bat");
     expect(content).toContain("blg-connector-windows-amd64.exe");
     expect(content).toContain("Get-FileHash");
     expect(content).toContain('reg add "HKCU\\Software\\Microsoft\\Windows\\CurrentVersion\\Run"');
@@ -168,5 +168,54 @@ describe("installerFor", () => {
     // JSON-escaped by buildConfigYaml: stays on one line inside the heredoc
     expect(body).toContain("\\n");
     expect(body.split("\n").some((l) => l.trim() === "BLGCONF")).toBe(false);
+  });
+});
+
+describe("installerArtifact", () => {
+  it("mac artifact is a zip carrying the exec bit", async () => {
+    const { installerArtifact } = await import("./installerSetup");
+    const { filename, blob } = installerArtifact("mac", OPTS);
+    expect(filename).toBe("BLG-Connect.zip");
+    const bytes = new Uint8Array(await blob.arrayBuffer());
+    expect([bytes[0], bytes[1], bytes[2], bytes[3]]).toEqual([0x50, 0x4b, 0x03, 0x04]);
+    const text = new TextDecoder().decode(bytes);
+    expect(text).toContain("BLG-Connect.command");
+    // stored (no compression) => the script is plaintext inside the zip
+    expect(text).toContain('token: "blg_abc123"');
+    let idx = -1;
+    for (let i = 0; i < bytes.length - 4; i++) {
+      if (
+        bytes[i] === 0x50 &&
+        bytes[i + 1] === 0x4b &&
+        bytes[i + 2] === 0x01 &&
+        bytes[i + 3] === 0x02
+      ) {
+        idx = i;
+        break;
+      }
+    }
+    expect(idx).toBeGreaterThan(-1);
+    const ext =
+      (bytes[idx + 38] |
+        (bytes[idx + 39] << 8) |
+        (bytes[idx + 40] << 16) |
+        (bytes[idx + 41] << 24)) >>>
+      0;
+    expect((ext >>> 16) & 0o7777).toBe(0o755);
+  });
+
+  it("windows and linux artifacts are plain text with new names", async () => {
+    const { installerArtifact } = await import("./installerSetup");
+    const w = installerArtifact("windows", OPTS);
+    expect(w.filename).toBe("BLG-Connect.bat");
+    expect(await w.blob.text()).toContain("blg-connector-windows-amd64.exe");
+    const l = installerArtifact("linux", OPTS);
+    expect(l.filename).toBe("blg-connect.sh");
+  });
+
+  it("installers self-verify the connection (step 3 status poll)", () => {
+    expect(installerFor("mac", OPTS).content).toContain("9110/status");
+    expect(installerFor("linux", OPTS).content).toContain("[3/3]");
+    expect(installerFor("windows", OPTS).content).toContain("9110/status");
   });
 });

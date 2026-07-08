@@ -379,9 +379,9 @@
     "installHint": "Jeden plik, jedno kliknięcie — instalator sam wszystko ustawi i uruchomi program w tle.",
     "installDownload": "Pobierz instalator",
     "installRun": {
-      "mac": "Otwórz Terminal (Cmd+Spacja, wpisz Terminal) i wklej: bash ~/Downloads/Podlacz-BLG.command — to jedyna komenda, instalator zrobi resztę.",
+      "mac": "Kliknij dwukrotnie pobrany BLG-Connect.zip (rozpakuje się sam), a potem dwukrotnie BLG-Connect.command. Gdy macOS zapyta o zgodę: Ustawienia → Prywatność i ochrona → „Otwórz mimo to”. Alternatywa w Terminalu: bash ~/Downloads/BLG-Connect.command",
       "windows": "Uruchom pobrany plik. Gdy pojawi się niebieskie okno SmartScreen: Więcej informacji → Uruchom mimo to.",
-      "linux": "W terminalu: `bash ~/Pobrane/podlacz-blg.sh` (jedyna komenda — instalator zrobi resztę)."
+      "linux": "W terminalu: `bash ~/Pobrane/blg-connect.sh` (jedyna komenda — instalator zrobi resztę)."
     },
     "unsignedNote": "Przy pierwszym uruchomieniu macOS może poprosić o dodatkowe uprawnienia — możesz śmiało się zgodzić.",
     "tokenPrivacy": "Twój prywatny token znajduje się wewnątrz pobranego pliku instalatora — nie udostępniaj tego pliku nikomu.",
@@ -412,8 +412,8 @@
     "virtualWinStep2": "Dodaj nową drukarkę: port „Standard TCP/IP”, adres 127.0.0.1, port 9101.",
     "virtualWinStep3": "W ustawieniach portu wyłącz SNMP i ustaw typ danych na RAW.",
     "virtualWinStep4": "Gotowe — drukuj z dowolnego programu, wydruk trafi do Inbox w tej aplikacji.",
-    "virtualCmdMac": "bash ~/Downloads/Podlacz-BLG.command --virtual-printer",
-    "virtualCmdLinux": "bash ~/Pobrane/podlacz-blg.sh --virtual-printer"
+    "virtualCmdMac": "bash ~/Downloads/BLG-Connect.command --virtual-printer",
+    "virtualCmdLinux": "bash ~/Pobrane/blg-connect.sh --virtual-printer"
   },
   "print": {
     "title": "Drukuj przez konektor",

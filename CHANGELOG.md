@@ -9,6 +9,28 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 _Nothing yet._
 
+## [0.23.1] — 2026-07-08
+
+### Fixed
+- **macOS installer failed with "you do not have appropriate access
+  privileges" on double-click** (found in the user's live E2E). A browser
+  blob download can never carry the executable bit, so the bare `.command`
+  could not be launched from Finder at all. The wizard now downloads
+  **`BLG-Connect.zip`** — a minimal stored ZIP written in the browser with
+  unix mode 0755 in its external attributes; Archive Utility restores the
+  +x on extraction, so double-click works (after the one-time
+  Privacy & Security "Open Anyway" approval). Verified end-to-end: the
+  extracted file carries `-rwxr-xr-x`.
+
+### Changed
+- **Installer filenames are English/universal** (user feedback):
+  `BLG-Connect.command` / `BLG-Connect.bat` / `blg-connect.sh` (macOS
+  artifact: `BLG-Connect.zip`).
+- **Installers self-verify in numbered steps** (AnyDesk-style guidance):
+  [1/3] download+checksum → [2/3] background service + autostart →
+  [3/3] the installer polls the connector's local status endpoint for up
+  to 30 s and prints a clear success line or a where-to-look log hint.
+
 ## [0.23.0] — 2026-07-07
 
 ### Added
@@ -505,7 +527,8 @@ _Nothing yet._
   label formats, dataset upload (CSV/XLSX/SQLite) with `{{column}}`
   mail-merge, and PDF single-label + batch generation via ReportLab.
 
-[Unreleased]: https://github.com/AmigoUK/BarcodeLabelGen/compare/v0.23.0...HEAD
+[Unreleased]: https://github.com/AmigoUK/BarcodeLabelGen/compare/v0.23.1...HEAD
+[0.23.1]: https://github.com/AmigoUK/BarcodeLabelGen/releases/tag/v0.23.1
 [0.23.0]: https://github.com/AmigoUK/BarcodeLabelGen/releases/tag/v0.23.0
 [0.22.0]: https://github.com/AmigoUK/BarcodeLabelGen/releases/tag/v0.22.0
 [0.21.3]: https://github.com/AmigoUK/BarcodeLabelGen/releases/tag/v0.21.3

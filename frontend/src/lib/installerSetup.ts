@@ -5,6 +5,7 @@
  * today) and never leaves the browser any other way.
  */
 import { type PrinterChoice, buildConfigYaml } from "./connectorSetup";
+import { zipSingleFile } from "./zip";
 
 export type InstallerFamily = "mac" | "windows" | "linux";
 
@@ -40,10 +41,28 @@ export function installerFor(
   family: InstallerFamily,
   opts: InstallerOptions,
 ): { filename: string; content: string } {
-  if (family === "windows") return { filename: "Podlacz-BLG.bat", content: windowsBat(opts) };
+  if (family === "windows") return { filename: "BLG-Connect.bat", content: windowsBat(opts) };
   if (family === "mac")
-    return { filename: "Podlacz-BLG.command", content: unixScript("mac", opts) };
-  return { filename: "podlacz-blg.sh", content: unixScript("linux", opts) };
+    return { filename: "BLG-Connect.command", content: unixScript("mac", opts) };
+  return { filename: "blg-connect.sh", content: unixScript("linux", opts) };
+}
+
+/** The actual downloadable artifact. macOS gets the .command wrapped in a
+ *  zip carrying the +x bit — a plain blob download can't be executable, so
+ *  double-clicking the bare file always failed with "access privileges". */
+export function installerArtifact(
+  family: InstallerFamily,
+  opts: InstallerOptions,
+): { filename: string; blob: Blob } {
+  const { filename, content } = installerFor(family, opts);
+  if (family === "mac") {
+    const bytes = zipSingleFile(filename, content, 0o755);
+    return {
+      filename: "BLG-Connect.zip",
+      blob: new Blob([bytes as BlobPart], { type: "application/zip" }),
+    };
+  }
+  return { filename, blob: new Blob([content], { type: "text/plain" }) };
 }
 
 function unixScript(family: "mac" | "linux", opts: InstallerOptions): string {
@@ -129,7 +148,7 @@ grep -q "^capture:" "$APP_DIR/config.yaml" 2>/dev/null && HAD_CAPTURE=1
 cat > "$APP_DIR/config.yaml" <<'BLGCONF'
 ${cfg}BLGCONF
 
-echo "-> pobieram program..."
+echo "-> [1/3] pobieram program..."
 curl -fsSL -o "$APP_DIR/blg-connector" "$RELEASE_BASE/$ASSET"
 curl -fsSL -o "$APP_DIR/SHA256SUMS" "$RELEASE_BASE/SHA256SUMS"
 echo "-> sprawdzam sume kontrolna..."
@@ -148,10 +167,22 @@ if [ "\${1:-}" = "--virtual-printer" ] || [ "$HAD_CAPTURE" = "1" ]; then
   fi
 fi
 
+echo "-> [2/3] wlaczam autostart i uruchamiam w tle..."
 ${autostart}
 
+echo "-> [3/3] sprawdzam polaczenie..."
+CONNECTED=0
+for _ in $(seq 1 15); do
+  if curl -fsS -m 2 http://127.0.0.1:9110/status >/dev/null 2>&1; then CONNECTED=1; break; fi
+  sleep 2
+done
+
 echo ""
-echo "OK — gotowe! Connector dziala w tle i wstaje automatycznie po restarcie."
+if [ "$CONNECTED" = "1" ]; then
+  echo "OK — gotowe! Connector dziala w tle i wstaje automatycznie po restarcie."
+else
+  echo "UWAGA: connector jeszcze nie odpowiada — daj mu chwile albo zajrzyj do logu."
+fi
 ${logLine}
 `.replace(/\n{3,}/g, "\n\n");
 }
@@ -203,6 +234,14 @@ if errorlevel 1 (
 
 rem Start teraz (bez okna)
 wscript "%APP%\\run-blg.vbs"
+
+echo [3/3] Sprawdzam polaczenie...
+powershell -NoProfile -Command "$ok=$false; for($i=0;$i -lt 15;$i++){ try{ Invoke-RestMethod -Uri 'http://127.0.0.1:9110/status' -TimeoutSec 2 | Out-Null; $ok=$true; break }catch{ Start-Sleep -Seconds 2 } }; if(-not $ok){ exit 1 }"
+if errorlevel 1 (
+  echo UWAGA: connector jeszcze nie odpowiada - daj mu chwile albo zajrzyj do logu.
+) else (
+  echo Polaczenie dziala!
+)
 
 echo.
 echo OK - gotowe! Connector dziala w tle i wstaje automatycznie po zalogowaniu.
